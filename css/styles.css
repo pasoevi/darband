@@ -1,0 +1,26 @@
+body {
+	background-color: #000;
+}
+
+h1 {
+	color: gold;
+}
+
+.flip {
+	-moz-transform: scale(-1, 1);
+	-webkit-transform: scale(-1, 1);
+	-o-transform: scale(-1, 1);
+	-ms-transform: scale(-1, 1);
+	transform: scale(-1, 1);
+	display: inline-block;
+	color: #CCBF33;
+}
+
+#game {
+	width: 100%;
+	text-align: center;
+}
+
+canvas {
+	margin: 10px auto;
+}

@@ -1,63 +1,40 @@
 import { Actor } from "./actor";
 import { DIRS } from "./dun";
-import Game from "./game";
+import { Game } from "./game";
 import { Message } from "./message";
 
-const Player = function (spec) {
-    let {
-        draw,
-        getPos,
-        setPos,
-        getSpeed,
-        getHp,
-        getMaxHp,
-        life,
-        die,
-        hasInventory,
-        inventory
-    } = Actor(spec);
+class Player extends Actor{
+    private game: Game;
 
-    const player = {
-        hasInventory,
-        inventory,
-        draw,
-        getPos,
-        setPos,
-        getSpeed,
-        getHp,
-        getMaxHp,
-        life,
-        die
-    };
-
-    player.getName = function () {
-        return "You";
-    };
+    constructor(game: Game, spec: Being) {
+        super(spec);
+        this.game = game;
+    }
 
     // Attach keydown listener.
-    player.act = function () {
-        Game.engine.lock();
-        window.addEventListener("keydown", player);
+    public act() {
+        this.game.engine.lock();
+        window.addEventListener("keydown", this);
     };
 
     // When invoked on a staircase or similar location, moves to that domain.
-    player.climb = function (direction) {
-        let tileMap = Game.level.map;
-        let tile = tileMap.getTile(getPos());
+    public climb(direction: string) {
+        let tileMap = this.game.level.map;
+        let tile = tileMap.getTile(this.getPos());
         if (direction === tile.getCh()) {
-            Game.switchLevel(Game.level.getNextLevel(tile.getCh()));
+            this.game.switchLevel(this.game.level.getNextLevel(tile.getCh()));
         } else {
             Message(`You cannot climb ${direction === ">" ? "down" : "up"} here`);
         }
     };
 
-    const handlePickItem = () => {
-        const item = player.getPos();
+    private handlePickItem = () => {
+        const item = this.getPos();
 
         if (typeof item === "undefined") {
             Message("Nothing to pick up");
         }
-        player.pickItem(item);
+        this.pickItem(item);
     };
 
     const moveOrAttack = function(dir) {

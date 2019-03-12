@@ -1,21 +1,25 @@
 import { Classes, Levels, Settings, Texts } from "./datafiles";
 import { Display, Engine, Scheduler } from "./dun";
 
-import { makeLevel } from "./level";
+import { makeLevel, Level } from "./level";
 import { Message } from "./message";
 import { Player } from "./player";
 import { random } from "./lang";
 
-export default {
-    display: null,
-    logDisplay: null,
-    scheduler: null,
-    engine: null,
-    level: null,
-    player: null,
-    log: [],
+export class Game {
+    public display: Display;
+    public logDisplay: Display;
+    public scheduler: Scheduler;
+    public engine: Engine;
+    public level: Level;
+    player: null;
+    log: [];
 
-    initDisplay: function () {
+    constructor() {
+        this.log = [];
+        this.scheduler = new Scheduler.Simple();
+        this.level = new Level(Levels[Settings.game.startLevel]);
+
         this.display = new Display({
             width: Settings.windowW,
             height: Settings.windowH - 3
@@ -25,19 +29,26 @@ export default {
             width: Settings.windowW,
             height: Settings.logLength
         });
+
+        this.engine = new Engine(this.scheduler);
+    }
+
+    private initDisplay() {
         let gameDiv = document.getElementById("darband_game");
-        gameDiv.appendChild(this.display.getContainer());
-        gameDiv.appendChild(this.logDisplay.getContainer());
-    },
+        if (gameDiv) {
+            gameDiv.appendChild(this.display.getContainer());
+            gameDiv.appendChild(this.logDisplay.getContainer());
+        } else {
+            console.log("Game div not found");
+        }
+    }
 
-    printWelcomeMsg: function () {
+    private printWelcomeMsg() {
         Message(random(Texts.en.quotes));
-    },
+    }
 
-    init: function () {
+    public init() {
         this.initDisplay();
-        this.scheduler = new Scheduler.Simple();
-        this.level = makeLevel(Levels[Settings.game.startLevel]);
         let freeCells = this.level.getFreeCells();
         this.player = this.level.createBeing(
             Player,
@@ -48,17 +59,15 @@ export default {
         this.level.draw();
 
         this.printWelcomeMsg();
-
-        this.engine = new Engine(this.scheduler);
         this.engine.start();
-    },
+    }
 
-    switchLevel: function (level) {
+    public switchLevel(level: Level) {
         /* remove old beings from the scheduler */
         this.scheduler.clear();
         this.scheduler.add(this.player, true);
 
-        let newLevel = makeLevel(level);
+        let newLevel = new Level(level);
         if (!newLevel) {
             return;
         }

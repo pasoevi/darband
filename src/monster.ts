@@ -2,7 +2,7 @@ import { Actor } from "./actor";
 import Game from "./game";
 import { Path } from "./dun";
 
-const Monster = function (spec) {
+class Monster extends Actor {
     let {
         getPos,
         setPos,

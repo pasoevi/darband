@@ -7,8 +7,7 @@ import { RNG } from "./dun";
  * @returns a random element or null if no element satisfied the given
  * predicate or the array is empty.
  */
-export function random (collection, predicate = undefined) {
-    predicate = predicate || null;
+export function random(collection: any[], predicate?: (elem: any) => boolean) {
     let validElems;
 
     if (!collection.length) {

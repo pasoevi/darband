@@ -1,5 +1,5 @@
-import { Display } from "./dun";
-import Game from "./game";
+// import { Display } from "./dun";
+import { Game } from "./game";
 
 function component() {
     let element = document.createElement("div");
@@ -9,5 +9,6 @@ function component() {
 
 document.body.appendChild(component());
 
-Display.Rect.cache = true;
-Game.init();
+// Display.Rect.cache = true;
+const game = new Game();
+game.init();

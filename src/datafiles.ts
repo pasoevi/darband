@@ -13,10 +13,12 @@ const Colors = {
     red: "#ff0000",
     white: "#ffffff",
     black: "#000000",
-    orange: "#aa8811"
+    orange: "#aa8811",
+    blue: "#0000FF",
+    purple: "#440044"
 };
 
-const ActorType = {
+export const ActorType = {
     MONSTER: "monster",
     WEAPON: "weapon",
     POTION: "potion"
@@ -474,7 +476,6 @@ export {
     Levels,
     Races,
     Classes,
-    ActorType,
     Monsters,
     Items,
     Texts,

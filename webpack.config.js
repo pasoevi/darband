@@ -1,25 +1,31 @@
-const path = require("path");
-
 module.exports = {
-    entry: "./src/index.js",
+    entry: "./src/index.ts",
     output: {
-        filename: "main.js",
-        path: path.resolve(__dirname, "dist")
+        filename: "./dist/main.js",
+    },
+    resolve: {
+        extensions: [".ts", ".tsx", ".js", ".jsx"]
     },
     module: {
         rules: [
             //...
+            /* No longer needed as rotjs is now installed as a dependency
             {
                 test: /rot\.min\.js$/,
                 loader: "exports?ROT"
             },
+            */
             {
-                test: /\.(js|jsx)$/,
+                test: /\.([jt]s|jsx)$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: "babel-loader"
+                    loader: "awesome-typescript-loader"
                 }
-            }
+            },
+            { enforce: "pre", test: /\.[jt]s$/, loader: "source-map-loader" }
         ]
+    },
+    externals: {
+        "rot-js": "Rot"
     }
 };

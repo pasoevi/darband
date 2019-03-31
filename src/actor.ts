@@ -6,7 +6,9 @@ import { Weapon, weapon, Modifier } from './weapon'
 import { Item } from './item'
 import { MapPosition } from './map'
 
-class Inventory {
+const game = Game.getSingleton();
+
+export class Inventory {
   private weapon: Weapon
   private items: Item[]
 
@@ -71,14 +73,14 @@ class AI {
   }
 }
 
-class Life {
+export class Life {
   private hp: number
   private maxHp: number
   private defence: number
   private corpseName: string
   private actor: Actor
 
-  constructor(spec: Life, actor: Actor) {
+  constructor(spec: LifeTemplate, actor: Actor) {
     this.hp = spec.hp
     this.maxHp = spec.maxHp
     this.defence = spec.defence
@@ -89,7 +91,7 @@ class Life {
   public die() {
     this.hp = 0
     Message(`${this.actor.getName()} dies`)
-    Game.scheduler.remove(this.actor)
+    game.scheduler.remove(this.actor)
   }
 
   public isAlive() {
@@ -106,9 +108,9 @@ class Life {
    */
   public takeDamage(
     dealer: Actor,
-    weapon: Weapon,
     value: number,
-    modifiers: Modifier[]
+    modifiers: Modifier[],
+    weapon: Weapon,
   ) {
     let damageTaken = value
 
@@ -127,7 +129,7 @@ class Life {
 
     Message(`${this.hp} was and now is ${damageTaken} less`)
     Message(
-      `${dealer.getName()} attacks ${this.getName()} for ${damageTaken} hp`,
+      `${dealer.getName()} attacks ${this.actor.getName()} for ${damageTaken} hp`,
       Colors.red
     )
 
@@ -158,9 +160,9 @@ export class Actor {
   private col: string
   private ch: string
 
-  private life?: Life
-  private inventory?: Inventory
-  private ai?: AI
+  public life?: Life
+  public inventory?: Inventory
+  public ai?: AI
 
   constructor(spec: ActorTemplate) {
     this.position = {
@@ -173,19 +175,19 @@ export class Actor {
     this.ch = spec.ch
 
     const lifeTemplate =
-      spec.lifeTemplate || (spec.race && spec.race.lifeTemplate)
+      spec.lifeTemplate || (spec.lifeTemplate)
 
     if (lifeTemplate) {
       this.life = new Life(lifeTemplate, this)
     }
 
     if (spec.aiTemplate) {
-      this..ai = new AI(spec.aiTemplate)
+      this.ai = new AI()
     }
+  }
 
-    if (spec.itemTemplate) {
-      actor.ai = spec.itemTemplate
-    }
+  public getInventory() {
+    return this.inventory;
   }
 
   public getName() {
@@ -205,18 +207,18 @@ export class Actor {
   }
 
   public setPos(pos: MapPosition) {
-    if (!Game.level.map.isPosOnMap(pos.x, pos.y)) {
+    if (!game.level.map.isPosOnMap(pos)) {
       dbg('Not on map')
       return
     }
 
     this.position = pos
-    Game.level.map.computeFov(pos)
+    game.level.map.computeFov(pos)
   }
 
   public draw() {
     if (this.life !== undefined && this.life.isAlive()) {
-      Game.display.draw(
+      game.display.draw(
         this.position.x,
         this.position.y,
         this.ch,
@@ -224,7 +226,7 @@ export class Actor {
         Colors.black
       )
     } else {
-      Game.display.draw(
+      game.display.draw(
         this.position.x,
         this.position.y,
         this.ch,
@@ -249,6 +251,8 @@ export interface ActorTemplate {
 export interface LifeTemplate {
   hp: number;
   maxHp: number;
+  defence: number;
+  corpseName: string;
 }
 
 export interface ItemTemplate {

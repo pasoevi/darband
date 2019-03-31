@@ -138,7 +138,8 @@ const Levels = [
 const WizardLife = {
     hp: 11100,
     maxHp: 11100,
-    defence: 2
+    defence: 2,
+    corpseName: "wizzard corpse"
 };
 
 const SimpleLife = {

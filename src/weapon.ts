@@ -1,3 +1,6 @@
+import { Item } from "./item";
+import { ActorTemplate } from "./actor";
+
 export interface Weapon {
     power: number;
 }
@@ -6,18 +9,14 @@ export interface Modifier {
     value: number;
 }
 
-const weapon = function (spec: Weapon) {
-    let {power} = spec;
+export class Weapon extends Item {
+    power: number;
+    constructor(spec = {power: 10}) {
+        super(spec);
+        this.power = spec.power;
+    }
 
-    let getPower = function () {
-        return power;
+    public getPower () {
+        return this.power;
     };
-
-    return Object.freeze({
-        getPower
-    });
-};
-
-export {
-    weapon
 };

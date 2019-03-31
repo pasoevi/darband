@@ -1,9 +1,8 @@
-import { Actor } from "./actor";
+import { Actor, ActorTemplate } from "./actor";
 import { ActorType } from "./datafiles";
 
-export class Item{
-    private type: ActorType;
-    constructor(spec: Item) {
-        this.type = spec.ActorType.ITEM;
+export class Item extends Actor{
+    constructor(spec: ActorTemplate) {
+        super(spec);
     };
 }

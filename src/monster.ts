@@ -1,35 +1,34 @@
-import { Actor } from "./actor";
-import Game from "./game";
+import { Actor, Inventory, ActorTemplate } from "./actor";
+import { Game } from "./game";
 import { Path } from "./dun";
+import { Weapon } from "./weapon";
 
-class Monster extends Actor {
-    let {
-        getPos,
-        setPos,
-        draw,
-        life,
-        inventory,
-        getName
-    } = Actor(spec);
+export class Monster extends Actor {
+    private game: Game;
 
-    let getInventory = function () {
-        return inventory;
+    constructor(spec: ActorTemplate, game: Game) {
+        super(spec);
+        this.game = game;
+    }
+
+    public hasInventory(){
+        return typeof this.inventory !== "undefined";
     };
 
-    let hasInventory = function () {
-        return inventory !== undefined;
-    };
-
-    let act = function () {
-        if (!life.isAlive()) {
+    public act () {
+        if (!this.life || !this.life.isAlive() || !this.game || !this.game.player) {
             return;
         }
-        let map = Game.level.map;
-        let playerPos = Game.player.getPos();
+        let map = this.game.level.map;
+        let playerPos = this.game.player.getPos();
 
-        let passableCallback = function (x, y) {
+
+        let passableCallback = function (x: number, y: number) {
             let tile = map.getTile({x: x, y: y});
-            return !tile.isBlocking();
+            if (tile) {
+                !tile.isBlocking();
+            }
+            return false;
         };
 
         let astar = new Path.AStar(
@@ -39,40 +38,28 @@ class Monster extends Actor {
             {topology: 4}
         );
 
-        let path = [];
-        let pathCallback = function (x, y) {
+        let path: any;
+        let pathCallback = function (x: number, y: number) {
             path.push([x, y]);
         };
-        astar.compute(getPos().x, getPos().y, pathCallback);
+        astar.compute(this.getPos().x, this.getPos().y, pathCallback);
 
         path.shift();
         if (path.length === 1) {
-            Game.player.life.takeDamage(
+            const inventory = this.getInventory();
+            const weapon = inventory? inventory.getCurrentWeapon(): new Weapon({});
+
+            this.game.player.life.takeDamage(
                 this,
-                getInventory().weapon,
                 10,
-                []
+                [],
+                weapon,
             );
             // call attack
         } else if (path.length > 1) {
             let newX = path[0][0];
             let newY = path[0][1];
-            setPos({x: newX, y: newY});
+            this.setPos({x: newX, y: newY});
         }
     };
-
-    return Object.freeze({
-        getPos,
-        setPos,
-        getName,
-        life,
-        hasInventory,
-        getInventory,
-        act,
-        draw
-    });
-};
-
-export {
-    Monster
-};
+}

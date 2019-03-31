@@ -1,17 +1,19 @@
 import { Items, Levels, Monsters, Settings, Colors } from './datafiles'
-import { Message } from './message'
+import { Message, dbg } from './message'
 
 import { Game } from './game'
 import { Item } from './item'
 import { Monster } from './monster'
 import { RNG, Map } from './dun'
-import { tileMap as makeTileMap, TileMap, Tile } from './map'
-import { Actor } from './actor'
+import { TileMap, Tile } from './map'
+import { Actor, ActorTemplate } from './actor'
 
 export interface ILevel {
   domain: string
   levelID: number
 }
+
+export type Staircase = ">" | "<";
 
 /**
  * A level is any area separated from the rest of the world by a
@@ -20,32 +22,42 @@ export interface ILevel {
 export class Level implements ILevel {
   public levelID: number;
   public domain: string;
-  private map: TileMap;
+  public map: TileMap;
   private monsters: Actor[];
   private items: Item[] = [];
+  private game: Game;
 
   constructor(level: ILevel) {
-    this.map = makeTileMap(Settings.mapW, Settings.mapH);
+    this.map = new TileMap(Settings.mapW, Settings.mapH);
     this.levelID = level.levelID;
     this.domain = level.domain;
     this.monsters = [];
 
-    this.map.generate()
-    this.generateActors(this.map)
+    this.map.generate();
+    this.generateActors(this.map);
+    this.game = Game.getSingleton();
+  }
+
+  public getItems() {
+    return this.items;
+  }
+
+  public getMonsters() {
+    return this.monsters;
   }
 
   public getFreeCells() {
     return this.map.getFreeCells()
   }
 
-  public createBeing(what, freeCells: Tile[], spec, activate: boolean) {
+  public createBeing(what: any, freeCells: Tile[], spec: ActorTemplate, activate = false) {
     let index = Math.floor(RNG.getUniform() * freeCells.length);
     let cell = freeCells[index];
     spec.x = cell.getPos().x
     spec.y = cell.getPos().y
-    let actor = what(spec)
+    let actor = new what(spec)
     if (activate) {
-      Game.scheduler.add(actor, true)
+      this.game.scheduler.add(actor, true)
     }
     return actor;
   }
@@ -91,17 +103,20 @@ export class Level implements ILevel {
   public draw () {
     this.map.draw()
     const exploredActors = [...this.monsters, ...this.items].filter(x => {
-      let tile = map.getTile(x.getPos())
-      return tile.isExplored()
+      let tile = this.map.getTile(x.getPos())
+      return tile && tile.isExplored()
     })
 
     for (const actor of exploredActors) {
       actor.draw()
     }
-    Game.player.draw()
+
+    if (this.game !== null && this.game.player !== null) {
+      this.game.player.draw();
+    }
   }
 
-  public getActorAt(tl) {
+  public getActorAt(tl: Tile) {
     if (!tl) {
       return null;
     }
@@ -112,25 +127,28 @@ export class Level implements ILevel {
       )
     });
 
-    return monster
+    return monster;
   }
 
-  public getNextLevel(staircase: ">" | "<") {
-    const currentLevel = Levels.find(l => l.levelID === this.levelID)
-    const nextLevelNumber = staircase === '>' ? currentLevel.levelID + 1 : currentLevel.levelID - 1
+  public getNextLevel(staircase: Staircase) {
+    const currentLevel = Levels.find(l => l.levelID === this.levelID);
+
+    if (!currentLevel) {
+      dbg(`Error: Level ${this.levelID} doesn't exist`);
+      return;
+    }
+    const nextLevelNumber = staircase === '>' ? currentLevel.levelID + 1 : currentLevel.levelID - 1;
 
     if (nextLevelNumber === Settings.game.winLevel) {
       Message(
         `You win the game by reaching the level ${Settings.game.winLevel}`
-      )
+      );
     }
 
     let nextLevel = Levels.find(l => l.levelID === nextLevelNumber)
     if (nextLevel) {
       return nextLevel
     }
-    return null
+    return currentLevel
   }
 }
-
-export { Level as makeLevel }

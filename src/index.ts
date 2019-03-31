@@ -10,5 +10,5 @@ function component() {
 document.body.appendChild(component());
 
 // Display.Rect.cache = true;
-const game = new Game();
+const game = Game.getSingleton();
 game.init();

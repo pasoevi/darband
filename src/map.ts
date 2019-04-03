@@ -13,15 +13,18 @@ export class Tile {
     private ch: string
     private col: string
 
-    constructor(spec) {
-        this.position = {
-            x: spec.x,
-            y: spec.y
-        }
-        this.block = spec.blocking
-        this.expl = spec.explored
-        this.ch = spec.ch
-        this.col = spec.col
+    constructor(
+        position: MapPosition,
+        blocking: boolean,
+        explored: boolean,
+        ch = "",
+        color = ""
+    ) {
+        this.position = position;
+        this.block = blocking;
+        this.expl = explored;
+        this.ch = ch;
+        this.col = color;
     }
 
     public getCh() {
@@ -136,12 +139,7 @@ export class TileMap {
     public generate() {
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
-                let wall = new Tile({
-                    x: x,
-                    y: y,
-                    blocking: true,
-                    explored: false
-                })
+                let wall = new Tile({ x: x, y: y}, true, false);
                 this.tiles.push(wall)
             }
         }

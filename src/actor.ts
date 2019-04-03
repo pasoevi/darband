@@ -1,21 +1,18 @@
-import { Message, dbg } from './Message'
+import { Message, dbg, msg } from './message'
 
 import { Colors } from './datafiles'
 import { Game } from './game'
-import { Weapon, weapon, Modifier } from './weapon'
+import { Weapon, Modifier } from './weapon'
 import { Item } from './item'
 import { MapPosition } from './map'
 
 const game = Game.getSingleton();
 
 export class Inventory {
-  private weapon: Weapon
+  private weapon?: Weapon
   private items: Item[]
 
   constructor() {
-    this.weapon = {
-      power: 10
-    }
     this.items = []
   }
 
@@ -90,7 +87,7 @@ export class Life {
 
   public die() {
     this.hp = 0
-    Message(`${this.actor.getName()} dies`)
+    msg(`${this.actor.getName()} dies`)
     game.scheduler.remove(this.actor)
   }
 
@@ -100,17 +97,12 @@ export class Life {
 
   /**
    * Take value damage from dealer, i.e subtract value from the dealer.
-   * @param dealer
-   * @param weapon - null means barehanded attack
-   * @param value - hp to subtract
-   * @param modifiers
-   * @return {number} actual damage taken.
    */
   public takeDamage(
     dealer: Actor,
     value: number,
     modifiers: Modifier[],
-    weapon: Weapon,
+    weapon?: Weapon,
   ) {
     let damageTaken = value
 
@@ -127,8 +119,8 @@ export class Life {
       damageTaken
     )
 
-    Message(`${this.hp} was and now is ${damageTaken} less`)
-    Message(
+    msg(`${this.hp} was and now is ${damageTaken} less`)
+    msg(
       `${dealer.getName()} attacks ${this.actor.getName()} for ${damageTaken} hp`,
       Colors.red
     )
@@ -255,10 +247,8 @@ export interface LifeTemplate {
   corpseName: string;
 }
 
-export interface ItemTemplate {
-  x: number;
-  y: number;
-  name: string;
+export interface ItemTemplate extends ActorTemplate {
+  power: number;
 }
 
 export interface AITemplate {

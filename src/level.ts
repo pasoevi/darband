@@ -1,5 +1,5 @@
 import { Items, Levels, Monsters, Settings, Colors } from './datafiles'
-import { Message, dbg } from './message'
+import { Message, dbg, msg } from './message'
 
 import { Game } from './game'
 import { Item } from './item'
@@ -50,7 +50,7 @@ export class Level implements ILevel {
     return this.map.getFreeCells()
   }
 
-  public createBeing(what: any, freeCells: Tile[], spec: ActorTemplate, activate = false) {
+  public createBeing(what: any, freeCells: Tile[], spec: Partial<ActorTemplate>, activate = false) {
     let index = Math.floor(RNG.getUniform() * freeCells.length);
     let cell = freeCells[index];
     spec.x = cell.getPos().x
@@ -140,7 +140,7 @@ export class Level implements ILevel {
     const nextLevelNumber = staircase === '>' ? currentLevel.levelID + 1 : currentLevel.levelID - 1;
 
     if (nextLevelNumber === Settings.game.winLevel) {
-      Message(
+      msg(
         `You win the game by reaching the level ${Settings.game.winLevel}`
       );
     }

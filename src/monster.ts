@@ -47,7 +47,7 @@ export class Monster extends Actor {
         path.shift();
         if (path.length === 1) {
             const inventory = this.getInventory();
-            const weapon = inventory? inventory.getCurrentWeapon(): new Weapon({});
+            const weapon = inventory? inventory.getCurrentWeapon(): undefined;
 
             this.game.player.life.takeDamage(
                 this,

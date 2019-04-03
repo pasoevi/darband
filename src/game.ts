@@ -2,7 +2,7 @@ import { Classes, Levels, Settings, Texts } from "./datafiles";
 import { Display, Engine, Scheduler } from "./dun";
 
 import { Level, ILevel } from "./level";
-import { Message } from "./message";
+import { msg, Message } from "./message";
 import { Player } from "./player";
 import { random } from "./lang";
 
@@ -13,7 +13,7 @@ export class Game {
     public engine: Engine;
     public level: Level;
     public player: Player;
-    log: [];
+    public log: Message[];
 
     private static game: Game;
 
@@ -63,7 +63,7 @@ export class Game {
     }
 
     private printWelcomeMsg() {
-        Message(random(Texts.en.quotes));
+        msg(random(Texts.en.quotes));
     }
 
     public init() {
@@ -97,6 +97,6 @@ export class Game {
         this.level.map.computeFov(newPos);
         this.level.draw();
 
-        Message(`You ${actionName} into the level ${level.levelID} of ${level.domain}`);
+        msg(`You ${actionName} into the level ${level.levelID} of ${level.domain}`);
     }
 };

@@ -1,7 +1,7 @@
 import { Actor, ActorTemplate, Inventory, LifeTemplate, Life } from "./actor";
 import { DIRS } from "./dun";
 import { Game } from "./game";
-import { Message } from "./message";
+import { msg } from "./message";
 import { Staircase } from "./level";
 import { random } from "./lang";
 import { WizardLife } from "./datafiles";
@@ -35,7 +35,7 @@ export class Player extends Actor{
                 this.game.switchLevel(nextLevel);
             }
         } else {
-            Message(`You cannot climb ${direction === ">" ? "down" : "up"} here`);
+            msg(`You cannot climb ${direction === ">" ? "down" : "up"} here`);
         }
     };
 
@@ -43,7 +43,7 @@ export class Player extends Actor{
         const pos = this.getPos();
 
         if (typeof pos === "undefined" || typeof this.inventory === "undefined") {
-            Message("Nothing to pick up");
+            msg("Nothing to pick up");
             return;
         }
 
@@ -52,7 +52,7 @@ export class Player extends Actor{
         this.inventory.pickItem(item);
     };
 
-    private moveOrAttack(dir) {
+    private moveOrAttack(dir: number[]) {
         // is there free space?
         const newX = this.getPos().x + dir[0];
         const newY = this.getPos().y + dir[1];
@@ -68,7 +68,7 @@ export class Player extends Actor{
 
         if (monster && monster.life && monster.life.isAlive()) {
             const inventory = this.getInventory();
-            const weapon = inventory ? inventory.getCurrentWeapon() : new Weapon({power: 10});
+            const weapon = inventory && inventory.getCurrentWeapon()
             monster.life.takeDamage(this, 10, [], weapon);
         } else {
             this.setPos({x: newX, y: newY});
@@ -77,30 +77,31 @@ export class Player extends Actor{
 
     public handleEvent(e: KeyboardEvent) {
         let code = e.keyCode;
-        let keyMap = {
-            38: 0,
-            33: 1,
-            39: 2,
-            34: 3,
-            40: 4,
-            35: 5,
-            37: 6,
-            36: 7,
-            getDirection: (code: number): Number => keyMap[code]
-        };
+        let keyMap = new WeakMap<Number, Number>();
+        keyMap.set(38, 0);
+        keyMap.set(33, 1);
+        keyMap.set(39, 2);
+        keyMap.set(34, 3);
+        keyMap.set(40, 4);
+        keyMap.set(35, 5);
+        keyMap.set(37, 6);
+        keyMap.set(36, 7);
 
         if (code === 13 || code === 32) {
             // Enter key was pressed
-            Message("Nothing much yet");
+            msg("Nothing much yet");
         } else if (code === 71) {
             this.handlePickItem();
         } else if (code === 188) {
             this.climb("<");
         } else if (code === 190) {
             this.climb(">");
-        } else if (keyMap.getDirection(code) !== undefined) { // one of numpad directions?
-            let dir = DIRS[8][keyMap.getDirection(code)];
-            this.moveOrAttack(dir);
+        } else if (keyMap.get(code) !== undefined) { // one of numpad directions?
+            const direction = keyMap.get(code);
+            if (direction) {
+                let dir = DIRS[8][direction.valueOf()];
+                this.moveOrAttack(dir);
+            }
         } else {
             return;
         }

@@ -7,29 +7,29 @@ import { Player } from "./player";
 import { random } from "./lang";
 
 export class Game {
-    public display: Display;
-    public logDisplay: Display;
-    public scheduler: Scheduler;
-    public engine: Engine;
-    public level: Level;
-    public player: Player;
+    public display: any;
+    public logDisplay: any;
+    public scheduler: any;
+    public engine: any;
+    public level: any;
+    public player: any;
     public log: Message[];
 
     private static game: Game;
 
     public static getSingleton() {
-        if (this.game) {
-            return this.game;
+        if (!this.game) {
+            this.game = new Game();
         }
 
-        this.game = new Game();
         return this.game;
     }
 
-    constructor() {
+    private constructor() {
+        this.level = null;
+        this.player = null;
         this.log = [];
         this.scheduler = new Scheduler.Simple();
-        this.level = new Level(Levels[Settings.game.startLevel]);
 
         this.display = new Display({
             width: Settings.windowW,
@@ -40,9 +40,29 @@ export class Game {
             width: Settings.windowW,
             height: Settings.logLength
         });
-
         this.engine = new Engine(this.scheduler);
+    }
 
+    private initDisplay() {
+        let gameDiv = document.getElementById("darband_game");
+        if (gameDiv) {
+            const gameContainer = this.display.getContainer();
+            const logContainer = this.logDisplay.getContainer();
+            if (gameContainer && logContainer) {
+                gameDiv.appendChild(gameContainer);
+                gameDiv.appendChild(logContainer);
+            }
+        } else {
+            console.log("Game div not found");
+        }
+    }
+
+    private printWelcomeMsg() {
+        msg(Game.getSingleton(), random(Texts.en.quotes));
+    }
+
+    public init() {
+        this.level = new Level(Levels[Settings.game.startLevel]);
         const freeCells = this.level.getFreeCells();
         this.player = this.level.createBeing(
             Player,
@@ -50,23 +70,6 @@ export class Game {
             random(Classes),
             true
         );
-    }
-
-    private initDisplay() {
-        let gameDiv = document.getElementById("darband_game");
-        if (gameDiv) {
-            gameDiv.appendChild(this.display.getContainer());
-            gameDiv.appendChild(this.logDisplay.getContainer());
-        } else {
-            console.log("Game div not found");
-        }
-    }
-
-    private printWelcomeMsg() {
-        msg(random(Texts.en.quotes));
-    }
-
-    public init() {
         this.initDisplay();
         this.level.draw();
 
@@ -97,6 +100,6 @@ export class Game {
         this.level.map.computeFov(newPos);
         this.level.draw();
 
-        msg(`You ${actionName} into the level ${level.levelID} of ${level.domain}`);
+        msg(Game.getSingleton(), `You ${actionName} into the level ${level.levelID} of ${level.domain}`);
     }
-};
+}

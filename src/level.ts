@@ -1,7 +1,7 @@
 import { Items, Levels, Monsters, Settings, Colors } from './datafiles'
 import { Message, dbg, msg } from './message'
 
-import { Game } from './game'
+import { Game } from './Game'
 import { Item } from './item'
 import { Monster } from './monster'
 import { RNG, Map } from './dun'
@@ -36,6 +36,7 @@ export class Level implements ILevel {
     this.map.generate();
     this.generateActors(this.map);
     this.game = Game.getSingleton();
+    this.draw();
   }
 
   public getItems() {
@@ -71,10 +72,10 @@ export class Level implements ILevel {
     let freeCells = map.getFreeCells()
 
     let possibleMonsters = Monsters.filter(monster =>
-      monster.race.domains.includes(this.levelID)
+      monster.race.domains.indexOf(this.levelID) >= 0
     )
     let possibleItems = Items.filter(item =>
-      item.domains.includes(this.levelID)
+      item.domains.indexOf(this.levelID) >= 0
     )
 
     possibleMonsters.forEach(spec => {
@@ -101,14 +102,14 @@ export class Level implements ILevel {
   }
 
   public draw () {
-    this.map.draw()
+    this.map.draw();
     const exploredActors = [...this.monsters, ...this.items].filter(x => {
-      let tile = this.map.getTile(x.getPos())
-      return tile && tile.isExplored()
+      let tile = this.map.getTile(x.getPos());
+      return tile && tile.isExplored();
     })
 
     for (const actor of exploredActors) {
-      actor.draw()
+      actor.draw();
     }
 
     if (this.game !== null && this.game.player !== null) {
@@ -121,11 +122,9 @@ export class Level implements ILevel {
       return null;
     }
 
-    let monster = this.monsters.find(function(mon) {
-      return (
-        mon.getPos().x === tl.getPos().x && mon.getPos().y === tl.getPos().y
-      )
-    });
+    let monster = this.monsters.find(mon =>
+      mon.getPos().x === tl.getPos().x && mon.getPos().y === tl.getPos().y
+    );
 
     return monster;
   }
@@ -141,6 +140,7 @@ export class Level implements ILevel {
 
     if (nextLevelNumber === Settings.game.winLevel) {
       msg(
+        this.game,
         `You win the game by reaching the level ${Settings.game.winLevel}`
       );
     }

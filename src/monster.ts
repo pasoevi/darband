@@ -1,14 +1,12 @@
 import { Actor, Inventory, ActorTemplate } from "./actor";
-import { Game } from "./game";
+import { Game } from "./Game";
 import { Path } from "./dun";
-import { Weapon } from "./weapon";
 
 export class Monster extends Actor {
-    private game: Game;
 
-    constructor(spec: ActorTemplate, game: Game) {
+    constructor(spec: ActorTemplate) {
         super(spec);
-        this.game = game;
+        this.game = Game.getSingleton();
     }
 
     public hasInventory(){

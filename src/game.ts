@@ -71,6 +71,7 @@ export class Game {
             true
         );
         this.initDisplay();
+        this.level.map.computeFov(this.player.getPos());
         this.level.draw();
 
         this.printWelcomeMsg();

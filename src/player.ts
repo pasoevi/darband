@@ -95,10 +95,8 @@ export class Player extends Actor{
             this.climb(">");
         } else if (keyMap[code] !== undefined) { // one of numpad directions?
             const direction = keyMap[code];
-            if (direction) {
-                let dir = DIRS[8][direction.valueOf()];
-                this.moveOrAttack(dir);
-            }
+            let dir = DIRS[8][direction];
+            this.moveOrAttack(dir);
         } else {
             return;
         }

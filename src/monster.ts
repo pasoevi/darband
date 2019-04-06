@@ -47,7 +47,6 @@ export class Monster extends Actor {
         }
 
         path.shift();
-        console.log(path);
         if (path.length === 1) {
             const inventory = this.getInventory();
             const weapon = inventory? inventory.getCurrentWeapon(): undefined;
@@ -64,7 +63,6 @@ export class Monster extends Actor {
                 x: path[0][0],
                 y: path[0][1]
             }
-            console.log(newPos);
             this.setPos(newPos);
         }
     };

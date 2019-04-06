@@ -1,10 +1,10 @@
-import { Items, Levels, Monsters, Settings, Colors } from './datafiles'
-import { Message, dbg, msg } from './message'
+import { Items, Levels, Monsters, Settings, Colors, getPossibleMonsters } from './datafiles'
+import { dbg, msg } from './message'
 
 import { Game } from './Game'
 import { Item } from './item'
 import { Monster } from './monster'
-import { RNG, Map } from './dun'
+import { RNG } from './dun'
 import { TileMap, Tile } from './map'
 import { Actor, ActorTemplate } from './actor'
 
@@ -71,21 +71,18 @@ export class Level implements ILevel {
   public generateActors(map: TileMap) {
     let freeCells = map.getFreeCells()
 
-    let possibleMonsters = Monsters.filter(monster =>
-      monster.race.domains.indexOf(this.levelID) >= 0
-    )
-    let possibleItems = Items.filter(item =>
-      item.domains.indexOf(this.levelID) >= 0
-    )
+    const possibleMonsters = getPossibleMonsters(this.levelID);
+
+    let possibleItems = Items.filter(item => item.domains.indexOf(this.levelID) >= 0);
 
     possibleMonsters.forEach(spec => {
-      let n = RNG.getUniformInt(0, 5)
+      let n = RNG.getUniformInt(0, 50);
       for (let i = 0; i < n; i++) {
-        this.monsters.push(this.createBeing(Monster, freeCells, spec))
+        this.monsters.push(this.createBeing(Monster, freeCells, spec));
       }
     })
 
-    for(const spec of possibleItems) {
+    for (const spec of possibleItems) {
       let n = RNG.getUniformInt(0, 5)
       for (let i = 0; i < n; i++) {
         this.items.push(this.createBeing(Item, freeCells, spec));
@@ -101,10 +98,15 @@ export class Level implements ILevel {
     }
   }
 
-  public draw () {
+  public draw() {
     this.map.draw();
     const exploredActors = [...this.monsters, ...this.items].filter(x => {
-      let tile = this.map.getTile(x.getPos());
+      const pos = x.getPos();
+      if (!pos) {
+        return false;
+      }
+
+      let tile = this.map.getTile(pos);
       return tile && tile.isExplored();
     })
 
@@ -122,8 +124,13 @@ export class Level implements ILevel {
       return null;
     }
 
-    let monster = this.monsters.find(mon =>
-      mon.getPos().x === tl.getPos().x && mon.getPos().y === tl.getPos().y
+    let monster = this.monsters.find(mon => {
+      const monsterPosition = mon.getPos();
+      if (!monsterPosition) {
+        return false;
+      }
+      return monsterPosition.x === tl.getPos().x && monsterPosition.y === tl.getPos().y
+    }
     );
 
     return monster;

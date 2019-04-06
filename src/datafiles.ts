@@ -1,3 +1,5 @@
+import { ActorTemplate } from "./actor";
+
 const Colors = {
     wall: "#c3c3c3",
     floor: "#323232",
@@ -145,7 +147,8 @@ const WizardLife = {
 const SimpleLife = {
     hp: 110,
     maxHp: 110,
-    defence: 2
+    defence: 2,
+    corpseName: "corpse",
 };
 
 const SimpleAI = {
@@ -363,7 +366,7 @@ const Items = [
     }
 ];
 
-const Monsters = [
+const Monsters: ActorTemplate[] = [
     {
         name: "orc",
         ch: "o",
@@ -400,6 +403,13 @@ const Monsters = [
         race: Races.elf
     }
 ];
+
+export function getPossibleMonsters(levelID: number) {
+    const possibleMonsters = Monsters
+        .filter(monster => monster.race.domains.indexOf(levelID) >= 0)
+        .map(monster => monster.lifeTemplate ? monster : {...monster, lifeTemplate: SimpleLife});
+    return possibleMonsters;
+}
 
 const Texts = {
     en: {

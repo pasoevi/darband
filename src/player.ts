@@ -1,6 +1,5 @@
 import { Actor, ActorTemplate, Inventory, LifeTemplate, Life } from "./actor";
 import { DIRS } from "./dun";
-import { Game } from "./Game";
 import { msg } from "./message";
 import { Staircase } from "./level";
 import { random } from "./lang";
@@ -50,8 +49,12 @@ export class Player extends Actor{
 
     private moveOrAttack(dir: number[]) {
         // is there free space?
-        const newX = this.getPos().x + dir[0];
-        const newY = this.getPos().y + dir[1];
+        const position = this.getPos();
+        if (!position) {
+            return;
+        }
+        const newX = position.x + dir[0];
+        const newY = position.y + dir[1];
         const newPos = {x: newX, y: newY};
 
         const map = this.game.level.map;

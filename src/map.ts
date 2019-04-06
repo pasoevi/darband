@@ -1,17 +1,16 @@
 import { FOV, Map, RNG } from './dun'
 
-import { Colors } from './datafiles'
-import { Game } from './game'
+import { Colors, Settings } from './datafiles'
+import { Game } from './Game'
 import { random } from './lang'
 
-const game = Game.getSingleton()
-
 export class Tile {
-    private position: MapPosition
-    private block: boolean
-    private expl: boolean
-    private ch: string
-    private col: string
+    private game: Game;
+    private position: MapPosition;
+    private block: boolean;
+    private expl: boolean;
+    private ch: string;
+    private col: string;
 
     constructor(
         position: MapPosition,
@@ -20,6 +19,7 @@ export class Tile {
         ch = "",
         color = ""
     ) {
+        this.game = Game.getSingleton();
         this.position = position;
         this.block = blocking;
         this.expl = explored;
@@ -28,7 +28,7 @@ export class Tile {
     }
 
     public getCh() {
-        if (typeof this.ch !== 'undefined') {
+        if (this.ch !== "") {
             return this.ch
         }
         return this.isBlocking() ? '#' : '.'
@@ -58,7 +58,7 @@ export class Tile {
     }
 
     public isBlocking() {
-        return this.block
+        return this.block;
     }
 
     public setBlocking(blocking: boolean) {
@@ -75,8 +75,8 @@ export class Tile {
 
     public draw() {
         if (this.expl) {
-            let color = this.getColor()
-            game.display.draw(
+            let color = this.getColor();
+            this.game.display.draw(
                 this.position.x,
                 this.position.y,
                 this.getCh(),
@@ -84,22 +84,24 @@ export class Tile {
                 '#000'
             )
         } else {
-            game.display.draw(this.position.x, this.position.y, ' ')
+            this.game.display.draw(this.position.x, this.position.y, ' ', "#000", "#000");
         }
     }
 }
 
 export class TileMap {
-    private width: number
-    private height: number
-    private tiles: Tile[]
-    private fov: FOV.PreciseShadowcasting
+    private game: Game;
+    private width: number;
+    private height: number;
+    private tiles: Tile[];
+    private fov: any;
 
     constructor(width: number, height: number) {
+        this.game = Game.getSingleton();
         this.width = width
         this.height = height
         this.tiles = []
-        this.fov = new FOV.PreciseShadowcasting(this.lightPasses)
+        this.fov = new FOV.PreciseShadowcasting(this.lightPasses.bind(this))
     }
 
     public getTiles() {
@@ -144,44 +146,42 @@ export class TileMap {
             }
         }
 
-        let digger = new Map.Digger()
+        let digger = new Map.Digger(Settings.mapW, Settings.mapH);
         let digCallback = (x: number, y: number, value: number) => {
             let tileAt = this.getTile({ x: x, y: y })
             if (tileAt) {
-                tileAt.setBlocking(value > 0) // TODO: Fix
-                tileAt.setExplored(false)
+                tileAt.setBlocking(value > 0);
+                tileAt.setExplored(false);
             }
         }
 
-        digger.create(digCallback)
+        digger.create(digCallback.bind(this));
     }
 
     public getFreeCells() {
-        return this.tiles.filter(function(elem) {
-            return !elem.isBlocking()
-        })
+        return this.tiles.filter(elem => !elem.isBlocking());
     }
 
     /* input callback */
     private lightPasses(x: number, y: number) {
-        const tileAt = this.getTile({ x, y })
-        if (tileAt && tileAt.getCh() === '.') {
-            return true
+        const tileAt = this.getTile({ x, y });
+        if (tileAt && tileAt.getCh() !== '#') {
+            return true;
         }
-        return false
+        return false;
     }
 
     public computeFov(pos: MapPosition) {
         /* output callback */
-        this.fov.compute(pos.x, pos.y, 10, (x, y, r, visibility) => {
+        this.fov.compute(pos.x, pos.y, 10, (x: number, y: number, r: number, visibility: boolean) => {
             if (visibility) {
                 let tileAt = this.getTile({ x: x, y: y })
                 if (tileAt && !tileAt.isExplored()) {
                     tileAt.setExplored(true)
 
-                    let monsterAt = game.level.getActorAt(tileAt)
+                    let monsterAt = this.game.level.getActorAt(tileAt)
                     if (monsterAt) {
-                        game.scheduler.add(monsterAt, false)
+                        this.game.scheduler.add(monsterAt, false)
                     }
                 }
             }
@@ -190,7 +190,7 @@ export class TileMap {
 
     public draw() {
         for (const tile of this.tiles) {
-            tile.draw()
+            tile.draw();
         }
     }
 }

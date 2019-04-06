@@ -1,18 +1,19 @@
 import { Message, dbg, msg } from './message'
 
 import { Colors } from './datafiles'
-import { Game } from './game'
+import { Game } from './Game'
 import { Weapon, Modifier } from './weapon'
 import { Item } from './item'
 import { MapPosition } from './map'
 
-const game = Game.getSingleton();
 
 export class Inventory {
-  private weapon?: Weapon
-  private items: Item[]
+  private game: Game;
+  private weapon?: Weapon;
+  private items: Item[];
 
   constructor() {
+    this.game = Game.getSingleton();
     this.items = []
   }
 
@@ -71,13 +72,15 @@ class AI {
 }
 
 export class Life {
-  private hp: number
-  private maxHp: number
-  private defence: number
-  private corpseName: string
-  private actor: Actor
+  private game: Game;
+  private hp: number;
+  private maxHp: number;
+  private defence: number;
+  private corpseName: string;
+  private actor: Actor;
 
   constructor(spec: LifeTemplate, actor: Actor) {
+    this.game = Game.getSingleton();
     this.hp = spec.hp
     this.maxHp = spec.maxHp
     this.defence = spec.defence
@@ -87,8 +90,8 @@ export class Life {
 
   public die() {
     this.hp = 0
-    msg(`${this.actor.getName()} dies`)
-    game.scheduler.remove(this.actor)
+    msg(this.game, `${this.actor.getName()} dies`)
+    this.game.scheduler.remove(this.actor)
   }
 
   public isAlive() {
@@ -119,8 +122,9 @@ export class Life {
       damageTaken
     )
 
-    msg(`${this.hp} was and now is ${damageTaken} less`)
+    msg(this.game, `${this.hp} was and now is ${damageTaken} less`)
     msg(
+      this.game,
       `${dealer.getName()} attacks ${this.actor.getName()} for ${damageTaken} hp`,
       Colors.red
     )
@@ -147,6 +151,7 @@ export class Life {
  * @constructor
  */
 export class Actor {
+  protected game: Game;
   private position: MapPosition
   private name: string
   private col: string
@@ -157,6 +162,7 @@ export class Actor {
   public ai?: AI
 
   constructor(spec: ActorTemplate) {
+    this.game = Game.getSingleton();
     this.position = {
       x: spec.x,
       y: spec.y
@@ -199,18 +205,18 @@ export class Actor {
   }
 
   public setPos(pos: MapPosition) {
-    if (!game.level.map.isPosOnMap(pos)) {
+    if (!this.game.level.map.isPosOnMap(pos)) {
       dbg('Not on map')
       return
     }
 
-    this.position = pos
-    game.level.map.computeFov(pos)
+    this.position = pos;
+    this.game.level.map.computeFov(pos);
   }
 
   public draw() {
     if (this.life !== undefined && this.life.isAlive()) {
-      game.display.draw(
+      this.game.display.draw(
         this.position.x,
         this.position.y,
         this.ch,
@@ -218,7 +224,7 @@ export class Actor {
         Colors.black
       )
     } else {
-      game.display.draw(
+      this.game.display.draw(
         this.position.x,
         this.position.y,
         this.ch,

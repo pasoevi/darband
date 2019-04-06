@@ -1,31 +1,31 @@
+const path = require('path');
+const HTMLPlugin = require('html-webpack-plugin');
+
 module.exports = {
-    entry: "./src/index.ts",
-    output: {
-        filename: "./dist/main.js",
-    },
-    resolve: {
-        extensions: [".ts", ".tsx", ".js", ".jsx"]
-    },
-    module: {
-        rules: [
-            //...
-            /* No longer needed as rotjs is now installed as a dependency
-            {
-                test: /rot\.min\.js$/,
-                loader: "exports?ROT"
-            },
-            */
-            {
-                test: /\.([jt]s|jsx)$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "awesome-typescript-loader"
-                }
-            },
-            { enforce: "pre", test: /\.[jt]s$/, loader: "source-map-loader" }
-        ]
-    },
-    externals: {
-        "rot-js": "Rot"
-    }
+  entry: './src/index.ts',
+  devtool: 'inline-source-map',
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      }
+    ]
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ]
+  },
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist')
+  },
+  plugins: [
+    new HTMLPlugin()
+  ],
+  'externals': {
+    // don't bundle the 'react' npm package with our bundle.js
+    // but get it from a global 'React' variable
+    // 'rot-js': 'Rot'
+  },
 };

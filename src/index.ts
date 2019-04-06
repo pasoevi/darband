@@ -1,5 +1,7 @@
 // import { Display } from "./dun";
-import { Game } from "./game";
+import { Game } from "./Game";
+import { Hello } from "./hello";
+import { Display } from "./dun";
 
 function component() {
     let element = document.createElement("div");
@@ -9,6 +11,6 @@ function component() {
 
 document.body.appendChild(component());
 
-// Display.Rect.cache = true;
+Display.Rect.cache = true;
 const game = Game.getSingleton();
 game.init();

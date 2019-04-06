@@ -5,7 +5,6 @@ import { msg } from "./message";
 import { Staircase } from "./level";
 import { random } from "./lang";
 import { WizardLife } from "./datafiles";
-import { Weapon } from "./weapon";
 
 export class Player extends Actor{
     public life: Life;

@@ -5,13 +5,14 @@ import { Level, ILevel } from "./level";
 import { msg, Message } from "./message";
 import { Player } from "./player";
 import { random } from "./lang";
+import { Map } from "./dun";
 
 export class Game {
     public display: any;
     public logDisplay: any;
     public scheduler: any;
     public engine: any;
-    public level: any;
+    public level: Level;
     public player: any;
     public log: Message[];
 
@@ -26,7 +27,7 @@ export class Game {
     }
 
     private constructor() {
-        this.level = null;
+        this.level = new Level(Levels[Settings.game.startLevel]);
         this.player = null;
         this.log = [];
         this.scheduler = new Scheduler.Simple();
@@ -62,7 +63,6 @@ export class Game {
     }
 
     public init() {
-        this.level = new Level(Levels[Settings.game.startLevel]);
         const freeCells = this.level.getFreeCells();
         this.player = this.level.createBeing(
             Player,
@@ -79,6 +79,9 @@ export class Game {
     }
 
     public switchLevel(level: ILevel) {
+        if (!this.level) {
+            return;
+        }
         /* remove old beings from the scheduler */
         this.scheduler.clear();
         this.scheduler.add(this.player, true);

@@ -29,32 +29,32 @@ export class Tile {
 
     public getCh() {
         if (this.ch !== "") {
-            return this.ch
+            return this.ch;
         }
-        return this.isBlocking() ? '#' : '.'
+        return this.isBlocking() ? '#' : '.';
     }
 
     public setCh(char: string) {
-        this.ch = char
+        this.ch = char;
     }
 
     public getColor() {
         if (this.col) {
-            return this.col
+            return this.col;
         }
-        return this.getCh() === '#' ? Colors.wall : Colors.floor
+        return this.getCh() === '#' ? Colors.wall : Colors.floor;
     }
 
     public setColor(color: string) {
-        this.col = color
+        this.col = color;
     }
 
     public setExplored(explored: boolean) {
-        this.expl = explored
+        this.expl = explored;
     }
 
     public isExplored() {
-        return this.expl
+        return this.expl;
     }
 
     public isBlocking() {
@@ -62,15 +62,15 @@ export class Tile {
     }
 
     public setBlocking(blocking: boolean) {
-        this.block = blocking
+        this.block = blocking;
     }
 
     public getPos() {
-        return this.position
+        return this.position;
     }
 
     public setPos(position: MapPosition) {
-        this.position = position
+        this.position = position;
     }
 
     public draw() {
@@ -98,28 +98,26 @@ export class TileMap {
 
     constructor(width: number, height: number) {
         this.game = Game.getSingleton();
-        this.width = width
-        this.height = height
-        this.tiles = []
-        this.fov = new FOV.PreciseShadowcasting(this.lightPasses.bind(this))
+        this.width = width;
+        this.height = height;
+        this.tiles = [];
+        this.fov = new FOV.PreciseShadowcasting(this.lightPasses.bind(this));
     }
 
     public getTiles() {
-        return this.tiles
+        return this.tiles;
     }
 
     public isPosOnMap(position: MapPosition) {
         if (position.x < 0 || position.x >= this.width) {
-            return false
+            return false;
         }
 
-        return position.y >= 0 && position.y <= this.height
+        return position.y >= 0 && position.y <= this.height;
     }
 
     public getTile(pos: MapPosition) {
-        return this.tiles.find(el => {
-            return el.getPos().x === pos.x && el.getPos().y === pos.y
-        })
+        return this.tiles.find(el => el.getPos().x === pos.x && el.getPos().y === pos.y);
     }
 
     public getRandomTile() {
@@ -131,18 +129,18 @@ export class TileMap {
         direction: string,
         color: string
     ) {
-        let index = Math.floor(RNG.getUniform() * freeCells.length)
-        let staircase = freeCells[index]
-        staircase.setCh(direction)
-        staircase.setColor(color)
-        return staircase
+        let index = Math.floor(RNG.getUniform() * freeCells.length);
+        let staircase = freeCells[index];
+        staircase.setCh(direction);
+        staircase.setColor(color);
+        return staircase;
     }
 
     public generate() {
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 let wall = new Tile({ x: x, y: y}, true, false);
-                this.tiles.push(wall)
+                this.tiles.push(wall);
             }
         }
 
@@ -177,11 +175,11 @@ export class TileMap {
             if (visibility) {
                 let tileAt = this.getTile({ x: x, y: y })
                 if (tileAt && !tileAt.isExplored()) {
-                    tileAt.setExplored(true)
+                    tileAt.setExplored(true);
 
                     let monsterAt = this.game.level.getActorAt(tileAt)
                     if (monsterAt) {
-                        this.game.scheduler.add(monsterAt, false)
+                        this.game.scheduler.add(monsterAt, false);
                     }
                 }
             }

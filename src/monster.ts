@@ -1,4 +1,4 @@
-import { Actor, Inventory, ActorTemplate } from "./actor";
+import { Actor, ActorTemplate } from "./actor";
 import { Game } from "./Game";
 import { Path } from "./dun";
 
@@ -13,7 +13,7 @@ export class Monster extends Actor {
         return typeof this.inventory !== "undefined";
     };
 
-    public act () {
+    public act() {
         if (!this.life || !this.life.isAlive() || !this.game || !this.game.player) {
             return;
         }
@@ -21,7 +21,7 @@ export class Monster extends Actor {
         let playerPos = this.game.player.getPos();
 
 
-        let passableCallback = function (x: number, y: number) {
+        let passableCallback = (x: number, y: number) => {
             let tile = map.getTile({x: x, y: y});
             if (tile) {
                 !tile.isBlocking();
@@ -29,18 +29,21 @@ export class Monster extends Actor {
             return false;
         };
 
-        let astar = new Path.AStar(
+        let astar = new Path.Dijkstra(
             playerPos.x,
             playerPos.y,
             passableCallback,
             {topology: 4}
         );
 
-        let path: any;
-        let pathCallback = function (x: number, y: number) {
+        let path: number[][] = [];
+        let pathCallback = (x: number, y: number) => {
             path.push([x, y]);
         };
-        astar.compute(this.getPos().x, this.getPos().y, pathCallback);
+        const position = this.getPos();
+        if (position) {
+            astar.compute(position.x, position.y, pathCallback);
+        }
 
         path.shift();
         if (path.length === 1) {

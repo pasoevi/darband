@@ -1,5 +1,4 @@
-import { Message, dbg, msg } from './message'
-
+import { dbg, msg } from './message'
 import { Colors } from './datafiles'
 import { Game } from './Game'
 import { Weapon, Modifier } from './weapon'
@@ -152,7 +151,7 @@ export class Life {
  */
 export class Actor {
   protected game: Game;
-  private position: MapPosition
+  private position?: MapPosition
   private name: string
   private col: string
   private ch: string
@@ -163,14 +162,16 @@ export class Actor {
 
   constructor(spec: ActorTemplate) {
     this.game = Game.getSingleton();
-    this.position = {
-      x: spec.x,
-      y: spec.y
+    if (spec.x && spec.y){
+      this.position = {
+        x: spec.x,
+        y: spec.y
+      }
     }
 
-    this.name = spec.name
-    this.col = spec.col
-    this.ch = spec.ch
+    this.name = spec.name ? spec.name : "";
+    this.col = spec.col ? spec.col : Colors.red;
+    this.ch = spec.ch ? spec.ch : "?";
 
     const lifeTemplate =
       spec.lifeTemplate || (spec.lifeTemplate)
@@ -215,6 +216,10 @@ export class Actor {
   }
 
   public draw() {
+    if (!this.position) {
+      return;
+    }
+
     if (this.life !== undefined && this.life.isAlive()) {
       this.game.display.draw(
         this.position.x,
@@ -236,15 +241,16 @@ export class Actor {
 }
 
 export interface ActorTemplate {
-  x: number;
-  y: number;
-  speed: number;
-  name: string;
-  col: string;
-  ch: string; // TODO: Make a type that lists every possible visible character
+  x?: number;
+  y?: number;
+  speed?: number;
+  name?: string;
+  col?: string;
+  ch?: string; // TODO: Make a type that lists every possible visible character
   lifeTemplate?: LifeTemplate;
   itemTemplate?: ItemTemplate;
   aiTemplate?: ItemTemplate;
+  race: any;
 }
 export interface LifeTemplate {
   hp: number;
@@ -262,5 +268,3 @@ export interface AITemplate {
   y: number;
   name: string;
 }
-
-

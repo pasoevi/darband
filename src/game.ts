@@ -12,7 +12,7 @@ export class Game {
     public logDisplay: any;
     public scheduler: any;
     public engine: any;
-    public level: Level;
+    public level?: Level;
     public player: any;
     public log: Message[];
 
@@ -27,7 +27,6 @@ export class Game {
     }
 
     private constructor() {
-        this.level = new Level(Levels[Settings.game.startLevel]);
         this.player = null;
         this.log = [];
         this.scheduler = new Scheduler.Simple();
@@ -42,6 +41,14 @@ export class Game {
             height: Settings.logLength
         });
         this.engine = new Engine(this.scheduler);
+    }
+
+    public getLevel() {
+        if (!this.level) {
+            this.level = new Level(Levels[Settings.game.startLevel]);
+        }
+
+        return this.level;
     }
 
     private initDisplay() {
@@ -63,6 +70,7 @@ export class Game {
     }
 
     public init() {
+        this.level = new Level(Levels[Settings.game.startLevel]);
         const freeCells = this.level.getFreeCells();
         this.player = this.level.createBeing(
             Player,

@@ -22,10 +22,10 @@ export class Player extends Actor{
 
     // When invoked on a staircase or similar location, moves to that domain.
     public climb(direction: Staircase) {
-        let tileMap = this.game.level.map;
+        let tileMap = this.game.getLevel().map;
         let tile = tileMap.getTile(this.getPos());
         if (tile && direction === tile.getCh()) {
-            const nextLevel = this.game.level.getNextLevel(direction);
+            const nextLevel = this.game.getLevel().getNextLevel(direction);
             if (nextLevel) {
                 this.game.switchLevel(nextLevel);
             }
@@ -42,7 +42,7 @@ export class Player extends Actor{
             return;
         }
 
-        const item = random(this.game.level.getItems());
+        const item = random(this.game.getLevel().getItems());
 
         this.inventory.pickItem(item);
     };
@@ -57,13 +57,13 @@ export class Player extends Actor{
         const newY = position.y + dir[1];
         const newPos = {x: newX, y: newY};
 
-        const map = this.game.level.map;
+        const map = this.game.getLevel().map;
         const newTile = map.getTile(newPos);
         if (!newTile || newTile.isBlocking()) {
             return;
         }
 
-        const monster = this.game.level.getActorAt(newTile);
+        const monster = this.game.getLevel().getActorAt(newTile);
 
         if (monster && monster.life && monster.life.isAlive()) {
             const inventory = this.getInventory();
@@ -103,8 +103,8 @@ export class Player extends Actor{
             return;
         }
 
-        this.game.level.map.computeFov(this.getPos());
-        this.game.level.draw();
+        this.game.getLevel().map.computeFov(this.getPos());
+        this.game.getLevel().draw();
         this.draw();
 
         window.removeEventListener("keydown", this);

@@ -177,9 +177,9 @@ export class TileMap {
                 if (tileAt && !tileAt.isExplored()) {
                     tileAt.setExplored(true);
 
-                    let monsterAt = this.game.level.getActorAt(tileAt)
+                    let monsterAt = this.game.getLevel().getActorAt(tileAt)
                     if (monsterAt) {
-                        this.game.scheduler.add(monsterAt, false);
+                        this.game.scheduler.add(monsterAt, true);
                     }
                 }
             }

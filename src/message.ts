@@ -29,5 +29,5 @@ export class Message {
 }
 
 export function dbg (text: string) {
-    console.debug(text);
+    console.log(text);
 }

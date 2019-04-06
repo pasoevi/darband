@@ -17,7 +17,7 @@ export class Monster extends Actor {
         if (!this.life || !this.life.isAlive() || !this.game || !this.game.player) {
             return;
         }
-        let map = this.game.level.map;
+        let map = this.game.getLevel().map;
         let playerPos = this.game.player.getPos();
 
 
@@ -29,10 +29,11 @@ export class Monster extends Actor {
             return false;
         };
 
-        let astar = new Path.Dijkstra(
+        let astar = new Path.AStar(
             playerPos.x,
             playerPos.y,
-            passableCallback,
+            () => true,
+            // passableCallback,
             {topology: 4}
         );
 
@@ -46,6 +47,7 @@ export class Monster extends Actor {
         }
 
         path.shift();
+        console.log(path);
         if (path.length === 1) {
             const inventory = this.getInventory();
             const weapon = inventory? inventory.getCurrentWeapon(): undefined;
@@ -58,9 +60,12 @@ export class Monster extends Actor {
             );
             // call attack
         } else if (path.length > 1) {
-            let newX = path[0][0];
-            let newY = path[0][1];
-            this.setPos({x: newX, y: newY});
+            const newPos = {
+                x: path[0][0],
+                y: path[0][1]
+            }
+            console.log(newPos);
+            this.setPos(newPos);
         }
     };
 }

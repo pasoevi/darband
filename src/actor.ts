@@ -151,7 +151,7 @@ export class Life {
  */
 export class Actor {
   protected game: Game;
-  private position?: MapPosition
+  private position: MapPosition
   private name: string
   private col: string
   private ch: string
@@ -166,6 +166,11 @@ export class Actor {
       this.position = {
         x: spec.x,
         y: spec.y
+      }
+    } else {
+      this.position = {
+        x: -1,
+        y: -1
       }
     }
 
@@ -206,13 +211,13 @@ export class Actor {
   }
 
   public setPos(pos: MapPosition) {
-    if (!this.game.level.map.isPosOnMap(pos)) {
+    if (!this.game.getLevel().map.isPosOnMap(pos)) {
       dbg('Not on map')
       return
     }
 
     this.position = pos;
-    this.game.level.map.computeFov(pos);
+    // this.game.getLevel().map.computeFov(pos);
   }
 
   public draw() {

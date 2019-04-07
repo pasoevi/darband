@@ -26,14 +26,13 @@ export class Monster extends Actor {
             if (tile) {
                 !tile.isBlocking();
             }
-            return false;
+            return true;
         };
 
         let astar = new Path.AStar(
             playerPos.x,
             playerPos.y,
-            () => true,
-            // passableCallback,
+            passableCallback,
             {topology: 4}
         );
 

@@ -476,7 +476,7 @@ const Settings = {
         y: 0
     },
     game: {
-        winLevel: 14,
+        winLevel: 0,
         startLevel: 16
     }
 };

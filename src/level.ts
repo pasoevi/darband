@@ -76,7 +76,7 @@ export class Level implements ILevel {
     let possibleItems = Items.filter(item => item.domains.indexOf(this.levelID) >= 0);
 
     possibleMonsters.forEach(spec => {
-      let n = RNG.getUniformInt(0, 50);
+      let n = RNG.getUniformInt(0, 30);
       for (let i = 0; i < n; i++) {
         this.monsters.push(this.createBeing(Monster, freeCells, spec));
       }

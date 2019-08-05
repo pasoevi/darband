@@ -1,5 +1,5 @@
 import { Actor, ActorTemplate } from "./actor";
-import { Game } from "./Game";
+import { Game } from "./game";
 import { Path } from "./dun";
 
 export class Monster extends Actor {

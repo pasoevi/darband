@@ -1,7 +1,7 @@
 import { FOV, Map, RNG } from './dun'
 
 import { Colors, Settings } from './datafiles'
-import { Game } from './Game'
+import { Game } from './game'
 import { random } from './lang'
 
 export class Tile {

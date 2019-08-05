@@ -1,4 +1,4 @@
-import { Game } from "./Game";
+import { Game } from "./game";
 import { Display } from "./dun";
 
 function component() {

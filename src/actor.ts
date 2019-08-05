@@ -1,6 +1,6 @@
 import { dbg, msg } from './message'
 import { Colors } from './datafiles'
-import { Game } from './Game'
+import { Game } from './game'
 import { Weapon, Modifier } from './weapon'
 import { Item } from './item'
 import { MapPosition } from './map'

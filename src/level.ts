@@ -1,7 +1,7 @@
 import { Items, Levels, Monsters, Settings, Colors, getPossibleMonsters } from './datafiles'
 import { dbg, msg } from './message'
 
-import { Game } from './Game'
+import { Game } from './game'
 import { Item } from './item'
 import { Monster } from './monster'
 import { RNG } from './dun'

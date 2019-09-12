@@ -1,4 +1,4 @@
-import { Game } from "./Game";
+import { Game } from "./game";
 import { Settings, Colors } from "./datafiles";
 
 export function msg(game: Game, text: string, color?: string) {

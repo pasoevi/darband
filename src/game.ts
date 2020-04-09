@@ -7,6 +7,8 @@ import { Player } from "./player";
 import { random } from "./lang";
 import { Map } from "./dun";
 
+import Tiles from "./assets/tiles.png";
+
 export class Game {
     public display: any;
     public logDisplay: any;
@@ -30,15 +32,35 @@ export class Game {
         this.player = null;
         this.log = [];
         this.scheduler = new Scheduler.Simple();
+        const tileSet = document.createElement("img");
+        tileSet.src = Tiles;
 
-        this.display = new Display({
-            width: Settings.windowW,
-            height: Settings.windowH - 3
-        });
+        const displayOptions = {
+          layout: "tile" as any,
+          bg: "transparent",
+          tileWidth: 32,
+          tileHeight: 32,
+          tileSet: tileSet,
+          tileMap: {
+            "@": [64, 32],
+            "#": [0, 32],
+            "a": [32, 0],
+            "!": [0, 0],
+            "~": [128, 64],
+            ".": [128, 64],
+            "d": [0, 64],
+            "<": [32, 32],
+            ">": [32, 32],
+          },
+          width: Settings.windowW,
+          height: Settings.windowH - 3,
+        };
+
+        this.display = new Display(displayOptions as any);
 
         this.logDisplay = new Display({
-            width: Settings.windowW,
-            height: Settings.logLength
+            width: Settings.windowW * 3.55,
+            height: Settings.logHeight,
         });
         this.engine = new Engine(this.scheduler);
     }

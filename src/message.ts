@@ -20,7 +20,7 @@ export class Message {
     public print() {
         this.game.logDisplay.clear();
         let i = 0;
-        for (let msg of this.game.log.slice(-Settings.logLength)) {
+        for (let msg of this.game.log.slice(-Settings.logHeight)) {
             this.game.logDisplay.draw(Settings.msg.x, Settings.msg.y + i, " ");
             this.game.logDisplay.drawText(Settings.msg.x, Settings.msg.y + i, `%c{${msg.color}}${msg.text}%c{}`);
             i += 1;

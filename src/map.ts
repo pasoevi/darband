@@ -84,7 +84,7 @@ export class Tile {
                 '#000'
             )
         } else {
-            this.game.display.draw(this.position.x, this.position.y, ' ', "#000", "#000");
+            this.game.display.draw(this.position.x, this.position.y, "~", "#000", "#000");
         }
     }
 }

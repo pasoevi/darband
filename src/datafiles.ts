@@ -465,11 +465,11 @@ const Settings = {
     version: "0.0.1",
     debug: true,
     test: false,
-    mapW: 80,
-    mapH: 30,
-    windowW: 80,
-    windowH: 33,
-    logLength: 7,
+    mapW: 36,
+    mapH: 13,
+    windowW: 36,
+    windowH: 16,
+    logHeight: 8,
     msg: {
         // Message box location
         x: 5,

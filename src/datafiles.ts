@@ -443,7 +443,8 @@ become a monster`,
             "Fear the reckoning of those you have wronged.",
             "He who becomes a sheep will be eaten by the wolf.",
             "The art of living well and the art of dying well is one.",
-            "Heroism consists in hanging on one minute longer."
+            "Heroism consists in hanging on one minute longer.",
+            "Men brave and generous live the best lives, seldom will they sorrow; then there are fools, afraid of everything, who grumble instead of giving."
         ],
         poems: []
     },

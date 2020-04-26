@@ -15,7 +15,7 @@ later in the game and have the objective of the game changed, as well.
 
 ## Game Mechanics
 
-You start your game at level 16 of the dungeons. There are lower levels that you can go to if you choose so, but your way should be up. You are never fully prepared for the bottom levels. It is way easier to die by chance unless you are prepared and resistant of at least most of the common hazards, in bottom levels than on the top ones.  
+You start your game at level 16 of the dungeons. There are lower levels that you can go to if you choose so, but your way should be up. You are never fully prepared for the bottom levels. It is way easier to die by chance unless you are prepared and resistant of at least most of the common hazards, in bottom levels than on the top ones.
 
 The objective of the game is to go up the level 0. But there are many paths leading upwards. Only few out of very many possibilities will take you to the surface. The rest of the paths upwards are dead ends.
 
@@ -25,14 +25,14 @@ While the objective of the game is to climb to the surface, which makes the top 
 
 The main challenge of the game is to figure out the correct sequence of staircases to take to reach the surface.
 
-Inspiration from Sirens of Titan climb up from caves on Mercury. You could be reaching dead ends unless you figure out the pattern on the sequence of staircases to make. 
- 
+Inspiration from Sirens of Titan climb up from caves on Mercury. You could be reaching dead ends unless you figure out the pattern on the sequence of staircases to make.
+
 
 ## Some points for further study
 
 - Inspiration from The Neverending Story!!
 - The fortress is the character.
-- The fortress doesn't want you to leave. 
+- The fortress doesn't want you to leave.
 - Sometimes maybe it does.
 - Players can create new monsters and items and they may remain in the game if more players use them
 
@@ -464,8 +464,8 @@ field of view, they all stop tracking you.
 ### Resistance
 
 Resistance is a family of technically similar but unrelated skills of
-resistances to various threats. Please note, that there is no single
-Resistance skill, but the following, independent skills:
+resistances to various harmful effects. Please note, that there is no
+single Resistance skill, but the following, independent skills:
 
 1.  Cold  Resistance
 
@@ -478,6 +478,9 @@ Resistance skill, but the following, independent skills:
     Mutation comes into play later in the game. If other threats are more
     deadly to you the weaker you are, the lower your HP, XP, etc, to this
     particular effect you are the more vulnerable the **larger** you are.
+
+    **note:** For **Humans**, mutation resistence merely delays the effects
+    of mutation.
 
 
 
@@ -510,7 +513,7 @@ activated, such monsters get out of your way.
 ## Combat
 
 ***NOTE:*** This is a general overview of the combat system. For
-information on skills in various aspects of fighting and weapon usage,
+information on skills in various aspects of fighting and weapon use,
 see the skills section.
 
 Winning the game isn't primarily about killing monsters and becoming
@@ -530,7 +533,7 @@ the <span class="underline">Religion</span> section.
 
 
 
-### Armoruy
+### Armor
 
 
 

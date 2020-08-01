@@ -23,6 +23,9 @@ export class Game {
     public static getSingleton() {
         if (!this.game) {
             this.game = new Game();
+        } else {
+            console.log('Arturs: Returning existing instance');
+
         }
 
         return this.game;

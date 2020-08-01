@@ -1,0 +1,18 @@
+html,
+body {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+canvas {
+    outline: 1px solid white;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: indigo;
+    text-align: center;
+}

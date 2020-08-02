@@ -47,6 +47,8 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     }
 
     public drawSprite(sprite: number, x: number, y: number): void {
+        console.log(`sprite: ${sprite}, x: ${x}, y: ${y}`);
+
         const ctx = this.context;
         const spriteSize = 32; // TODO: Get from the image filename
         const { tileSize } = this.options;

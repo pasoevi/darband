@@ -6,9 +6,21 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     canvas: HTMLCanvasElement;
     options: RenderOptions;
     spritesheet: HTMLImageElement;
+    isRendererReady = false;
+    onRendererReady: () => void;
+
+    public setOnRendererReady(onReady: () => void): void {
+        if (this.isRendererReady) {
+            onReady();
+        } else {
+            this.onRendererReady = onReady;
+        }
+    }
 
     constructor(canvasElementId: string, options: RenderOptions) {
-        const canvas = document.getElementById("game") as HTMLCanvasElement;
+        const canvas = document.getElementById(
+            canvasElementId,
+        ) as HTMLCanvasElement;
         this.canvas = canvas;
         this.context = this.canvas.getContext("2d");
         this.options = options;
@@ -28,6 +40,10 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     public loadAssets(): void {
         this.spritesheet = new Image();
         this.spritesheet.src = sprites;
+        this.spritesheet.onload = () => {
+            this.isRendererReady = true;
+            this.onRendererReady();
+        };
     }
 
     public drawSprite(sprite: number, x: number, y: number): void {
@@ -51,9 +67,14 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     public draw(x: number, y: number, tile: temporaryAny): void {
         const ctx = this.context;
         const { tileSize } = this.options;
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         /* ctx.fillStyle = "blue";
         ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize); */
         this.drawSprite(0, x, y);
+    }
+
+    public clearScreen(): void {
+        const ctx = this.context;
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }

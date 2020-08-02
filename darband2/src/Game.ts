@@ -1,6 +1,7 @@
 import { RenderingLibrary, InputHandler } from "./lib/interfaces";
 import { Player } from "./player";
 import { Wall, Floor, Tile } from "./Tile";
+import { Monster } from "./Monster";
 
 export class Game {
     private static instance: Game;
@@ -9,16 +10,17 @@ export class Game {
     player: Player;
     tiles: Tile[];
     onRendererReady: () => void;
+    monsters: any;
 
     private constructor(renderingLibrary: RenderingLibrary) {
         this.renderer = renderingLibrary;
         this.renderer.setOnRendererReady(() => {
             this.render();
-        })
+        });
     }
 
     public setupGame(): void {
-        this.player = new Player("You", 4, 0, 0);
+        this.player = new Player("You", 0, 0, 0);
 
         document.querySelector("html").onkeypress = (e) => {
             if (e.key == "w") this.player.y--;
@@ -32,6 +34,27 @@ export class Game {
 
     generateLevel(): void {
         this.tiles = this.generateTiles();
+        this.monsters = this.generateMonsters();
+    }
+    generateMonsters(): Monster[] {
+        const monsters = [];
+        monsters.push(new Monster("Red bug", 4, 10, 13));
+        return monsters;
+    }
+
+    renderTiles(): void {
+        const numTiles = this.renderer.options.numTiles;
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                this.getTile(i, j).draw();
+            }
+        }
+    }
+
+    renderMonsters(): void {
+        for (const monster of this.monsters) {
+            monster.draw();
+        }
     }
 
     generateTiles(): Tile[] {
@@ -76,15 +99,9 @@ export class Game {
     }
 
     render(): void {
-        console.log('Arturs: Render');
-
         this.renderer.clearScreen();
-        const numTiles = this.renderer.options.numTiles;
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
-                this.getTile(i, j).draw();
-            }
-        }
+        this.renderTiles();
+        this.renderMonsters();
         this.player.draw();
     }
 }

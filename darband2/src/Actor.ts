@@ -20,6 +20,7 @@ export class Actor {
     }
 
     draw(): void {
-        this.game.renderer.draw(this.x, this.y, this.tile);
+        console.log(`${this.name}: ${this.tile}`);
+        this.game.renderer.drawSprite(this.tile, this.x, this.y);
     }
 }

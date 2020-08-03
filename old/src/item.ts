@@ -1,4 +1,4 @@
-import { Actor, ActorTemplate } from "./Actor";
+import { Actor, ActorTemplate } from "./actor";
 
 export class Item extends Actor {
     constructor(spec: ActorTemplate) {

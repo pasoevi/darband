@@ -26,7 +26,7 @@ export class Monster extends Actor {
             );
         });
 
-        if (neighbors.length) {
+        if (neighbors.length > 0) {
             const playerTile = this.game.player?.getTile();
             neighbors.sort(
                 (a, b) => a.distance(playerTile) - b.distance(playerTile),

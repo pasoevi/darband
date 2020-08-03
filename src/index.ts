@@ -1,14 +1,23 @@
-import { Game } from "./game";
-import { Display } from "./dun";
+import { CanvasDrawingLibrary } from "./lib/rendering";
+import { Game, GameOptions } from "./Game";
+import { RenderOptions } from "./lib/interfaces";
+import "./index.css";
+import { CanvasUI } from "./ui/CanvasUI";
 
-function component() {
-    let element = document.createElement("div");
-    element.setAttribute("id", "darband_game");
-    return element;
+function setupGame() {
+    const renderOptions: RenderOptions = {
+        tileSize: 32,
+        numTiles: 19,
+        uiWidth: 4,
+    };
+    const renderingLibrary = new CanvasDrawingLibrary("game", renderOptions);
+    const gameUI = new CanvasUI();
+    const gameOptions: GameOptions = {
+        renderingLibrary: renderingLibrary,
+        ui: gameUI,
+    };
+    const game = Game.getInstance(gameOptions);
+    game.setupGame();
 }
 
-document.body.appendChild(component());
-
-Display.Rect.cache = true;
-const game = Game.getSingleton();
-game.init();
+setupGame();

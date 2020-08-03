@@ -1,63 +1,78 @@
-import { Actor, ActorTemplate } from "./actor";
-import { Game } from "./game";
-import { Path } from "./dun";
+import { Actor, ActorTemplate } from "./Actor";
+import { SimpleLife } from "./Data";
+import { Tile } from "./Tile";
 
 export class Monster extends Actor {
     constructor(spec: ActorTemplate) {
-        super(spec);
-        this.game = Game.getSingleton();
+        super({ ...spec, lifeTemplate: SimpleLife });
     }
 
-    public hasInventory() {
-        return typeof this.inventory !== "undefined";
+    public update(): void {
+        this.act();
     }
 
-    public act() {
-        if (
-            !this.life ||
-            !this.life.isAlive() ||
-            !this.game ||
-            !this.game.player
-        ) {
-            return;
-        }
-        let map = this.game.getLevel().map;
-        let playerPos = this.game.player.getPos();
+    public getAdjacentTiles(): Array<Tile> {
+        return this.game.getTile(this.x, this.y).getAdjacentPassableTiles();
+    }
 
-        let passableCallback = (x: number, y: number) => {
-            let tile = map.getTile({ x: x, y: y });
-            if (tile) {
-                !tile.isBlocking();
-            }
-            return true;
-        };
+    private act() {
+        let neighbors = this.getAdjacentTiles();
 
-        let astar = new Path.AStar(playerPos.x, playerPos.y, passableCallback, {
-            topology: 4,
+        neighbors = neighbors.filter((t) => {
+            const actors = t.getActorsOnThis();
+            return (
+                actors.length === 0 ||
+                actors.filter((a) => a.isPlayer).length > 0
+            );
         });
 
-        let path: number[][] = [];
-        let pathCallback = (x: number, y: number) => {
-            path.push([x, y]);
-        };
-        const position = this.getPos();
-        if (position) {
-            astar.compute(position.x, position.y, pathCallback);
-        }
-
-        path.shift();
-        if (path.length === 1) {
-            const inventory = this.getInventory();
-            const weapon = inventory ? inventory.getCurrentWeapon() : undefined;
-
-            this.game.player.life.takeDamage(this, 10, [], weapon);
-            // call attack
-        } else if (path.length > 1) {
-            const newPos = {
-                x: path[0][0],
-                y: path[0][1],
-            };
-            this.setPos(newPos);
+        if (neighbors.length > 0) {
+            const playerTile = this.game.player?.getTile();
+            neighbors.sort(
+                (a, b) => a.distance(playerTile) - b.distance(playerTile),
+            );
+            const newTile = neighbors[0];
+            this.tryMove(
+                newTile.x - this.getTile().x,
+                newTile.y - this.getTile().y,
+            );
         }
     }
 }
+
+export class RedBug extends Monster {
+    constructor(spec: ActorTemplate) {
+        super(spec);
+    }
+}
+
+/* class Bird extends Monster {
+    constructor(tile) {
+        super(tile, 4, 3);
+    }
+}
+
+class Snake extends Monster {
+    constructor(tile) {
+        super(tile, 5, 1);
+    }
+}
+
+class Tank extends Monster {
+    constructor(tile) {
+        super(tile, 6, 2);
+    }
+}
+
+class Eater extends Monster {
+    constructor(tile) {
+        super(tile, 7, 1);
+    }
+}
+
+class Jester extends Monster {
+    constructor(tile) {
+        super(tile, 8, 2);
+    }
+}
+ */

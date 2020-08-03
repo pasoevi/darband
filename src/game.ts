@@ -1,142 +1,225 @@
-import { Classes, Levels, Settings, Texts } from "./datafiles";
-import { Display, Engine, Scheduler } from "./dun";
-
-import { Level, ILevel } from "./level";
-import { msg, Message } from "./message";
+import { RenderingLibrary, GameUI } from "./lib/interfaces";
 import { Player } from "./player";
-import { random } from "./lang";
-import { Map } from "./dun";
+import { Wall, Floor, Tile } from "./Tile";
+import { Monster } from "./Monster";
+import { randomRange, flatten, tryTo } from "./Util";
+import { getPossibleMonsters } from "./Data";
+import { ActorTemplate } from "./Actor";
 
-import Tiles from "./assets/tiles.png";
+export interface GameOptions {
+    renderingLibrary: RenderingLibrary;
+    ui: GameUI;
+}
 
 export class Game {
-    public display: any;
-    public logDisplay: any;
-    public scheduler: any;
-    public engine: any;
-    public level?: Level;
-    public player: any;
-    public log: Message[];
+    private static instance: Game;
+    renderer: RenderingLibrary;
+    ui: GameUI;
+    player = (null as unknown) as Player;
+    tiles: Array<Array<Tile>> = [];
+    onRendererReady: () => void = () => {
+        /* noop */
+    };
+    monsters: Monster[] = [];
+    levelID = 1;
 
-    private static game: Game;
-
-    public static getSingleton() {
-        if (!this.game) {
-            this.game = new Game();
-        } else {
-            console.log('Arturs: Returning existing instance');
-
-        }
-
-        return this.game;
-    }
-
-    private constructor() {
-        this.player = null;
-        this.log = [];
-        this.scheduler = new Scheduler.Simple();
-        const tileSet = document.createElement("img");
-        tileSet.src = Tiles;
-
-        const displayOptions = {
-          layout: "tile" as any,
-          bg: "transparent",
-          tileWidth: 32,
-          tileHeight: 32,
-          tileSet: tileSet,
-          tileMap: {
-            "@": [64, 32],
-            "#": [0, 32],
-            "a": [32, 0],
-            "!": [0, 0],
-            "~": [128, 64],
-            ".": [128, 64],
-            "d": [0, 64],
-            "<": [32, 32],
-            ">": [32, 32],
-          },
-          width: Settings.windowW,
-          height: Settings.windowH - 3,
-        };
-
-        this.display = new Display(displayOptions as any);
-
-        this.logDisplay = new Display({
-            width: Settings.windowW * 3.55,
-            height: Settings.logHeight,
+    private constructor(options: GameOptions) {
+        this.renderer = options.renderingLibrary;
+        this.ui = options.ui;
+        this.renderer.setOnRendererReady(() => {
+            this.render();
         });
-        this.engine = new Engine(this.scheduler);
     }
 
-    public getLevel() {
-        if (!this.level) {
-            this.level = new Level(Levels[Settings.game.startLevel]);
-        }
-
-        return this.level;
+    private getRandomTile(condition?: (tile: Tile) => boolean): Tile {
+        const allTiles = flatten<Tile>(this.tiles);
+        const possibleTiles =
+            condition === undefined ? allTiles : allTiles.filter(condition);
+        const randomTileIndex = randomRange(0, possibleTiles.length - 1);
+        return possibleTiles[randomTileIndex];
     }
 
-    private initDisplay() {
-        let gameDiv = document.getElementById("darband_game");
-        if (gameDiv) {
-            const gameContainer = this.display.getContainer();
-            const logContainer = this.logDisplay.getContainer();
-            if (gameContainer && logContainer) {
-                gameDiv.appendChild(gameContainer);
-                gameDiv.appendChild(logContainer);
-            }
+    public getRandomPassableTile(): Tile {
+        return this.getRandomTile((t: Tile) => t.passable);
+    }
+
+    public getTiles(condition?: (tile: Tile) => boolean): Array<Tile> {
+        const allTiles = flatten<Tile>(this.tiles);
+        const possibleTiles =
+            condition === undefined ? allTiles : allTiles.filter(condition);
+        return possibleTiles;
+    }
+
+    public getPassableTiles(): Array<Tile> {
+        return this.getTiles((t: Tile) => t.passable);
+    }
+
+    public setupGame(): void {
+        const html = document.querySelector("html");
+        if (html === null) {
+            throw Error("Please run the app in the browser environment");
         } else {
-            console.log("Game div not found");
+            html.onkeydown = (e) => {
+                if (this.player === undefined) {
+                    return;
+                }
+                if (e.key == "w") {
+                    this.player.tryMove(0, -1);
+                }
+                if (e.key == "s") {
+                    this.player.tryMove(0, 1);
+                }
+                if (e.key == "a") {
+                    this.player.tryMove(-1, 0);
+                }
+                if (e.key == "d") {
+                    this.player.tryMove(1, 0);
+                }
+
+                // Monster movements (temporary feature)
+                if (e.key == "ArrowUp") {
+                    this.monsters[0].y--;
+                }
+                if (e.key == "ArrowDown") {
+                    this.monsters[0].y++;
+                }
+                if (e.key == "ArrowLeft") {
+                    this.monsters[0].x--;
+                }
+                if (e.key == "ArrowRight") {
+                    this.monsters[0].x++;
+                }
+
+                this.render();
+            };
+        }
+        this.generateLevel();
+    }
+
+    generateLevel(): void {
+        tryTo("generate map", () => {
+            return (
+                this.generateTiles() ===
+                this.getRandomPassableTile().getConnectedTiles().length
+            );
+        });
+
+        const startingTile = this.getRandomPassableTile();
+
+        // Create player
+        this.player = new Player({
+            x: startingTile.x,
+            y: startingTile.y,
+        });
+
+        this.monsters = this.generateMonsters();
+    }
+
+    public createBeing<T>(
+        // what: typeof Actor,
+        what: { new (spec: ActorTemplate): T },
+        // freeCells: Tile[],
+        spec: Partial<ActorTemplate>,
+        activate = false,
+    ): T {
+        const startingTile = this.getRandomPassableTile();
+        spec.x = startingTile.x;
+        spec.y = startingTile.y;
+        const actor = new what(spec);
+        if (activate) {
+            // this.game.scheduler.add(actor, true);
+        }
+        return actor;
+    }
+
+    generateMonsters(): Monster[] {
+        const monsters: Monster[] = [];
+        const possibleMonsters = getPossibleMonsters(this.levelID);
+
+        possibleMonsters.forEach((spec) => {
+            const n = randomRange(0, 15);
+            for (let i = 0; i < n; i++) {
+                monsters.push(this.createBeing(Monster, spec));
+            }
+        });
+
+        return monsters;
+    }
+
+    renderTiles(): void {
+        const numTiles = this.renderer.options.numTiles;
+        for (let i = 0; i < numTiles; i++) {
+            for (let j = 0; j < numTiles; j++) {
+                this.getTile(i, j).draw();
+            }
         }
     }
 
-    private printWelcomeMsg() {
-        msg(Game.getSingleton(), random(Texts.en.quotes));
+    renderMonsters(): void {
+        for (const monster of this.monsters) {
+            monster.draw();
+        }
     }
 
-    public init() {
-        this.level = new Level(Levels[Settings.game.startLevel]);
-        const freeCells = this.level.getFreeCells();
-        this.player = this.level.createBeing(
-            Player,
-            freeCells,
-            random(Classes),
-            true
-        );
-        this.initDisplay();
-        this.level.map.computeFov(this.player.getPos());
-        this.level.draw();
+    generateTiles(): number {
+        let passableTiles = 0;
+        const tiles: Array<Array<Tile>> = [];
+        const numTiles = this.renderer.options.numTiles;
+        for (let i = 0; i < numTiles; i++) {
+            tiles[i] = [];
+            for (let j = 0; j < numTiles; j++) {
+                if (Math.random() < 0.3 || !this.inBounds(i, j)) {
+                    tiles[i][j] = new Wall(i, j);
+                } else {
+                    tiles[i][j] = new Floor(i, j);
+                    passableTiles++;
+                }
+            }
+        }
 
-        this.printWelcomeMsg();
-        this.engine.start();
+        this.tiles = tiles;
+        return passableTiles;
     }
 
-    public switchLevel(level: ILevel) {
-        if (!this.level) {
-            return;
+    inBounds(x: number, y: number): boolean {
+        const numTiles = this.renderer.options.numTiles;
+        return x > 0 && y > 0 && x < numTiles - 1 && y < numTiles - 1;
+    }
+
+    getTile(x: number, y: number): Tile {
+        if (this.inBounds(x, y)) {
+            return this.tiles[x][y];
+        } else {
+            return new Wall(x, y);
         }
-        /* remove old beings from the scheduler */
-        this.scheduler.clear();
-        this.scheduler.add(this.player, true);
+    }
 
-        let newLevel = new Level(level);
-        if (!newLevel) {
-            return;
+    public static getInstance(options?: GameOptions): Game {
+        if (Game.instance === undefined) {
+            if (options === undefined) {
+                throw new Error(
+                    "getInstance needs to be passed the parameters when called for the fist time",
+                );
+            }
+            Game.instance = new Game(options);
         }
+        return Game.instance;
+    }
 
-        if (this.player === null) {
-            return;
+    public tick(): void {
+        for (let k = this.monsters.length - 1; k >= 0; k--) {
+            if (this.monsters[k].life?.isAlive()) {
+                this.monsters[k].update();
+            } else {
+                this.monsters.splice(k, 1);
+            }
         }
+    }
 
-        let newPos = random(newLevel.getFreeCells(), (elem) =>  elem.getCh() === "<").getPos();
-
-        const actionName = level.levelID > this.level.levelID ? "descend" : "ascend";
-        this.level = newLevel;
-
-        this.player.setPos(newPos);
-        this.level.map.computeFov(newPos);
-        this.level.draw();
-
-        msg(Game.getSingleton(), `You ${actionName} into the level ${level.levelID} of ${level.domain}`);
+    render(): void {
+        this.renderer.clearScreen();
+        this.renderTiles();
+        this.renderMonsters();
+        this.player?.draw();
     }
 }

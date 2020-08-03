@@ -141,7 +141,7 @@ class AI {
 
 export class Actor {
     name: string;
-    sprite: number;
+    sprite?: number;
     x: number;
     y: number;
     game: Game;
@@ -170,7 +170,9 @@ export class Actor {
     }
 
     draw(): void {
-        this.game.renderer.drawSprite(this.sprite, this.x, this.y);
+        if (this.sprite !== undefined) {
+            this.game.renderer.drawSprite(this.sprite, this.x, this.y);
+        }
     }
 
     tryMove(dx: number, dy: number): boolean {

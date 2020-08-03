@@ -29,7 +29,7 @@ export class Game {
     }
 
     public getRandomTile(condition?: (tile: Tile) => boolean): Tile {
-        const allTiles = flatten(this.tiles);
+        const allTiles = flatten<Tile>(this.tiles);
         const possibleTiles =
             condition === undefined ? allTiles : allTiles.filter(condition);
         const randomTileIndex = randomRange(0, possibleTiles.length - 1);
@@ -59,6 +59,7 @@ export class Game {
                 }
 
                 // Monster movements (temporary feature)
+                console.log(this.monsters);
                 if (e.which == 38) {
                     this.monsters[0].y--;
                 }

@@ -478,6 +478,27 @@ become a monster`,
     },
 };
 
+// Begin COMMANDS
+
+enum Commands {
+    MOVE_UP = "MOVE_UP",
+    MOVE_RIGHT = "MOVE_RIGHT",
+    MOVE_DOWN = "MOVE_DOWN",
+    MOVE_LEFT = "MOVE_LEFT",
+    PICK_ITEM = "PICK_ITEM",
+    DROP_ITEM = "DROP_ITEM",
+    DROP_LAST_ITEM = "DROP_LAST_ITEM",
+    QUAFF = "QUAFF",
+    OPEN_INVENTORY = "OPEN_INVENTORY",
+    WIELD = "WIELD",
+    UNWIELD = "UNWIELD",
+    THROW = "THROW",
+    INVOKE = "INVOKE",
+    PRAY = "PRAY",
+}
+
+// End COMMANDS
+
 const Settings = {
     programName: "darband",
     version: "0.0.1",
@@ -497,6 +518,22 @@ const Settings = {
         winLevel: 0,
         startLevel: 16,
     },
+    keybindings: {
+        [Commands.MOVE_UP]: "",
+        [Commands.MOVE_RIGHT]: "",
+        [Commands.MOVE_DOWN]: "",
+        [Commands.MOVE_LEFT]: "",
+        [Commands.PICK_ITEM]: "",
+        [Commands.DROP_ITEM]: "",
+        [Commands.DROP_LAST_ITEM]: "",
+        [Commands.QUAFF]: "",
+        [Commands.OPEN_INVENTORY]: "",
+        [Commands.WIELD]: "",
+        [Commands.UNWIELD]: "",
+        [Commands.THROW]: "",
+        [Commands.INVOKE]: "",
+        [Commands.PRAY]: ""
+    }
 };
 
 export {

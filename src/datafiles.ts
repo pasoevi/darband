@@ -17,131 +17,131 @@ const Colors = {
     black: "#000000",
     orange: "#aa8811",
     blue: "#0000FF",
-    purple: "#440044"
+    purple: "#440044",
 };
 
 export const ActorType = {
     MONSTER: "monster",
     WEAPON: "weapon",
-    POTION: "potion"
+    POTION: "potion",
 };
 
 const Levels = [
     {
         domain: "abstracts",
-        levelID: 0
+        levelID: 0,
     },
     {
         domain: "dungeons",
-        levelID: 1
+        levelID: 1,
     },
     {
         domain: "dungeons",
-        levelID: 2
+        levelID: 2,
     },
     {
         domain: "dungeons",
-        levelID: 3
+        levelID: 3,
     },
     {
         domain: "dungeons",
-        levelID: 4
+        levelID: 4,
     },
     {
         domain: "dungeons",
-        levelID: 5
+        levelID: 5,
     },
     {
         domain: "dungeons",
-        levelID: 6
+        levelID: 6,
     },
     {
         domain: "dungeons",
-        levelID: 7
+        levelID: 7,
     },
     {
         domain: "dungeons",
-        levelID: 8
+        levelID: 8,
     },
     {
         domain: "dungeons",
-        levelID: 9
+        levelID: 9,
     },
     {
         domain: "dungeons",
-        levelID: 10
+        levelID: 10,
     },
     {
         domain: "dungeons",
-        levelID: 11
+        levelID: 11,
     },
     {
         domain: "dungeons",
-        levelID: 12
+        levelID: 12,
     },
     {
         domain: "dungeons",
-        levelID: 13
+        levelID: 13,
     },
     {
         domain: "gates",
-        levelID: 14
+        levelID: 14,
     },
     {
         domain: "gates",
-        levelID: 15
+        levelID: 15,
     },
     {
         domain: "gates",
-        levelID: 16
+        levelID: 16,
     },
     {
         domain: "gates",
-        levelID: 17
+        levelID: 17,
     },
     {
         domain: "gates",
-        levelID: 18
+        levelID: 18,
     },
     {
         domain: "gates",
-        levelID: 19
+        levelID: 19,
     },
     {
         domain: "gates",
-        levelID: 20
+        levelID: 20,
     },
     {
         domain: "gates",
-        levelID: 21
+        levelID: 21,
     },
     {
         domain: "gates",
-        levelID: 22
+        levelID: 22,
     },
     {
         domain: "gates",
-        levelID: 23
+        levelID: 23,
     },
     {
         domain: "gates",
-        levelID: 24
+        levelID: 24,
     },
     {
         domain: "gates",
-        levelID: 25
+        levelID: 25,
     },
     {
         domain: "gates",
-        levelID: 26
-    }
+        levelID: 26,
+    },
 ];
 
 const WizardLife = {
     hp: 11100,
     maxHp: 11100,
     defence: 2,
-    corpseName: "wizzard corpse"
+    corpseName: "wizzard corpse",
 };
 
 const SimpleLife = {
@@ -156,7 +156,7 @@ const SimpleAI = {
     moveCount: 0,
     skills: [],
     xp: 10,
-    xpLevel: 1
+    xpLevel: 1,
 };
 
 const Races = {
@@ -166,10 +166,10 @@ const Races = {
             strength: 10,
             dexterity: 10,
             constitution: 10,
-            providence: 10
+            providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [0, 1, 2]
+        domains: [0, 1, 2],
     },
 
     kobold: {
@@ -178,10 +178,10 @@ const Races = {
             strength: 10,
             dexterity: 10,
             constitution: 10,
-            providence: 10
+            providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [0, 1, 2]
+        domains: [0, 1, 2],
     },
 
     orc: {
@@ -190,10 +190,10 @@ const Races = {
             strength: 10,
             dexterity: 10,
             constitution: 10,
-            providence: 10
+            providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [0, 1, 2, 3]
+        domains: [0, 1, 2, 3],
     },
 
     dwarf: {
@@ -202,10 +202,10 @@ const Races = {
             strength: 10,
             dexterity: 10,
             constitution: 10,
-            providence: 10
+            providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [13, 14, 15, 16]
+        domains: [13, 14, 15, 16],
     },
 
     man: {
@@ -214,10 +214,10 @@ const Races = {
             strength: 10,
             dexterity: 10,
             constitution: 10,
-            providence: 10
+            providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [3]
+        domains: [3],
     },
 
     troll: {
@@ -226,10 +226,10 @@ const Races = {
             strength: 10,
             dexterity: 10,
             constitution: 10,
-            providence: 10
+            providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [2]
+        domains: [2],
     },
 
     elf: {
@@ -238,10 +238,10 @@ const Races = {
             strength: 10,
             dexterity: 10,
             constitution: 10,
-            providence: 10
+            providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [5]
+        domains: [5],
     },
 
     dragon: {
@@ -250,11 +250,11 @@ const Races = {
             strength: 10,
             dexterity: 10,
             constitution: 10,
-            providence: 10
+            providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [4]
-    }
+        domains: [4],
+    },
 };
 
 const Classes = [
@@ -264,7 +264,7 @@ const Classes = [
         col: Colors.white,
         themeColor: Colors.wealth,
         speed: 120,
-        lifeTemplate: WizardLife
+        lifeTemplate: WizardLife,
     },
     {
         name: "dark elf",
@@ -272,7 +272,7 @@ const Classes = [
         col: Colors.white,
         themeColor: Colors.magic,
         speed: 130,
-        lifeTemplate: WizardLife
+        lifeTemplate: WizardLife,
     },
     {
         name: "wizard",
@@ -280,7 +280,7 @@ const Classes = [
         col: Colors.white,
         themeColor: Colors.magic,
         speed: 100,
-        lifeTemplate: WizardLife
+        lifeTemplate: WizardLife,
     },
     {
         name: "dwarf",
@@ -288,7 +288,7 @@ const Classes = [
         col: Colors.white,
         themeColor: Colors.gold_metallic,
         speed: 90,
-        lifeTemplate: WizardLife
+        lifeTemplate: WizardLife,
     },
     {
         name: "human",
@@ -296,8 +296,8 @@ const Classes = [
         col: Colors.white,
         themeColor: Colors.ice,
         speed: 120,
-        lifeTemplate: WizardLife
-    }
+        lifeTemplate: WizardLife,
+    },
 ];
 
 const Items = [
@@ -306,108 +306,112 @@ const Items = [
         ch: "_",
         col: "#dfd",
         speed: 100,
-        domains: [1, 2, 5, 6]
+        domains: [1, 2, 5, 6],
     },
     {
         name: "long sword",
         ch: "}",
         col: "#2f9",
         speed: 100,
-        domains: [1, 5, 5, 6]
+        domains: [1, 5, 5, 6],
     },
     {
         name: "knife",
         ch: "-",
         col: "#2f9",
         speed: 100,
-        domains: [1, 4, 5, 6]
+        domains: [1, 4, 5, 6],
     },
     {
         name: "orc",
         ch: "+",
         col: "#2f9",
         speed: 100,
-        domains: [3, 4, 5, 6]
+        domains: [3, 4, 5, 6],
     },
     {
         name: "orc",
         ch: "(",
         col: "#2f9",
         speed: 100,
-        domains: [3, 4, 5, 6]
+        domains: [3, 4, 5, 6],
     },
     {
         name: "orc",
         ch: ")",
         col: "#2f9",
         speed: 100,
-        domains: [3, 4, 5, 6]
+        domains: [3, 4, 5, 6],
     },
     {
         name: "orc",
         ch: ")",
         col: "#2f9",
         speed: 100,
-        domains: [3, 4, 5, 6]
+        domains: [3, 4, 5, 6],
     },
     {
         name: "blue potion",
         ch: "_",
         col: Colors.blue,
         speed: 100,
-        domains: [1, 3]
+        domains: [1, 3],
     },
     {
         name: "purple potion",
         ch: "_",
         col: Colors.purple,
         speed: 100,
-        domains: [2, 3, 4, 5]
-    }
+        domains: [2, 3, 4, 5],
+    },
 ];
 
-const Monsters: ActorTemplate[] = [
+const Monsters = [
     {
         name: "orc",
         ch: "o",
         col: "#2f9",
         speed: 100,
-        race: Races.orc
+        race: Races.orc,
     },
     {
         name: "gray wolf",
         ch: "w",
         col: "#888",
         speed: 120,
-        race: Races.goblin
+        race: Races.goblin,
     },
     {
         name: "dragon",
         ch: "D",
         col: "#0fc",
         speed: 80,
-        race: Races.dragon
+        race: Races.dragon,
     },
     {
         name: "dwarf",
         ch: "d",
         col: "#9f1",
         speed: 100,
-        race: Races.dwarf
+        race: Races.dwarf,
     },
     {
         name: "elf",
         ch: "e",
         col: "#24e",
         speed: 100,
-        race: Races.elf
-    }
+        race: Races.elf,
+    },
 ];
 
 export function getPossibleMonsters(levelID: number) {
-    const possibleMonsters = Monsters
-        .filter(monster => monster.race.domains.indexOf(levelID) >= 0)
-        .map(monster => monster.lifeTemplate ? monster : {...monster, lifeTemplate: SimpleLife});
+    const possibleMonsters = Monsters.filter(
+        (monster) => monster.race.domains.indexOf(levelID) >= 0,
+    ).map((monster) =>
+        monster.lifeTemplate
+            ? monster
+            : { ...monster, lifeTemplate: SimpleLife },
+    );
     return possibleMonsters;
 }
 
@@ -444,9 +448,9 @@ become a monster`,
             "He who becomes a sheep will be eaten by the wolf.",
             "The art of living well and the art of dying well is one.",
             "Heroism consists in hanging on one minute longer.",
-            "Men brave and generous live the best lives, seldom will they sorrow; then there are fools, afraid of everything, who grumble instead of giving."
+            "Men brave and generous live the best lives, seldom will they sorrow; then there are fools, afraid of everything, who grumble instead of giving.",
         ],
-        poems: []
+        poems: [],
     },
     ru: {
         quotes: [
@@ -455,10 +459,10 @@ become a monster`,
             "Live for today, for tomorrow never comes.",
             "Always watch and follow nature",
             "Where many die there is no fear of death",
-            "Deceit sleeps with greed"
+            "Deceit sleeps with greed",
         ],
-        poems: []
-    }
+        poems: [],
+    },
 };
 
 const Settings = {
@@ -474,12 +478,12 @@ const Settings = {
     msg: {
         // Message box location
         x: 5,
-        y: 0
+        y: 0,
     },
     game: {
         winLevel: 0,
-        startLevel: 16
-    }
+        startLevel: 16,
+    },
 };
 
 export {
@@ -492,5 +496,5 @@ export {
     Items,
     Texts,
     SimpleAI,
-    WizardLife
+    WizardLife,
 };

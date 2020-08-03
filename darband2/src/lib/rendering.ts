@@ -22,10 +22,21 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
             canvasElementId,
         ) as HTMLCanvasElement;
         this.canvas = canvas;
-        this.context = this.canvas.getContext("2d");
+        const ctx = this.canvas.getContext("2d");
+        if (ctx === null) {
+            throw new Error("No matching drawing context supported");
+        }
+        this.context = ctx;
         this.options = options;
 
         this.context.imageSmoothingEnabled = false;
+
+        // Can also be assigned by calling setOnRendererReady
+        this.onRendererReady =
+            options.onRendererReady ??
+            (() => {
+                /* tmp */
+            });
 
         const { tileSize, numTiles, uiWidth } = options;
 
@@ -34,11 +45,11 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         canvas.style.width = canvas.width + "px";
         canvas.style.height = canvas.height + "px";
 
+        this.spritesheet = new Image();
         this.loadAssets();
     }
 
     public loadAssets(): void {
-        this.spritesheet = new Image();
         this.spritesheet.src = sprites;
         this.spritesheet.onload = () => {
             this.isRendererReady = true;
@@ -63,13 +74,12 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public draw(x: number, y: number, tile: temporaryAny): void {
+    public drawRect(x: number, y: number): void {
         const ctx = this.context;
         const { tileSize } = this.options;
-        // ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        /* ctx.fillStyle = "blue";
-        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize); */
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        ctx.fillStyle = "blue";
+        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
         this.drawSprite(0, x, y);
     }
 

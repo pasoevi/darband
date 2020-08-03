@@ -2,7 +2,6 @@
 declare type temporaryAny = any;
 
 declare module "*.png" {
-  const value: any;
-  export default value;
+    const value: temporaryAny;
+    export default value;
 }
-

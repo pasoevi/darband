@@ -144,7 +144,7 @@ const WizardLife = {
     corpseName: "wizard corpse",
 };
 
-const SimpleLife = {
+export const SimpleLife = {
     hp: 110,
     maxHp: 110,
     defence: 2,

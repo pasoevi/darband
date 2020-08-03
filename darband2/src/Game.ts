@@ -209,7 +209,7 @@ export class Game {
     public tick(): void {
         for (let k = this.monsters.length - 1; k >= 0; k--) {
             if (this.monsters[k].life?.isAlive()) {
-                // this.monsters[k].update();
+                this.monsters[k].update();
             } else {
                 this.monsters.splice(k, 1);
             }

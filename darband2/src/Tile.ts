@@ -17,7 +17,7 @@ export class Tile {
         this.game.renderer.drawSprite(this.sprite, this.x, this.y);
     }
 
-    public getActorOnThis(): Actor[] {
+    public getActorsOnThis(): Actor[] {
         return this.game.monsters.filter(
             (a: Actor) => a.x === this.x && a.y === this.y,
         );
@@ -36,7 +36,11 @@ export class Tile {
         ]);
     }
 
-    getAdjacentPassableNeighbors(): Array<Tile> {
+    distance(other: Tile): number {
+        return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
+    }
+
+    getAdjacentPassableTiles(): Array<Tile> {
         return this.getAdjacentNeighbors().filter((t) => t.passable);
     }
 
@@ -46,7 +50,7 @@ export class Tile {
         while (frontier.length) {
             const neighbors = frontier
                 .pop()
-                ?.getAdjacentPassableNeighbors()
+                ?.getAdjacentPassableTiles()
                 .filter((t: Tile) => !connectedTiles.includes(t));
             connectedTiles = connectedTiles.concat(neighbors ?? []);
             frontier = frontier.concat(neighbors ?? []);

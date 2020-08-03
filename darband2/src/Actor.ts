@@ -144,6 +144,7 @@ export class Actor {
     sprite?: number;
     x: number;
     y: number;
+    isPlayer = false;
     game: Game;
     public life?: Life;
     public inventory?: Inventory;
@@ -174,7 +175,7 @@ export class Actor {
         return this.name;
     }
 
-    public getTile(): Tile | undefined {
+    public getTile(): Tile {
         return this.game.tiles[this.x][this.y];
     }
 
@@ -187,7 +188,7 @@ export class Actor {
     tryMove(dx: number, dy: number): boolean {
         const newTile = this.getTile()?.getNeighbor(dx, dy);
         if (newTile?.passable) {
-            if (newTile?.getActorOnThis().length === 0) {
+            if (newTile?.getActorsOnThis().length === 0) {
                 this.move(newTile);
             }
             return true;

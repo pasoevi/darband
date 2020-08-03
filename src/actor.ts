@@ -149,6 +149,7 @@ export class Life {
  * @constructor
  */
 export class Actor {
+    public isPlayer = false;
     protected game: Game;
     private position: MapPosition;
     private name: string;

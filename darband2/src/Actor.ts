@@ -165,9 +165,7 @@ export class Actor {
         }
 
         // randomTile will be used only if the spec doesn't contain coordinates
-        const randomTile = Game.getInstance().getRandomTile(
-            (t: Tile) => t.passable,
-        );
+        const randomTile = Game.getInstance().getRandomPassableTile();
         this.x = spec.x ?? randomTile.x;
         this.y = spec.y ?? randomTile.y;
     }

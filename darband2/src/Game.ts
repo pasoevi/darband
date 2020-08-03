@@ -39,11 +39,19 @@ export class Game {
         return possibleTiles[randomTileIndex];
     }
 
+    public getRandomPassableTile(): Tile {
+        return this.getRandomTile((t: Tile) => t.passable);
+    }
+
     public getTiles(condition?: (tile: Tile) => boolean): Array<Tile> {
         const allTiles = flatten<Tile>(this.tiles);
         const possibleTiles =
             condition === undefined ? allTiles : allTiles.filter(condition);
         return possibleTiles;
+    }
+
+    public getPassableTiles(): Array<Tile> {
+        return this.getTiles((t: Tile) => t.passable);
     }
 
     public setupGame(): void {
@@ -69,16 +77,16 @@ export class Game {
                 }
 
                 // Monster movements (temporary feature)
-                if (e.which == 38) {
+                if (e.key == "ArrowUp") {
                     this.monsters[0].y--;
                 }
-                if (e.which == 40) {
+                if (e.key == "ArrowDown") {
                     this.monsters[0].y++;
                 }
-                if (e.which == 37) {
+                if (e.key == "ArrowLeft") {
                     this.monsters[0].x--;
                 }
-                if (e.which == 39) {
+                if (e.key == "ArrowRight") {
                     this.monsters[0].x++;
                 }
 
@@ -92,15 +100,14 @@ export class Game {
         tryTo("generate map", () => {
             return (
                 this.generateTiles() ===
-                this.getRandomTile((t: Tile) => t.passable).getConnectedTiles()
-                    .length
+                this.getRandomPassableTile().getConnectedTiles().length
             );
         });
 
-        const freeTiles = this.getTiles((t: Tile) => t.passable);
+        const freeTiles = this.getPassableTiles();
 
         // Create player
-        const startingTile = this.getRandomTile((tile: Tile) => tile.passable);
+        const startingTile = this.getRandomPassableTile();
         this.player = new Player({
             x: startingTile.x,
             y: startingTile.y,
@@ -115,7 +122,7 @@ export class Game {
         spec: Partial<ActorTemplate>,
         activate = false,
     ): Actor {
-        const startingTile = this.getRandomTile((t: Tile) => t.passable);
+        const startingTile = this.getRandomPassableTile();
         spec.x = startingTile.x;
         spec.y = startingTile.y;
         const actor = new what(spec);

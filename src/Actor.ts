@@ -190,35 +190,46 @@ export class Actor {
 
     drawHP(): void {
         const tileSize = this.game.renderer.options.tileSize;
-        console.log(this.life);
-
-        console.log(`hp: ${this.life?.hp}, maxHp: ${this.life?.maxHp}`);
         const hpPercentage = Math.floor(
             (this.life?.hp ?? 0) / (this.life?.maxHp ?? 1),
         );
         const greenLength = tileSize * hpPercentage;
         const redLength = tileSize - greenLength;
+        const hpLineHeight = 2;
         this.game.renderer.drawRect(
-            "green",
+            "lime",
             this.x * tileSize,
-            this.y * tileSize + tileSize - 3,
+            this.y * tileSize + tileSize - hpLineHeight,
             greenLength,
-            3,
+            hpLineHeight,
         );
         this.game.renderer.drawRect(
             "red",
             this.x + greenLength,
-            this.y * tileSize + tileSize - 3,
+            this.y * tileSize + tileSize - hpLineHeight,
             redLength,
-            3,
+            hpLineHeight,
         );
     }
 
     tryMove(dx: number, dy: number): boolean {
+        const playerTile = this.game.player.getTile();
         const newTile = this.getTile()?.getNeighbor(dx, dy);
         if (newTile?.passable) {
-            if (newTile?.getActorsOnThis().length === 0) {
+            const actorsOnNewTile = newTile?.getActorsOnThis();
+            /* console.log(newTile);
+            console.log(actorsOnNewTile);
+            console.log(`Player: ${this.game.player.x}, ${this.game.player.y}`); */
+            if (actorsOnNewTile.length === 0) {
                 this.move(newTile);
+            } /*  else if (actorsOnNewTile.filter((a) => a.isPlayer).length > 0) {
+                console.log("Arturs: Attack");
+                this.game.player.life?.takeDamage(this, 10, []);
+            } */ else if (
+                newTile.x === playerTile.x &&
+                newTile.y === playerTile.y
+            ) {
+                this.game.player.life?.takeDamage(this, 10, []);
             }
             return true;
         }

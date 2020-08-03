@@ -45,10 +45,18 @@ export class Game {
                 if (this.player === undefined) {
                     return;
                 }
-                if (e.key == "w") this.player.y--;
-                if (e.key == "s") this.player.y++;
-                if (e.key == "a") this.player.x--;
-                if (e.key == "d") this.player.x++;
+                if (e.key == "w") {
+                    this.player.tryMove(0, -1);
+                }
+                if (e.key == "s") {
+                    this.player.tryMove(0, 1);
+                }
+                if (e.key == "a") {
+                    this.player.tryMove(-1, 0);
+                }
+                if (e.key == "d") {
+                    this.player.tryMove(1, 0);
+                }
 
                 // Monster movements (temporary feature)
                 if (e.which == 38) {
@@ -80,9 +88,6 @@ export class Game {
         });
         const startingTile = this.getRandomTile((tile: Tile) => tile.passable);
         this.player = new Player({
-            name: "You",
-            char: "@",
-            sprite: 0,
             x: startingTile.x,
             y: startingTile.y,
         });

@@ -201,8 +201,8 @@ export interface ActorTemplate {
     speed?: number;
     name?: string;
     col?: string;
-    sprite: number; // TODO: Make a type that lists every possible visible character
-    char: string;
+    sprite?: number; // TODO: Make a type that lists every possible visible character
+    char?: string;
     lifeTemplate?: LifeTemplate;
     itemTemplate?: ItemTemplate;
     aiTemplate?: ItemTemplate;

@@ -17,3 +17,7 @@ export interface RenderOptions {
 export interface InputHandler {
     setup(): void;
 }
+
+export interface GameUI {
+    msg: (game: temporaryAny, text: string, color?: string) => void;
+}

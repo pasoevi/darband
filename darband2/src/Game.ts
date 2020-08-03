@@ -175,6 +175,7 @@ export class Game {
                 // this.monsters[k].update();
             } else {
                 this.monsters.splice(k, 1);
+                console.log("Removed a monster");
             }
         }
     }

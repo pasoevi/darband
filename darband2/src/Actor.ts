@@ -150,9 +150,21 @@ export class Actor {
     public ai?: AI;
 
     constructor(spec: ActorTemplate) {
+        console.log(spec.lifeTemplate);
         this.game = Game.getInstance();
         this.name = name;
         this.sprite = spec.sprite;
+
+        const lifeTemplate = spec.lifeTemplate;
+
+        if (lifeTemplate) {
+            this.life = new Life(lifeTemplate, this);
+        }
+
+        if (spec.aiTemplate) {
+            this.ai = new AI();
+        }
+
         // randomTile will be used only if the spec doesn't contain coordinates
         const randomTile = Game.getInstance().getRandomTile(
             (t: Tile) => t.passable,

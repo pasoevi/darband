@@ -2,7 +2,10 @@ export function randomRange(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const flatten = function<T> (arr: Array<Array<T>> | Array<T>, result: Array<T> = []): Array<T> {
+export const flatten = function <T>(
+    arr: Array<Array<T>> | Array<T>,
+    result: Array<T> = [],
+): Array<T> {
     for (let i = 0, length = arr.length; i < length; i++) {
         const value = arr[i];
         if (Array.isArray(value)) {

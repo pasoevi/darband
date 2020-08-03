@@ -6,9 +6,9 @@ import { Item } from "./item";
 import { MapPosition } from "./map";
 
 export class Inventory {
-    private game: Game;
-    private weapon?: Weapon;
-    private items: Item[];
+    game: Game;
+    weapon?: Weapon;
+    items: Item[];
 
     constructor() {
         this.game = Game.getSingleton();
@@ -177,7 +177,7 @@ export class Actor {
         this.col = spec.col ? spec.col : Colors.red;
         this.ch = spec.ch ? spec.ch : "?";
 
-        const lifeTemplate = spec.lifeTemplate || spec.lifeTemplate;
+        const lifeTemplate = spec.lifeTemplate;
 
         if (lifeTemplate) {
             this.life = new Life(lifeTemplate, this);

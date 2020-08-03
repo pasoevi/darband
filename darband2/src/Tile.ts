@@ -57,12 +57,12 @@ export class Tile {
 
 export class Floor extends Tile {
     constructor(public x: number, public y: number) {
-        super(x, y, 2, true);
+        super(x, y, 32, true);
     }
 }
 
 export class Wall extends Tile {
     constructor(public x: number, public y: number) {
-        super(x, y, 3, false);
+        super(x, y, 33, false);
     }
 }

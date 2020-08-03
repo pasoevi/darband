@@ -187,7 +187,7 @@ const Races = {
     },
 
     orc: {
-        name: "ord",
+        name: "orc",
         skills: {
             intelligence: 10,
             strength: 10,
@@ -222,7 +222,7 @@ const Races = {
             providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [3],
+        domains: [3, 4],
     },
 
     troll: {
@@ -235,7 +235,7 @@ const Races = {
             providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [2],
+        domains: [2, 3],
     },
 
     elf: {
@@ -248,7 +248,7 @@ const Races = {
             providence: 10,
         },
         lifeTemplate: SimpleLife,
-        domains: [5],
+        domains: [1,2,5],
     },
 
     dragon: {
@@ -376,28 +376,28 @@ const Items = [
 
 const Monsters: ActorTemplate[] = [
     {
+        name: "dragon",
+        sprite: 3,
+        char: "D",
+        col: "#0fc",
+        speed: 80,
+        race: Races.dragon,
+    },
+    {
         name: "orc",
-        sprite: 5,
+        sprite: 4,
         char: "o",
         col: "#2f9",
         speed: 100,
         race: Races.orc,
     },
     {
-        name: "gray wolf",
-        sprite: 7,
+        name: "white  wolf",
+        sprite: 11,
         char: "w",
         col: "#888",
         speed: 120,
         race: Races.goblin,
-    },
-    {
-        name: "dragon",
-        sprite: 6,
-        char: "D",
-        col: "#0fc",
-        speed: 80,
-        race: Races.dragon,
     },
     {
         name: "dwarf",
@@ -409,7 +409,7 @@ const Monsters: ActorTemplate[] = [
     },
     {
         name: "elf",
-        sprite: 9,
+        sprite: 2,
         char: "e",
         col: "#24e",
         speed: 100,

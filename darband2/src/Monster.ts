@@ -13,7 +13,7 @@ export class RedBug extends Monster {
     }
 }
 
-class Bird extends Monster {
+/* class Bird extends Monster {
     constructor(tile) {
         super(tile, 4, 3);
     }
@@ -42,3 +42,4 @@ class Jester extends Monster {
         super(tile, 8, 2);
     }
 }
+ */

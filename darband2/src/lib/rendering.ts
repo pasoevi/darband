@@ -59,21 +59,18 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
 
     public drawSprite(sprite: number, x: number, y: number): void {
         const ctx = this.context;
-        const spriteSize = 32; // TODO: Get from the image filename
         const { tileSize } = this.options;
-        const spritesheetRows = this.spritesheet.height / spriteSize;
-        const spritesheetColumns = this.spritesheet.width / spriteSize;
-        const spriteRow = Math.floor(sprite / spritesheetColumns) * spriteSize;
-        const spriteColumn = (sprite % spritesheetRows) * spriteSize;
+        const spritesheetRows = this.spritesheet.height / tileSize;
+        const spritesheetColumns = this.spritesheet.width / tileSize;
+        const spriteRow = Math.floor(sprite / spritesheetColumns) * tileSize;
+        const spriteColumn = (sprite % spritesheetRows) * tileSize;
 
         ctx.drawImage(
             this.spritesheet,
-            /* sprite * spriteSize,
-            0, */
             spriteColumn,
             spriteRow,
-            spriteSize,
-            spriteSize,
+            tileSize,
+            tileSize,
             x * tileSize,
             y * tileSize,
             tileSize,
@@ -81,13 +78,18 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         );
     }
 
-    public drawRect(x: number, y: number): void {
+    public drawRect(
+        color: string,
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+    ): void {
         const ctx = this.context;
-        const { tileSize } = this.options;
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        ctx.fillStyle = "blue";
-        ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
-        this.drawSprite(0, x, y);
+        const oldColor = ctx.fillStyle;
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+        ctx.fillStyle = oldColor;
     }
 
     public clearScreen(): void {

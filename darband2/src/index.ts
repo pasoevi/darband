@@ -9,8 +9,6 @@ function setupGame() {
         tileSize: 32,
         numTiles: 19,
         uiWidth: 4,
-        windowWidth: 1000,
-        windowHeight: 1000,
     };
     const renderingLibrary = new CanvasDrawingLibrary("game", renderOptions);
     const gameUI = new CanvasUI();

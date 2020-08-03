@@ -150,7 +150,6 @@ export class Actor {
     public ai?: AI;
 
     constructor(spec: ActorTemplate) {
-        console.log(spec.lifeTemplate);
         this.game = Game.getInstance();
         this.name = name;
         this.sprite = spec.sprite;

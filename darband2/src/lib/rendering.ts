@@ -61,10 +61,17 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         const ctx = this.context;
         const spriteSize = 32; // TODO: Get from the image filename
         const { tileSize } = this.options;
+        const spritesheetRows = this.spritesheet.height / spriteSize;
+        const spritesheetColumns = this.spritesheet.width / spriteSize;
+        const spriteRow = Math.floor(sprite / spritesheetColumns) * spriteSize;
+        const spriteColumn = (sprite % spritesheetRows) * spriteSize;
+
         ctx.drawImage(
             this.spritesheet,
-            sprite * spriteSize,
-            0,
+            /* sprite * spriteSize,
+            0, */
+            spriteColumn,
+            spriteRow,
             spriteSize,
             spriteSize,
             x * tileSize,

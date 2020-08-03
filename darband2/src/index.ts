@@ -1,18 +1,24 @@
 import { CanvasDrawingLibrary } from "./lib/rendering";
-import { Game } from "./Game";
+import { Game, GameOptions } from "./Game";
 import { RenderOptions } from "./lib/interfaces";
 import "./index.css";
+import { CanvasUI } from "./ui/CanvasUI";
 
 function setupGame() {
     const renderOptions: RenderOptions = {
         tileSize: 32,
-        numTiles: 18,
+        numTiles: 19,
         uiWidth: 4,
         windowWidth: 1000,
         windowHeight: 1000,
     };
     const renderingLibrary = new CanvasDrawingLibrary("game", renderOptions);
-    const game = Game.getInstance(renderingLibrary);
+    const gameUI = new CanvasUI();
+    const gameOptions: GameOptions = {
+        renderingLibrary: renderingLibrary,
+        ui: gameUI,
+    };
+    const game = Game.getInstance(gameOptions);
     game.setupGame();
 }
 

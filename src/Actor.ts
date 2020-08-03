@@ -177,6 +177,8 @@ export class Actor {
 
     public getTile(): Tile {
         return this.game.tiles[this.x][this.y];
+
+        console.log("OK");
     }
 
     draw(): void {

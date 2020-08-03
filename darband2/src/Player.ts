@@ -3,6 +3,7 @@ import { Actor, ActorTemplate } from "./Actor";
 export class Player extends Actor {
     constructor(spec: ActorTemplate) {
         super({ ...spec, name: "You", char: "@", sprite: 0 });
+        this.isPlayer = true;
     }
 
     public tryMove(dx: number, dy: number): boolean {
@@ -12,4 +13,8 @@ export class Player extends Actor {
         }
         return false;
     }
+}
+
+export class UninitializedPlayer extends Player {
+
 }

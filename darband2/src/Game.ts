@@ -4,7 +4,7 @@ import { Wall, Floor, Tile } from "./Tile";
 import { Monster } from "./Monster";
 import { randomRange, flatten, tryTo } from "./Util";
 import { getPossibleMonsters } from "./Data";
-import { Actor, ActorTemplate } from "./Actor";
+import { ActorTemplate } from "./Actor";
 
 export interface GameOptions {
     renderingLibrary: RenderingLibrary;
@@ -15,7 +15,7 @@ export class Game {
     private static instance: Game;
     renderer: RenderingLibrary;
     ui: GameUI;
-    player: Player | undefined;
+    player = (null as unknown) as Player;
     tiles: Array<Array<Tile>> = [];
     onRendererReady: () => void = () => {
         /* noop */
@@ -31,7 +31,7 @@ export class Game {
         });
     }
 
-    public getRandomTile(condition?: (tile: Tile) => boolean): Tile {
+    private getRandomTile(condition?: (tile: Tile) => boolean): Tile {
         const allTiles = flatten<Tile>(this.tiles);
         const possibleTiles =
             condition === undefined ? allTiles : allTiles.filter(condition);
@@ -104,24 +104,24 @@ export class Game {
             );
         });
 
-        const freeTiles = this.getPassableTiles();
+        const startingTile = this.getRandomPassableTile();
 
         // Create player
-        const startingTile = this.getRandomPassableTile();
         this.player = new Player({
             x: startingTile.x,
             y: startingTile.y,
         });
 
-        this.monsters = this.generateMonsters(freeTiles);
+        this.monsters = this.generateMonsters();
     }
 
-    public createBeing(
-        what: typeof Actor,
-        freeCells: Tile[],
+    public createBeing<T>(
+        // what: typeof Actor,
+        what: { new (spec: ActorTemplate): T },
+        // freeCells: Tile[],
         spec: Partial<ActorTemplate>,
         activate = false,
-    ): Actor {
+    ): T {
         const startingTile = this.getRandomPassableTile();
         spec.x = startingTile.x;
         spec.y = startingTile.y;
@@ -132,26 +132,17 @@ export class Game {
         return actor;
     }
 
-    generateMonsters(freeTiles: Array<Tile>): Monster[] {
+    generateMonsters(): Monster[] {
         const monsters: Monster[] = [];
-
         const possibleMonsters = getPossibleMonsters(this.levelID);
+
         possibleMonsters.forEach((spec) => {
-            const n = randomRange(0, 30);
+            const n = randomRange(0, 15);
             for (let i = 0; i < n; i++) {
-                monsters.push(this.createBeing(Monster, freeTiles, spec));
+                monsters.push(this.createBeing(Monster, spec));
             }
         });
 
-        /* monsters.push(
-            new Monster({
-                name: "Red bug",
-                char: "b",
-                sprite: 4,
-                x: startingTile.x,
-                y: startingTile.y,
-            }),
-        ); */
         return monsters;
     }
 

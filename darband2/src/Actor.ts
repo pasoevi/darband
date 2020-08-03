@@ -6,9 +6,9 @@ import { Item } from "./Item";
 
 export class Life {
     private game: Game;
-    private hp: number;
-    private maxHp: number;
-    private defence: number;
+    hp: number;
+    maxHp: number;
+    defence: number;
     private corpseName: string;
     private actor: Actor;
 
@@ -183,6 +183,35 @@ export class Actor {
         if (this.sprite !== undefined) {
             this.game.renderer.drawSprite(this.sprite, this.x, this.y);
         }
+        if (this.life !== undefined) {
+            this.drawHP();
+        }
+    }
+
+    drawHP(): void {
+        const tileSize = this.game.renderer.options.tileSize;
+        console.log(this.life);
+
+        console.log(`hp: ${this.life?.hp}, maxHp: ${this.life?.maxHp}`);
+        const hpPercentage = Math.floor(
+            (this.life?.hp ?? 0) / (this.life?.maxHp ?? 1),
+        );
+        const greenLength = tileSize * hpPercentage;
+        const redLength = tileSize - greenLength;
+        this.game.renderer.drawRect(
+            "green",
+            this.x * tileSize,
+            this.y * tileSize + tileSize - 3,
+            greenLength,
+            3,
+        );
+        this.game.renderer.drawRect(
+            "red",
+            this.x + greenLength,
+            this.y * tileSize + tileSize - 3,
+            redLength,
+            3,
+        );
     }
 
     tryMove(dx: number, dy: number): boolean {

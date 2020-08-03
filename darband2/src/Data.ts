@@ -1,5 +1,4 @@
-import { ActorTemplate, Actor } from "./actor";
-import { Monster } from "./Monster";
+import { ActorTemplate } from "./actor";
 
 const Colors = {
     wall: "#c3c3c3",
@@ -142,7 +141,7 @@ const WizardLife = {
     hp: 11100,
     maxHp: 11100,
     defence: 2,
-    corpseName: "wizzard corpse",
+    corpseName: "wizard corpse",
 };
 
 const SimpleLife = {
@@ -162,7 +161,7 @@ const SimpleAI = {
 
 const Races = {
     goblin: {
-        name: "goblon",
+        name: "goblin",
         skills: {
             intelligence: 10,
             strength: 10,
@@ -446,7 +445,7 @@ become a monster`,
             "Better go without healing, than call for an unskilled healer.",
             "Skill is not a heavy load to carry.",
             "Even the best climber may fall.",
-            "There is no death for the honourable, only a change of bodies.",
+            "There is no death for the honorable, only a change of bodies.",
             "Straight ahead is always shortest, but not always best.",
             "The sky is no less blue only because the blind can not see it.",
             "Death smiles at us all. All a man can do is to smile back.",

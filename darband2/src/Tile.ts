@@ -28,7 +28,7 @@ export class Tile {
     }
 
     public getAdjacentNeighbors(): Array<Tile> {
-        return shuffle([
+        return shuffle<Tile>([
             this.getNeighbor(0, -1),
             this.getNeighbor(0, 1),
             this.getNeighbor(-1, 0),
@@ -36,11 +36,11 @@ export class Tile {
         ]);
     }
 
-    getAdjacentPassableNeighbors() {
+    getAdjacentPassableNeighbors(): Array<Tile> {
         return this.getAdjacentNeighbors().filter((t) => t.passable);
     }
 
-    getConnectedTiles() {
+    getConnectedTiles(): Array<Tile> {
         let connectedTiles: Array<Tile> = [this];
         let frontier: Array<Tile> = [this];
         while (frontier.length) {

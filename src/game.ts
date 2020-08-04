@@ -1,10 +1,10 @@
 import { Floor, Tile, Wall } from "./Tile";
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
+import { WizardLife, getPossibleMonsters } from "./Data";
 import { flatten, randomRange, tryTo } from "./Util";
 import { ActorTemplate } from "./Actor";
 import { Monster } from "./Monster";
 import { Player } from "./player";
-import { getPossibleMonsters } from "./Data";
 
 export interface GameOptions {
     renderingLibrary: RenderingLibrary;
@@ -110,6 +110,7 @@ export class Game {
         this.player = new Player({
             x: startingTile.x,
             y: startingTile.y,
+            lifeTemplate: WizardLife,
         });
 
         this.monsters = this.generateMonsters();

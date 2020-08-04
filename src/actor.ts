@@ -190,9 +190,7 @@ export class Actor {
 
     drawHP(): void {
         const tileSize = this.game.renderer.options.tileSize;
-        const hpPercentage = Math.floor(
-            (this.life?.hp ?? 0) / (this.life?.maxHp ?? 1),
-        );
+        const hpPercentage = (this.life?.hp ?? 0) / (this.life?.maxHp ?? 1);
         const greenLength = tileSize * hpPercentage;
         const redLength = tileSize - greenLength;
         const hpLineHeight = 2;
@@ -205,7 +203,7 @@ export class Actor {
         );
         this.game.renderer.drawRect(
             "red",
-            this.x + greenLength,
+            this.x * tileSize + greenLength,
             this.y * tileSize + tileSize - hpLineHeight,
             redLength,
             hpLineHeight,

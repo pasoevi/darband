@@ -1,6 +1,6 @@
+import { Actor } from "./Actor";
 import { Game } from "./Game";
 import { shuffle } from "./Util";
-import { Actor } from "./Actor";
 
 export class Tile {
     private game: Game;
@@ -9,6 +9,7 @@ export class Tile {
         public y: number,
         public sprite: number,
         public passable: boolean,
+        public monster: Actor| null = null,
     ) {
         this.game = Game.getInstance();
     }

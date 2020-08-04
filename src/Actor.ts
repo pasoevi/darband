@@ -1,8 +1,8 @@
-import { Game } from "./Game";
 import { Modifier, Weapon } from "./Weapon";
 import { Colors } from "./Data";
-import { Tile } from "./Tile";
+import { Game } from "./Game";
 import { Item } from "./Item";
+import { Tile } from "./Tile";
 
 export class Life {
     private game: Game;
@@ -152,7 +152,7 @@ export class Actor {
 
     constructor(spec: ActorTemplate) {
         this.game = Game.getInstance();
-        this.name = name;
+        this.name = spec.name ?? "Unnamed monster";
         this.sprite = spec.sprite;
 
         const lifeTemplate = spec.lifeTemplate;
@@ -213,23 +213,12 @@ export class Actor {
     }
 
     tryMove(dx: number, dy: number): boolean {
-        const playerTile = this.game.player.getTile();
         const newTile = this.getTile()?.getNeighbor(dx, dy);
-        if (newTile?.passable) {
-            const actorsOnNewTile = newTile?.getActorsOnThis();
-            /* console.log(newTile);
-            console.log(actorsOnNewTile);
-            console.log(`Player: ${this.game.player.x}, ${this.game.player.y}`); */
-            if (actorsOnNewTile.length === 0) {
+        if (newTile.passable) {
+            if (newTile.monster === null) {
                 this.move(newTile);
-            } /*  else if (actorsOnNewTile.filter((a) => a.isPlayer).length > 0) {
-                console.log("Arturs: Attack");
-                this.game.player.life?.takeDamage(this, 10, []);
-            } */ else if (
-                newTile.x === playerTile.x &&
-                newTile.y === playerTile.y
-            ) {
-                this.game.player.life?.takeDamage(this, 10, []);
+            } else if (this.isPlayer !== newTile.monster.isPlayer) {
+                newTile.monster.life?.takeDamage(this, 10, []);
             }
             return true;
         }
@@ -237,8 +226,12 @@ export class Actor {
     }
 
     move(newTile: Tile): void {
+        const currentTile = this.getTile();
+        currentTile.monster = null;
+
         this.x = newTile.x;
         this.y = newTile.y;
+        newTile.monster = this;
     }
 }
 

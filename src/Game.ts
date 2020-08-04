@@ -1,10 +1,10 @@
-import { RenderingLibrary, GameUI } from "./lib/interfaces";
-import { Player } from "./player";
-import { Wall, Floor, Tile } from "./Tile";
-import { Monster } from "./Monster";
-import { randomRange, flatten, tryTo } from "./Util";
-import { getPossibleMonsters } from "./Data";
+import { Floor, Tile, Wall } from "./Tile";
+import { GameUI, RenderingLibrary } from "./lib/interfaces";
+import { flatten, randomRange, tryTo } from "./Util";
 import { ActorTemplate } from "./Actor";
+import { Monster } from "./Monster";
+import { Player } from "./player";
+import { getPossibleMonsters } from "./Data";
 
 export interface GameOptions {
     renderingLibrary: RenderingLibrary;
@@ -137,7 +137,7 @@ export class Game {
         const possibleMonsters = getPossibleMonsters(this.levelID);
 
         possibleMonsters.forEach((spec) => {
-            const n = randomRange(0, 15);
+            const n = randomRange(0, 5);
             for (let i = 0; i < n; i++) {
                 monsters.push(this.createBeing(Monster, spec));
             }

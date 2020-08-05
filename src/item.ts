@@ -1,7 +1,8 @@
-import { Actor, ActorTemplate } from "./Actor";
+import { Actor } from "./Actor";
+import { Tile } from "./Tile";
 
 export class Item extends Actor {
-    constructor(spec: ActorTemplate) {
-        super(spec);
+    constructor(name: string, sprite: number, tile: Tile) {
+        super(name, tile, sprite);
     }
 }

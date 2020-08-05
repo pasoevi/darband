@@ -1,10 +1,21 @@
+import {
+    Dragon,
+    Dwarf,
+    Elf,
+    Goblin,
+    Kobold,
+    Man,
+    Monster,
+    Orc,
+    Snake,
+    Troll,
+    createMonster,
+} from "./Monster";
 import { Floor, Tile, Wall } from "./Tile";
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
-import { WizardLife, getPossibleMonsters } from "./Data";
 import { flatten, randomRange, tryTo } from "./Util";
-import { ActorTemplate } from "./Actor";
-import { Monster } from "./Monster";
 import { Player } from "./player";
+import { getPossibleMonsters } from "./Data";
 
 export interface GameOptions {
     renderingLibrary: RenderingLibrary;
@@ -78,16 +89,16 @@ export class Game {
 
                 // Monster movements (temporary feature)
                 if (e.key == "ArrowUp") {
-                    this.monsters[0].y--;
+                    this.monsters[0].tile.y--;
                 }
                 if (e.key == "ArrowDown") {
-                    this.monsters[0].y++;
+                    this.monsters[0].tile.y++;
                 }
                 if (e.key == "ArrowLeft") {
-                    this.monsters[0].x--;
+                    this.monsters[0].tile.x--;
                 }
                 if (e.key == "ArrowRight") {
-                    this.monsters[0].x++;
+                    this.monsters[0].tile.x++;
                 }
 
                 this.render();
@@ -107,42 +118,41 @@ export class Game {
         const startingTile = this.getRandomPassableTile();
 
         // Create player
-        this.player = new Player({
-            x: startingTile.x,
-            y: startingTile.y,
-            lifeTemplate: WizardLife,
-        });
+        this.player = new Player(startingTile);
 
         this.monsters = this.generateMonsters();
     }
 
-    public createBeing<T>(
-        // what: typeof Actor,
-        what: { new (spec: ActorTemplate): T },
-        // freeCells: Tile[],
-        spec: Partial<ActorTemplate>,
-        activate = false,
-    ): T {
-        const startingTile = this.getRandomPassableTile();
-        spec.x = startingTile.x;
-        spec.y = startingTile.y;
-        const actor = new what(spec);
-        if (activate) {
-            // this.game.scheduler.add(actor, true);
-        }
-        return actor;
-    }
-
     generateMonsters(): Monster[] {
         const monsters: Monster[] = [];
-        const possibleMonsters = getPossibleMonsters(this.levelID);
-
-        possibleMonsters.forEach((spec) => {
+        /*  const allMonsters: {[key: string]: Monster} = {
+            "goblin": Goblin,
+            "kobold": Kobold,
+            "orc": Orc,
+            "dwarf": Dwarf,
+            "man": Man,
+            "troll": Troll,
+            "elf": Elf,
+            "dragon": Dragon,
+            "snake": Snake,
+        }; */
+        const allMonsters = [
+            Goblin,
+            Kobold,
+            Orc,
+            Dwarf,
+            Man,
+            Troll,
+            Elf,
+            Dragon,
+            Snake,
+        ];
+        for (const monster of allMonsters) {
             const n = randomRange(0, 5);
             for (let i = 0; i < n; i++) {
-                monsters.push(this.createBeing(Monster, spec));
+                monsters.push(createMonster(monster));
             }
-        });
+        }
 
         return monsters;
     }

@@ -498,10 +498,6 @@ const Items = [
     },
 ];
 
-export function getPossibleMonsters(levelID: number): string[] {
-    return Levels[levelID].possibleMonsters;
-}
-
 const Texts = {
     en: {
         quotes: [

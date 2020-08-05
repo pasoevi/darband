@@ -9,7 +9,7 @@ export class Tile {
         public y: number,
         public sprite: number,
         public passable: boolean,
-        public monster: Actor| null = null,
+        public monster: Actor | null = null,
     ) {
         this.game = Game.getInstance();
     }

@@ -233,8 +233,7 @@ export class Actor {
         const currentTile = this.getTile();
         currentTile.monster = null;
 
-        this.tile.x = newTile.x;
-        this.tile.y = newTile.y;
+        this.tile = newTile;
         newTile.monster = this;
     }
 }

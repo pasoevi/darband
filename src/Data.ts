@@ -1,5 +1,3 @@
-import { ActorTemplate } from "./actor";
-
 const Colors = {
     wall: "#c3c3c3",
     floor: "#323232",
@@ -30,281 +28,407 @@ const Levels = [
     {
         domain: "abstracts",
         levelID: 0,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 1,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 2,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 3,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 4,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 5,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 6,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 7,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 8,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 9,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 10,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 11,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 12,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "dungeons",
         levelID: 13,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 14,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 15,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 16,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 17,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 18,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 19,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 20,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 21,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 22,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 23,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 24,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 25,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
     {
         domain: "gates",
         levelID: 26,
-    },
-];
-
-const WizardLife = {
-    hp: 190,
-    maxHp: 190,
-    defence: 3,
-    corpseName: "wizard corpse",
-};
-
-export const SimpleLife = {
-    hp: 110,
-    maxHp: 110,
-    defence: 2,
-    corpseName: "corpse",
-};
-
-const SimpleAI = {
-    quests: [],
-    moveCount: 0,
-    skills: [],
-    xp: 10,
-    xpLevel: 1,
-};
-
-const Races = {
-    goblin: {
-        name: "goblin",
-        skills: {
-            intelligence: 10,
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            providence: 10,
-        },
-        lifeTemplate: SimpleLife,
-        domains: [0, 1, 2],
-    },
-
-    kobold: {
-        name: "kobold",
-        skills: {
-            intelligence: 10,
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            providence: 10,
-        },
-        lifeTemplate: SimpleLife,
-        domains: [0, 1, 2],
-    },
-
-    orc: {
-        name: "orc",
-        skills: {
-            intelligence: 10,
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            providence: 10,
-        },
-        lifeTemplate: SimpleLife,
-        domains: [0, 1, 2, 3],
-    },
-
-    dwarf: {
-        name: "dwarf",
-        skills: {
-            intelligence: 10,
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            providence: 10,
-        },
-        lifeTemplate: SimpleLife,
-        domains: [13, 14, 15, 16],
-    },
-
-    man: {
-        name: "man",
-        skills: {
-            intelligence: 10,
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            providence: 10,
-        },
-        lifeTemplate: SimpleLife,
-        domains: [3, 4],
-    },
-
-    troll: {
-        name: "troll",
-        skills: {
-            intelligence: 10,
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            providence: 10,
-        },
-        lifeTemplate: SimpleLife,
-        domains: [2, 3],
-    },
-
-    elf: {
-        name: "elf",
-        skills: {
-            intelligence: 10,
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            providence: 10,
-        },
-        lifeTemplate: SimpleLife,
-        domains: [1,2,5],
-    },
-
-    dragon: {
-        name: "dragon",
-        skills: {
-            intelligence: 10,
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            providence: 10,
-        },
-        lifeTemplate: SimpleLife,
-        domains: [4],
-    },
-};
-
-const Classes = [
-    {
-        name: "huttler",
-        ch: "@",
-        col: Colors.white,
-        themeColor: Colors.wealth,
-        speed: 120,
-        lifeTemplate: WizardLife,
-    },
-    {
-        name: "dark elf",
-        ch: "@",
-        col: Colors.white,
-        themeColor: Colors.magic,
-        speed: 130,
-        lifeTemplate: WizardLife,
-    },
-    {
-        name: "wizard",
-        ch: "@",
-        col: Colors.white,
-        themeColor: Colors.magic,
-        speed: 100,
-        lifeTemplate: WizardLife,
-    },
-    {
-        name: "dwarf",
-        ch: "@",
-        col: Colors.white,
-        themeColor: Colors.gold_metallic,
-        speed: 90,
-        lifeTemplate: WizardLife,
-    },
-    {
-        name: "human",
-        ch: "@",
-        col: Colors.white,
-        themeColor: Colors.ice,
-        speed: 120,
-        lifeTemplate: WizardLife,
+        possibleMonsters: [
+            "goblin",
+            "kobold",
+            "orc",
+            "dwarf",
+            "man",
+            "troll",
+            "elf",
+            "dragon",
+            "snake",
+        ],
     },
 ];
 
@@ -374,58 +498,8 @@ const Items = [
     },
 ];
 
-const Monsters: ActorTemplate[] = [
-    {
-        name: "dragon",
-        sprite: 3,
-        char: "D",
-        col: "#0fc",
-        speed: 80,
-        race: Races.dragon,
-    },
-    {
-        name: "orc",
-        sprite: 4,
-        char: "o",
-        col: "#2f9",
-        speed: 100,
-        race: Races.orc,
-    },
-    {
-        name: "white  wolf",
-        sprite: 11,
-        char: "w",
-        col: "#888",
-        speed: 120,
-        race: Races.goblin,
-    },
-    {
-        name: "dwarf",
-        sprite: 8,
-        char: "d",
-        col: "#9f1",
-        speed: 100,
-        race: Races.dwarf,
-    },
-    {
-        name: "elf",
-        sprite: 2,
-        char: "e",
-        col: "#24e",
-        speed: 100,
-        race: Races.elf,
-    },
-];
-
-export function getPossibleMonsters(levelID: number): Array<ActorTemplate> {
-    const possibleMonsters = Monsters.filter(
-        (monster) => (monster.race?.domains?.indexOf(levelID) ?? -1) >= 0,
-    ).map((monster) =>
-        monster.lifeTemplate
-            ? monster
-            : { ...monster, lifeTemplate: SimpleLife },
-    );
-    return possibleMonsters;
+export function getPossibleMonsters(levelID: number): string[] {
+    return Levels[levelID].possibleMonsters;
 }
 
 const Texts = {
@@ -532,19 +606,8 @@ const Settings = {
         [Commands.UNWIELD]: "",
         [Commands.THROW]: "",
         [Commands.INVOKE]: "",
-        [Commands.PRAY]: ""
-    }
+        [Commands.PRAY]: "",
+    },
 };
 
-export {
-    Settings,
-    Colors,
-    Levels,
-    Races,
-    Classes,
-    Monsters,
-    Items,
-    Texts,
-    SimpleAI,
-    WizardLife,
-};
+export { Settings, Colors, Levels, Items, Texts };

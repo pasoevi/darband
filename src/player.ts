@@ -1,8 +1,10 @@
-import { Actor, ActorTemplate } from "./Actor";
+import { Actor, WizardLife } from "./Actor";
+import { Tile } from "./Tile";
 
 export class Player extends Actor {
-    constructor(spec: ActorTemplate) {
-        super({ ...spec, name: "You", char: "@", sprite: 0 });
+    constructor(tile: Tile) {
+        super("You", tile, 0);
+        this.life = new WizardLife(this);
         this.isPlayer = true;
     }
 
@@ -15,6 +17,4 @@ export class Player extends Actor {
     }
 }
 
-export class UninitializedPlayer extends Player {
-
-}
+export class UninitializedPlayer extends Player {}

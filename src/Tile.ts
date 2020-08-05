@@ -20,7 +20,7 @@ export class Tile {
 
     public getActorsOnThis(): Actor[] {
         return this.game.monsters.filter(
-            (a: Actor) => a.x === this.x && a.y === this.y,
+            (a: Actor) => a.tile.x === this.x && a.tile.y === this.y,
         );
     }
 

@@ -1,8 +1,8 @@
-import { CanvasDrawingLibrary } from "./lib/rendering";
-import { Game, GameOptions } from "./Game";
-import { RenderOptions } from "./lib/interfaces";
 import "./index.css";
+import { Game, GameOptions } from "./Game";
+import { CanvasDrawingLibrary } from "./lib/rendering";
 import { CanvasUI } from "./ui/CanvasUI";
+import { RenderOptions } from "./lib/interfaces";
 
 function setupGame() {
     const renderOptions: RenderOptions = {

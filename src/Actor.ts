@@ -9,22 +9,20 @@ export class Life {
     hp: number;
     maxHp: number;
     defence: number;
-    private corpseName: string;
     private actor: Actor;
 
-    constructor(spec: LifeTemplate, actor: Actor) {
+    constructor(hp: number, maxHp: number, defence: number, actor: Actor) {
         this.game = Game.getInstance();
-        this.hp = spec.hp;
-        this.maxHp = spec.maxHp;
-        this.defence = spec.defence;
-        this.corpseName = spec.corpseName;
+        this.hp = hp;
+        this.maxHp = maxHp;
+        this.defence = defence;
         this.actor = actor;
     }
 
     public die(): void {
         this.hp = 0;
+        this.actor.getTile().monster = null;
         this.game.ui.msg(this.game, `${this.actor.getName()} dies`);
-        // this.game.scheduler.remove(this.actor);
     }
 
     public isAlive(): boolean {
@@ -105,36 +103,38 @@ interface Skill {
     name: string;
 }
 
-class AI {
-    private skills: Skill[];
+export type Skills = { [key: string]: number };
+
+export class AI {
+    public skills: Skills;
     private quests: Quest[];
     private xp: number;
     private xpLevel: number;
 
-    constructor() {
-        this.skills = [];
-        this.quests = [];
-        this.xp = 0;
+    constructor(skills: Skills, quests: Array<Quest>, xp: number) {
+        this.skills = skills;
+        this.quests = quests;
+        this.xp = xp;
         this.xpLevel = 0;
     }
 
-    public getSkills() {
+    public getSkills(): Skills {
         return this.skills;
     }
 
-    public getQuests() {
+    public getQuests(): Array<Quest> {
         return this.quests;
     }
 
-    public addQuest(quest: Quest) {
+    public addQuest(quest: Quest): void {
         this.quests.push(quest);
     }
 
-    public getXP() {
+    public getXP(): number {
         return this.xp;
     }
 
-    public getXpLevel() {
+    public getXpLevel(): number {
         return this.xpLevel;
     }
 }
@@ -142,33 +142,35 @@ class AI {
 export class Actor {
     name: string;
     sprite?: number;
-    x: number;
-    y: number;
+    tile: Tile;
     isPlayer = false;
     game: Game;
     public life?: Life;
     public inventory?: Inventory;
     public ai?: AI;
+    public domains?: ReadonlyArray<number>;
 
-    constructor(spec: ActorTemplate) {
+    constructor(
+        name: string,
+        tile: Tile,
+        sprite: number,
+        life?: Life,
+        ai?: AI,
+        domains?: ReadonlyArray<number>,
+    ) {
         this.game = Game.getInstance();
-        this.name = spec.name ?? "Unnamed monster";
-        this.sprite = spec.sprite;
+        this.tile = tile;
+        this.name = name ?? "Unnamed monster";
+        this.sprite = sprite;
+        this.domains = domains;
 
-        const lifeTemplate = spec.lifeTemplate;
-
-        if (lifeTemplate) {
-            this.life = new Life(lifeTemplate, this);
+        if (life !== undefined) {
+            this.life = life;
         }
 
-        if (spec.aiTemplate) {
-            this.ai = new AI();
+        if (ai !== undefined) {
+            this.ai = ai;
         }
-
-        // randomTile will be used only if the spec doesn't contain coordinates
-        const randomTile = Game.getInstance().getRandomPassableTile();
-        this.x = spec.x ?? randomTile.x;
-        this.y = spec.y ?? randomTile.y;
     }
 
     getName(): string {
@@ -176,12 +178,16 @@ export class Actor {
     }
 
     public getTile(): Tile {
-        return this.game.tiles[this.x][this.y];
+        return this.tile;
     }
 
     draw(): void {
         if (this.sprite !== undefined) {
-            this.game.renderer.drawSprite(this.sprite, this.x, this.y);
+            this.game.renderer.drawSprite(
+                this.sprite,
+                this.tile.x,
+                this.tile.y,
+            );
         }
         if (this.life !== undefined) {
             this.drawHP();
@@ -196,22 +202,22 @@ export class Actor {
         const hpLineHeight = 2;
         this.game.renderer.drawRect(
             "lime",
-            this.x * tileSize,
-            this.y * tileSize + tileSize - hpLineHeight,
+            this.tile.x * tileSize,
+            this.tile.y * tileSize + tileSize - hpLineHeight,
             greenLength,
             hpLineHeight,
         );
         this.game.renderer.drawRect(
             "red",
-            this.x * tileSize + greenLength,
-            this.y * tileSize + tileSize - hpLineHeight,
+            this.tile.x * tileSize + greenLength,
+            this.tile.y * tileSize + tileSize - hpLineHeight,
             redLength,
             hpLineHeight,
         );
     }
 
     tryMove(dx: number, dy: number): boolean {
-        const newTile = this.getTile()?.getNeighbor(dx, dy);
+        const newTile = this.tile.getNeighbor(dx, dy);
         if (newTile.passable) {
             if (newTile.monster === null) {
                 this.move(newTile);
@@ -227,43 +233,26 @@ export class Actor {
         const currentTile = this.getTile();
         currentTile.monster = null;
 
-        this.x = newTile.x;
-        this.y = newTile.y;
+        this.tile.x = newTile.x;
+        this.tile.y = newTile.y;
         newTile.monster = this;
     }
 }
 
-export interface Race {
-    name: string;
-    domains: Array<number>;
+export class WizardLife extends Life {
+    constructor(actor: Actor) {
+        super(190, 190, 3, actor);
+    }
 }
 
-export interface ActorTemplate {
-    x?: number;
-    y?: number;
-    speed?: number;
-    name?: string;
-    col?: string;
-    sprite?: number; // TODO: Make a type that lists every possible visible character
-    char?: string;
-    lifeTemplate?: LifeTemplate;
-    itemTemplate?: ItemTemplate;
-    aiTemplate?: ItemTemplate;
-    race?: Race;
-}
-export interface LifeTemplate {
-    hp: number;
-    maxHp: number;
-    defence: number;
-    corpseName: string;
+export class SimpleLife extends Life {
+    constructor(actor: Actor) {
+        super(110, 110, 2, actor);
+    }
 }
 
-export interface ItemTemplate extends ActorTemplate {
-    power: number;
-}
-
-export interface AITemplate {
-    x: number;
-    y: number;
-    name: string;
+export class MoveAndAttackAI extends AI {
+    constructor() {
+        super({}, [], 10);
+    }
 }

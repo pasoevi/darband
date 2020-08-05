@@ -1,5 +1,5 @@
 import { Item } from "./Item";
-import { ItemTemplate } from "./Actor";
+import { Tile } from "./Tile";
 
 export interface Weapon {
     power: number;
@@ -10,10 +10,14 @@ export interface Modifier {
 }
 
 export class Weapon extends Item {
-    power: number;
-    constructor(spec: ItemTemplate) {
-        super(spec);
-        this.power = spec.power;
+    constructor(
+        name: string,
+        sprite: number,
+        tile: Tile,
+        public power: number,
+    ) {
+        super(name, sprite, tile);
+        this.power = power;
     }
 
     public getPower(): number {

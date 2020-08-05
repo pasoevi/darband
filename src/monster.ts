@@ -1,10 +1,19 @@
-import { Actor, ActorTemplate } from "./Actor";
-import { SimpleLife } from "./Data";
+import { AI, Actor, Life, MoveAndAttackAI, SimpleLife } from "./Actor";
+import { Game } from "./Game";
 import { Tile } from "./Tile";
 
 export class Monster extends Actor {
-    constructor(spec: ActorTemplate) {
-        super({ ...spec, lifeTemplate: SimpleLife });
+    constructor(
+        name: string,
+        sprite: number,
+        tile: Tile,
+        domains: Array<number>,
+        life?: Life,
+        ai?: AI,
+    ) {
+        super(name, tile, sprite);
+        this.life = life ?? new SimpleLife(this);
+        this.ai = ai ?? new MoveAndAttackAI();
     }
 
     public update(): void {
@@ -12,7 +21,9 @@ export class Monster extends Actor {
     }
 
     public getAdjacentTiles(): Array<Tile> {
-        return this.game.getTile(this.x, this.y).getAdjacentPassableTiles();
+        return this.game
+            .getTile(this.tile.x, this.tile.y)
+            .getAdjacentPassableTiles();
     }
 
     private act() {
@@ -40,39 +51,53 @@ export class Monster extends Actor {
     }
 }
 
-export class RedBug extends Monster {
-    constructor(spec: ActorTemplate) {
-        super(spec);
+export class Goblin extends Monster {
+    constructor(tile: Tile) {
+        super("goblin", 12, tile, [0, 1, 2]);
+    }
+}
+export class Kobold extends Monster {
+    constructor(tile: Tile) {
+        super("kobold", 15, tile, [0, 1, 2]);
+    }
+}
+export class Orc extends Monster {
+    constructor(tile: Tile) {
+        super("orc", 14, tile, [0, 1, 2, 3]);
+    }
+}
+export class Dwarf extends Monster {
+    constructor(tile: Tile) {
+        super("dwarf", 19, tile, [7, 8, 9, 10, 11, 12]);
+    }
+}
+export class Man extends Monster {
+    constructor(tile: Tile) {
+        super("man", 16, tile, [3, 4, 5]);
+    }
+}
+export class Troll extends Monster {
+    constructor(tile: Tile) {
+        super("troll", 17, tile, [3, 4]);
+    }
+}
+export class Elf extends Monster {
+    constructor(tile: Tile) {
+        super("elf", 18, tile, [0, 1, 2]);
+    }
+}
+export class Dragon extends Monster {
+    constructor(tile: Tile) {
+        super("dragon", 3, tile, [10, 11, 12, 13, 14, 15]);
+    }
+}
+export class Snake extends Monster {
+    constructor(tile: Tile) {
+        super("snake", 13, tile, [7, 8, 9]);
     }
 }
 
-/* class Bird extends Monster {
-    constructor(tile) {
-        super(tile, 4, 3);
-    }
+export function createMonster<M extends Monster>(C: new (tile: Tile) => M): M {
+    const randomTile = Game.getInstance().getRandomPassableTile();
+    return new C(randomTile);
 }
-
-class Snake extends Monster {
-    constructor(tile) {
-        super(tile, 5, 1);
-    }
-}
-
-class Tank extends Monster {
-    constructor(tile) {
-        super(tile, 6, 2);
-    }
-}
-
-class Eater extends Monster {
-    constructor(tile) {
-        super(tile, 7, 1);
-    }
-}
-
-class Jester extends Monster {
-    constructor(tile) {
-        super(tile, 8, 2);
-    }
-}
- */

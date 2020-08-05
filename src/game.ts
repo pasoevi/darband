@@ -15,7 +15,6 @@ import { Floor, Tile, Wall } from "./Tile";
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
 import { flatten, randomRange, tryTo } from "./Util";
 import { Player } from "./player";
-import { getPossibleMonsters } from "./Data";
 
 export interface GameOptions {
     renderingLibrary: RenderingLibrary;

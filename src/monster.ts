@@ -1,8 +1,9 @@
-import { AI, Actor, Life, MoveAndAttackAI, SimpleLife } from "./Actor";
+import { Actor, AI, Life, MoveAndAttackAI, SimpleLife } from "./Actor";
 import { Game } from "./Game";
 import { Tile } from "./Tile";
 
 export class Monster extends Actor {
+    public ai: AI;
     constructor(
         name: string,
         sprite: number,
@@ -26,7 +27,7 @@ export class Monster extends Actor {
             .getAdjacentPassableTiles();
     }
 
-    private act() {
+    protected act(): void {
         let neighbors = this.getAdjacentTiles();
 
         neighbors = neighbors.filter((t) => {
@@ -56,44 +57,61 @@ export class Goblin extends Monster {
         super("goblin", 12, tile, [0, 1, 2]);
     }
 }
+
 export class Kobold extends Monster {
     constructor(tile: Tile) {
         super("kobold", 15, tile, [0, 1, 2]);
     }
 }
+
 export class Orc extends Monster {
     constructor(tile: Tile) {
         super("orc", 14, tile, [0, 1, 2, 3]);
     }
 }
+
 export class Dwarf extends Monster {
     constructor(tile: Tile) {
         super("dwarf", 19, tile, [7, 8, 9, 10, 11, 12]);
     }
 }
+
 export class Man extends Monster {
     constructor(tile: Tile) {
         super("man", 16, tile, [3, 4, 5]);
     }
 }
+
 export class Troll extends Monster {
     constructor(tile: Tile) {
         super("troll", 17, tile, [3, 4]);
     }
 }
+
 export class Elf extends Monster {
     constructor(tile: Tile) {
         super("elf", 18, tile, [0, 1, 2]);
     }
 }
+
 export class Dragon extends Monster {
     constructor(tile: Tile) {
         super("dragon", 3, tile, [10, 11, 12, 13, 14, 15]);
     }
 }
+
 export class Snake extends Monster {
     constructor(tile: Tile) {
         super("snake", 13, tile, [7, 8, 9]);
+    }
+
+    act(): void {
+        this.ai.attackCountThisTurn = 0;
+        super.act();
+
+        if (this.ai.attackCountThisTurn === 0) {
+            super.act();
+        }
     }
 }
 

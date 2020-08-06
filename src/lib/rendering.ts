@@ -1,5 +1,5 @@
-import { RenderOptions, RenderingLibrary } from "./interfaces";
 import sprites from "../../assets/sprites.png";
+import { RenderingLibrary, RenderOptions } from "./interfaces";
 
 export class CanvasDrawingLibrary implements RenderingLibrary {
     context: CanvasRenderingContext2D;
@@ -8,14 +8,6 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     spritesheet: HTMLImageElement;
     isRendererReady = false;
     onRendererReady: () => void;
-
-    public setOnRendererReady(onReady: () => void): void {
-        if (this.isRendererReady) {
-            onReady();
-        } else {
-            this.onRendererReady = onReady;
-        }
-    }
 
     constructor(canvasElementId: string, options: RenderOptions) {
         const canvas = document.getElementById(
@@ -47,6 +39,14 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
 
         this.spritesheet = new Image();
         this.loadAssets();
+    }
+
+    public setOnRendererReady(onReady: () => void): void {
+        if (this.isRendererReady) {
+            onReady();
+        } else {
+            this.onRendererReady = onReady;
+        }
     }
 
     public loadAssets(): void {

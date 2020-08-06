@@ -1,15 +1,5 @@
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
-import {
-    createMonster,
-    Dragon,
-    Goblin,
-    Man,
-    Monster,
-    Orc,
-    Snake,
-    Troll,
-    Wolf,
-} from "./Monster";
+import { createMonster, Dragon, Monster, Wolf } from "./Monster";
 import { Player } from "./player";
 import { Floor, Tile, Wall } from "./Tile";
 import { flatten, randomRange, tryTo } from "./Util";

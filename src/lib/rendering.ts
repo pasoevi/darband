@@ -2,14 +2,14 @@ import sprites from "../../assets/sprites.png";
 import { RenderingLibrary, RenderOptions } from "./interfaces";
 
 export class CanvasDrawingLibrary implements RenderingLibrary {
-    context: CanvasRenderingContext2D;
-    canvas: HTMLCanvasElement;
-    options: RenderOptions;
-    spritesheet: HTMLImageElement;
-    isRendererReady = false;
-    onRendererReady: () => void;
+    public context: CanvasRenderingContext2D;
+    public options: RenderOptions;
+    private canvas: HTMLCanvasElement;
+    private spritesheet: HTMLImageElement;
+    private isRendererReady = false;
+    private onRendererReady: () => void;
 
-    constructor(canvasElementId: string, options: RenderOptions) {
+    public constructor(canvasElementId: string, options: RenderOptions) {
         const canvas = document.getElementById(
             canvasElementId,
         ) as HTMLCanvasElement;

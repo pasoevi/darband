@@ -1,17 +1,23 @@
 import { Colors } from "./Data";
 import { Game } from "./Game";
 import { Item } from "./Item";
+import { Monster } from "./Monster";
 import { Tile } from "./Tile";
 import { Modifier, Weapon } from "./Weapon";
 
 export class Life {
-    hp: number;
-    maxHp: number;
-    defence: number;
+    public hp: number;
+    public maxHp: number;
+    public defence: number;
     private game: Game;
     private actor: Actor;
 
-    constructor(hp: number, maxHp: number, defence: number, actor: Actor) {
+    public constructor(
+        hp: number,
+        maxHp: number,
+        defence: number,
+        actor: Actor,
+    ) {
         this.game = Game.getInstance();
         this.hp = hp;
         this.maxHp = maxHp;
@@ -70,7 +76,7 @@ export class Life {
         return damageTaken;
     }
 
-    heal(hp: number): number {
+    public heal(hp: number): number {
         this.hp = Math.min(this.maxHp, this.hp + hp);
         this.game.ui.msg(this.game, `${this.actor.name} heals by ${hp}`);
         return hp;
@@ -82,7 +88,7 @@ export class Inventory {
     private weapon?: Weapon;
     private items: Item[];
 
-    constructor() {
+    public constructor() {
         this.game = Game.getInstance();
         this.items = [];
     }
@@ -110,17 +116,26 @@ interface Skill {
 export type Skills = { [key: string]: number };
 
 export class AI {
+    public game: Game;
     public skills: Skills;
     private quests: Quest[];
     private xp: number;
     private xpLevel: number;
     public attackCountThisTurn = 0;
+    public pursuing: Actor | undefined = undefined;
 
-    constructor(skills: Skills, quests: Array<Quest>, xp: number) {
+    public constructor(
+        public monster: Monster,
+        skills: Skills = {},
+        quests: Array<Quest> = [],
+        xp = 10,
+    ) {
+        this.game = Game.getInstance();
         this.skills = skills;
         this.quests = quests;
         this.xp = xp;
         this.xpLevel = 0;
+        this.pursue(this.game.player);
     }
 
     public getSkills(): Skills {
@@ -135,28 +150,63 @@ export class AI {
         this.quests.push(quest);
     }
 
-    public getXP(): number {
-        return this.xp;
+    public act(): void {
+        if (this.monster.stunned) {
+            this.monster.stunned = false;
+            this.game.ui.msg(
+                this.game,
+                `${this.monster.name} is no longer stunned`,
+            );
+            return;
+        }
+        this.towardPursuedActor();
     }
 
-    public getXpLevel(): number {
-        return this.xpLevel;
+    public pursue(actor: Actor): void {
+        this.pursuing = actor;
+    }
+
+    protected towardPursuedActor(): void {
+        if (this.pursuing === undefined) {
+            return;
+        }
+        let neighbors = this.monster.getAdjacentTiles();
+
+        neighbors = neighbors.filter((t) => {
+            const actors = t.getActorsOnThis();
+            return (
+                actors.length === 0 ||
+                actors.filter((a) => a.isPlayer).length > 0
+            );
+        });
+
+        if (neighbors.length > 0) {
+            const pursuedActor = this.pursuing.getTile();
+            neighbors.sort(
+                (a, b) => a.distance(pursuedActor) - b.distance(pursuedActor),
+            );
+            const newTile = neighbors[0];
+            this.monster.tryMove(
+                newTile.x - this.monster.tile.x,
+                newTile.y - this.monster.tile.y,
+            );
+        }
     }
 }
 
 export class Actor {
-    name: string;
-    sprite?: number;
-    tile: Tile;
-    isPlayer = false;
-    game: Game;
+    public name: string;
+    public sprite?: number;
+    public tile: Tile;
+    public isPlayer = false;
+    public game: Game;
     public life?: Life;
     public inventory?: Inventory;
     public ai?: AI;
     public domains?: ReadonlyArray<number>;
-    stunned = false;
+    public stunned = false;
 
-    constructor(
+    public constructor(
         name: string,
         tile: Tile,
         sprite: number,
@@ -179,15 +229,15 @@ export class Actor {
         }
     }
 
-    getName(): string {
+    public getName(): string {
         return this.name;
     }
 
-    getTile(): Tile {
+    public getTile(): Tile {
         return this.tile;
     }
 
-    draw(): void {
+    public draw(): void {
         if (this.sprite !== undefined) {
             this.game.renderer.drawSprite(
                 this.sprite,
@@ -200,7 +250,7 @@ export class Actor {
         }
     }
 
-    drawHP(): void {
+    public drawHP(): void {
         const tileSize = this.game.renderer.options.tileSize;
         const hpPercentage = (this.life?.hp ?? 0) / (this.life?.maxHp ?? 1);
         const greenLength = tileSize * hpPercentage;
@@ -222,7 +272,7 @@ export class Actor {
         );
     }
 
-    tryMove(dx: number, dy: number): boolean {
+    public tryMove(dx: number, dy: number): boolean {
         const newTile = this.tile.getNeighbor(dx, dy);
         if (newTile.passable) {
             if (newTile.monster === null) {
@@ -246,7 +296,7 @@ export class Actor {
         return false;
     }
 
-    move(newTile: Tile): void {
+    public move(newTile: Tile): void {
         this.game.ui.msg(
             this.game,
             `${this.name} ${this.isPlayer ? "move" : "moves"} to ${
@@ -259,22 +309,16 @@ export class Actor {
         this.tile = newTile;
         newTile.monster = this;
     }
+
+    public getAdjacentTiles(): Array<Tile> {
+        return this.game
+            .getTile(this.tile.x, this.tile.y)
+            .getAdjacentPassableTiles();
+    }
 }
 
 export class WizardLife extends Life {
-    constructor(actor: Actor) {
+    public constructor(actor: Actor) {
         super(190, 190, 3, actor);
-    }
-}
-
-export class SimpleLife extends Life {
-    constructor(actor: Actor, maxHP = 100) {
-        super(maxHP, maxHP, 2, actor);
-    }
-}
-
-export class MoveAndAttackAI extends AI {
-    constructor() {
-        super({}, [], 10);
     }
 }

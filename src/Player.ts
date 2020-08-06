@@ -2,7 +2,7 @@ import { Actor, WizardLife } from "./Actor";
 import { Tile } from "./Tile";
 
 export class Player extends Actor {
-    constructor(tile: Tile) {
+    public constructor(tile: Tile) {
         super("You", tile, 0);
         this.life = new WizardLife(this);
         this.isPlayer = true;

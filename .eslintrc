@@ -1,15 +1,8 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint",
-        "simple-import-sort",
-        "import"
-    ],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
-    ],
+    "plugins": ["@typescript-eslint", "simple-import-sort", "import"],
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
     "env": {
         "browser": true,
         "amd": true,
@@ -17,27 +10,16 @@
     },
     "rules": {
         "no-console": "error",
-        "indent": [
-            "error",
-            4
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
-        "object-curly-spacing": [ "error", "always"],
+        "indent": ["error", 4],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+        "object-curly-spacing": ["error", "always"],
         "simple-import-sort/sort": "error",
         "sort-imports": "off",
         "import/first": "error",
         "import/newline-after-import": "error",
-        "import/no-duplicates": "error"
+        "import/no-duplicates": "error",
+        "@typescript-eslint/explicit-member-accessibility": ["error"]
     }
 }

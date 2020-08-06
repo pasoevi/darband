@@ -18,6 +18,14 @@ export class Monster extends Actor {
     }
 
     public update(): void {
+        this.game.ui.msg(
+            this.game,
+            `${this.name} ${this.stunned ? "is" : "is NOT"} stunned`,
+        );
+        if (this.stunned) {
+            this.stunned = false;
+            return;
+        }
         this.act();
     }
 
@@ -85,6 +93,14 @@ export class Man extends Monster {
 export class Troll extends Monster {
     constructor(tile: Tile) {
         super("troll", 17, tile, [3, 4]);
+    }
+
+    update(): void {
+        const startedStunned = this.stunned;
+        super.update();
+        if (!startedStunned) {
+            this.stunned = true;
+        }
     }
 }
 

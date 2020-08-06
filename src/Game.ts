@@ -9,110 +9,128 @@ export interface GameOptions {
     ui: GameUI;
 }
 
+export type GameState = "LOADING" | "PLAYING" | "DEAD" | "TITLE";
+
 export class Game {
-    private static instance: Game;
-    public renderer: RenderingLibrary;
-    public ui: GameUI;
-    public player = (null as unknown) as Player;
-    public tiles: Array<Array<Tile>> = [];
-    public monsters: Monster[] = [];
-    // TODO: Use in getPossibleMonsters
-    public levelID = 1;
+           private static instance: Game;
+           public renderer: RenderingLibrary;
+           public ui: GameUI;
+           public player = (null as unknown) as Player;
+           public tiles: Array<Array<Tile>> = [];
+           public monsters: Monster[] = [];
+           // TODO: Use in getPossibleMonsters
+           public levelID = 1;
+           public gameState: GameState = "TITLE";
 
-    private constructor(options: GameOptions) {
-        this.renderer = options.renderingLibrary;
-        this.ui = options.ui;
-        this.renderer.setOnRendererReady(() => {
-            this.render();
-        });
-    }
+           private constructor(options: GameOptions) {
+               this.renderer = options.renderingLibrary;
+               this.ui = options.ui;
+               this.renderer.setOnRendererReady(() => {
+                   this.renderTitleScreen();
+                   this.render();
+               });
+           }
 
-    public static getInstance(options?: GameOptions): Game {
-        if (Game.instance === undefined) {
-            if (options === undefined) {
-                throw new Error(
-                    "getInstance needs to be passed the parameters when called for the fist time",
-                );
-            }
-            Game.instance = new Game(options);
-        }
-        return Game.instance;
-    }
-    public getRandomPassableTile(): Tile {
-        return this.getRandomTile((t: Tile) => t.passable);
-    }
+           public static getInstance(options?: GameOptions): Game {
+               if (Game.instance === undefined) {
+                   if (options === undefined) {
+                       throw new Error(
+                           "getInstance needs to be passed the parameters when called for the fist time",
+                       );
+                   }
+                   Game.instance = new Game(options);
+               }
+               return Game.instance;
+           }
+           public getRandomPassableTile(): Tile {
+               return this.getRandomTile((t: Tile) => t.passable);
+           }
 
-    public getTiles(condition?: (tile: Tile) => boolean): Array<Tile> {
-        const allTiles = flatten<Tile>(this.tiles);
-        return condition === undefined ? allTiles : allTiles.filter(condition);
-    }
+           public getTiles(condition?: (tile: Tile) => boolean): Array<Tile> {
+               const allTiles = flatten<Tile>(this.tiles);
+               return condition === undefined
+                   ? allTiles
+                   : allTiles.filter(condition);
+           }
 
-    public getPassableTiles(): Array<Tile> {
-        return this.getTiles((t: Tile) => t.passable);
-    }
+           public getPassableTiles(): Array<Tile> {
+               return this.getTiles((t: Tile) => t.passable);
+           }
 
-    public setupGame(): void {
-        const html = document.querySelector("html");
-        if (html === null) {
-            throw Error("Please run the app in the browser environment");
-        } else {
-            html.onkeydown = (e) => {
-                if (this.player === undefined) {
-                    return;
-                }
-                if (e.key == "w") {
-                    this.player.tryMove(0, -1);
-                }
-                if (e.key == "s") {
-                    this.player.tryMove(0, 1);
-                }
-                if (e.key == "a") {
-                    this.player.tryMove(-1, 0);
-                }
-                if (e.key == "d") {
-                    this.player.tryMove(1, 0);
-                }
+           public setupGame(): void {
+               const html = document.querySelector("html");
+               if (html === null) {
+                   throw Error("Please run the app in the browser environment");
+               }
+               html.onkeydown = (e) => {
+                   if (this.gameState === "TITLE") {
+                       this.startGame();
+                   } else if (this.gameState === "DEAD") {
+                       this.renderTitleScreen();
+                   } else if (this.gameState === "PLAYING") {
+                       if (this.player === undefined) {
+                           return;
+                       }
+                       if (e.key == "w") {
+                           this.player.tryMove(0, -1);
+                       }
+                       if (e.key == "s") {
+                           this.player.tryMove(0, 1);
+                       }
+                       if (e.key == "a") {
+                           this.player.tryMove(-1, 0);
+                       }
+                       if (e.key == "d") {
+                           this.player.tryMove(1, 0);
+                       }
 
-                // Monster movements (temporary feature)
-                if (e.key == "ArrowUp") {
-                    this.monsters[0].tryMove(0, -1);
-                }
-                if (e.key == "ArrowDown") {
-                    this.monsters[0].tryMove(0, 1);
-                }
-                if (e.key == "ArrowLeft") {
-                    this.monsters[0].tryMove(-1, 0);
-                }
-                if (e.key == "ArrowRight") {
-                    this.monsters[0].tryMove(1, 0);
-                }
+                       // Monster movements (temporary feature)
+                       if (e.key == "ArrowUp") {
+                           this.monsters[0].tryMove(0, -1);
+                       }
+                       if (e.key == "ArrowDown") {
+                           this.monsters[0].tryMove(0, 1);
+                       }
+                       if (e.key == "ArrowLeft") {
+                           this.monsters[0].tryMove(-1, 0);
+                       }
+                       if (e.key == "ArrowRight") {
+                           this.monsters[0].tryMove(1, 0);
+                       }
 
-                this.render();
-            };
-        }
-        this.generateLevel();
-    }
+                       this.render();
+                   }
+               };
+           }
 
-    private generateLevel(): void {
-        tryTo("generate map", () => {
-            return (
-                this.generateTiles() ===
-                this.getRandomPassableTile().getConnectedTiles().length
-            );
-        });
+           private startGame(): void {
+               this.levelID = 0;
+               this.startLevel();
+               this.gameState = "PLAYING";
+           }
 
-        const startingTile = this.getRandomPassableTile();
+           private startLevel() {
+               this.generateLevel();
+           }
 
-        // Create player
-        this.player = new Player(startingTile);
+           private generateLevel(): void {
+               tryTo("generate map", () => {
+                   return (
+                       this.generateTiles() ===
+                       this.getRandomPassableTile().getConnectedTiles().length
+                   );
+               });
 
-        this.monsters = this.generateMonsters();
-    }
+               const startingTile = this.getRandomPassableTile();
+               this.player = new Player(startingTile);
 
-    /* TODO: Not fully implemented */
-    private generateMonsters(): Monster[] {
-        const monsters: Monster[] = [];
-        /*
+               this.monsters = this.generateMonsters();
+           }
+
+           /* TODO: Not fully implemented */
+           private generateMonsters(): Monster[] {
+               const monsters: Monster[] = [];
+               /*
         TODO: Delete
         const allMonsters: {[key: string]: Monster} = {
             "goblin": Goblin,
@@ -125,86 +143,99 @@ export class Game {
             "dragon": Dragon,
             "snake": Snake,
         }; */
-        const allMonsters = [Wolf, Wolf, Dragon];
-        // const n = randomRange(2, 2);
-        for (const monster of allMonsters) {
-            monsters.push(createMonster(monster));
-        }
-        /* for (let i = 0; i < n; i++) {
+               const allMonsters = [Wolf, Wolf, Dragon];
+               // const n = randomRange(2, 2);
+               for (const monster of allMonsters) {
+                   monsters.push(createMonster(monster));
+               }
+               /* for (let i = 0; i < n; i++) {
         } */
-        return monsters;
-    }
+               return monsters;
+           }
 
-    private renderTiles(): void {
-        const numTiles = this.renderer.options.numTiles;
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
-                this.getTile(i, j).draw();
-            }
-        }
-    }
+           private renderTiles(): void {
+               const numTiles = this.renderer.options.numTiles;
+               for (let i = 0; i < numTiles; i++) {
+                   for (let j = 0; j < numTiles; j++) {
+                       this.getTile(i, j).draw();
+                   }
+               }
+           }
 
-    private renderMonsters(): void {
-        for (const monster of this.monsters) {
-            monster.draw();
-        }
-    }
+           private renderMonsters(): void {
+               for (const monster of this.monsters) {
+                   monster.draw();
+               }
+           }
 
-    private generateTiles(): number {
-        let passableTiles = 0;
-        const tiles: Array<Array<Tile>> = [];
-        const numTiles = this.renderer.options.numTiles;
-        for (let i = 0; i < numTiles; i++) {
-            tiles[i] = [];
-            for (let j = 0; j < numTiles; j++) {
-                if (Math.random() < 0.3 || !this.inBounds(i, j)) {
-                    tiles[i][j] = new Wall(i, j);
-                } else {
-                    tiles[i][j] = new Floor(i, j);
-                    passableTiles++;
-                }
-            }
-        }
+           private generateTiles(): number {
+               let passableTiles = 0;
+               const tiles: Array<Array<Tile>> = [];
+               const numTiles = this.renderer.options.numTiles;
+               for (let i = 0; i < numTiles; i++) {
+                   tiles[i] = [];
+                   for (let j = 0; j < numTiles; j++) {
+                       if (Math.random() < 0.3 || !this.inBounds(i, j)) {
+                           tiles[i][j] = new Wall(i, j);
+                       } else {
+                           tiles[i][j] = new Floor(i, j);
+                           passableTiles++;
+                       }
+                   }
+               }
 
-        this.tiles = tiles;
-        return passableTiles;
-    }
+               this.tiles = tiles;
+               return passableTiles;
+           }
 
-    public inBounds(x: number, y: number): boolean {
-        const numTiles = this.renderer.options.numTiles;
-        return x > 0 && y > 0 && x < numTiles - 1 && y < numTiles - 1;
-    }
+           public inBounds(x: number, y: number): boolean {
+               const numTiles = this.renderer.options.numTiles;
+               return x > 0 && y > 0 && x < numTiles - 1 && y < numTiles - 1;
+           }
 
-    public getTile(x: number, y: number): Tile {
-        if (this.inBounds(x, y)) {
-            return this.tiles[x][y];
-        } else {
-            return new Wall(x, y);
-        }
-    }
+           public getTile(x: number, y: number): Tile {
+               if (this.inBounds(x, y)) {
+                   return this.tiles[x][y];
+               } else {
+                   return new Wall(x, y);
+               }
+           }
 
-    public tick(): void {
-        for (let k = this.monsters.length - 1; k >= 0; k--) {
-            if (this.monsters[k].life?.isAlive()) {
-                this.monsters[k].update();
-            } else {
-                this.monsters.splice(k, 1);
-            }
-        }
-    }
+           public tick(): void {
+               for (let k = this.monsters.length - 1; k >= 0; k--) {
+                   if (this.monsters[k].life?.isAlive()) {
+                       this.monsters[k].update();
+                   } else {
+                       this.monsters.splice(k, 1);
+                   }
+               }
 
-    public render(): void {
-        this.renderer.clearScreen();
-        this.renderTiles();
-        this.renderMonsters();
-        this.player?.draw();
-    }
+               if (!this.player.life.isAlive()) {
+                   this.gameState = "DEAD";
+               }
+           }
 
-    private getRandomTile(condition?: (tile: Tile) => boolean): Tile {
-        const allTiles = flatten<Tile>(this.tiles);
-        const possibleTiles =
-            condition === undefined ? allTiles : allTiles.filter(condition);
-        const randomTileIndex = randomRange(0, possibleTiles.length - 1);
-        return possibleTiles[randomTileIndex];
-    }
+           public render(): void {
+               if (this.gameState === "PLAYING" || this.gameState === "DEAD") {
+                   this.renderer.clearScreen();
+                   this.renderTiles();
+                   this.renderMonsters();
+                   this.player.draw();
+               }
+           }
+
+           private renderTitleScreen() {
+               this.renderer.drawRect("rgba(0,0,0,.75)", 0, 0);
+               this.gameState = "TITLE";
+           }
+
+           private getRandomTile(condition?: (tile: Tile) => boolean): Tile {
+               const allTiles = flatten<Tile>(this.tiles);
+               const possibleTiles =
+                   condition === undefined
+                       ? allTiles
+                       : allTiles.filter(condition);
+               const randomTileIndex = randomRange(0, possibleTiles.length - 1);
+               return possibleTiles[randomTileIndex];
+           }
 }

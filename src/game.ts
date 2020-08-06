@@ -1,5 +1,14 @@
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
-import { createMonster, Dragon, Monster, Snake, Troll } from "./Monster";
+import {
+    createMonster,
+    Dragon,
+    Goblin,
+    Man,
+    Monster,
+    Orc,
+    Snake,
+    Troll,
+} from "./Monster";
 import { Player } from "./player";
 import { Floor, Tile, Wall } from "./Tile";
 import { flatten, randomRange, tryTo } from "./Util";
@@ -125,7 +134,7 @@ export class Game {
             "dragon": Dragon,
             "snake": Snake,
         }; */
-        const allMonsters = [Snake, Troll, Dragon, Dragon];
+        const allMonsters = [Snake, Goblin, Orc, Man, Dragon, Dragon];
         // const n = randomRange(2, 2);
         for (const monster of allMonsters) {
             monsters.push(createMonster(monster));

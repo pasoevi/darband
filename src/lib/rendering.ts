@@ -82,8 +82,8 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         color: string,
         x: number,
         y: number,
-        w: number,
-        h: number,
+        w = this.canvas.width,
+        h = this.canvas.height,
     ): void {
         const ctx = this.context;
         const oldColor = ctx.fillStyle;

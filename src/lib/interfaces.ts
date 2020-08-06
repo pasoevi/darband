@@ -5,7 +5,7 @@ export interface RenderingLibrary {
 
     drawSprite(sprite: number, x: number, y: number): void;
 
-    drawRect(color: string, x: number, y: number, w: number, h: number): void;
+    drawRect(color: string, x: number, y: number, w?: number, h?: number): void;
 
     setOnRendererReady(onReady: () => void): void;
 }

@@ -10,7 +10,7 @@ export interface Modifier {
 }
 
 export class Weapon extends Item {
-    constructor(
+    public constructor(
         name: string,
         sprite: number,
         tile: Tile,

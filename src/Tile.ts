@@ -5,7 +5,7 @@ import { shuffle } from "./Util";
 export class Tile {
     private game: Game;
 
-    constructor(
+    public constructor(
         public x: number,
         public y: number,
         public sprite = 0,
@@ -38,7 +38,7 @@ export class Tile {
         ]);
     }
 
-    getAdjacentActors<T extends Actor>(): Array<T> {
+    public getAdjacentActors<T extends Actor>(): Array<T> {
         return (
             this.getAdjacentNeighbors()
                 .filter((t) => t.monster !== null)
@@ -47,15 +47,15 @@ export class Tile {
         );
     }
 
-    distance(other: Tile): number {
-        return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
-    }
-
-    getAdjacentPassableTiles(): Array<Tile> {
+    public getAdjacentPassableTiles(): Array<Tile> {
         return this.getAdjacentNeighbors().filter((t) => t.passable);
     }
 
-    getConnectedTiles(): Array<Tile> {
+    public distance(other: Tile): number {
+        return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
+    }
+
+    public getConnectedTiles(): Array<Tile> {
         let connectedTiles: Array<Tile> = [this];
         let frontier: Array<Tile> = [this];
         while (frontier.length) {
@@ -69,7 +69,7 @@ export class Tile {
         return connectedTiles;
     }
 
-    replace(newTileType: typeof Tile): Tile {
+    public replace(newTileType: typeof Tile): Tile {
         // TODO: copy over monsters and items from the old tile to the new if necessary
         this.game.tiles[this.x][this.y] = new newTileType(this.x, this.y);
         return this.game.tiles[this.x][this.y];
@@ -77,13 +77,13 @@ export class Tile {
 }
 
 export class Floor extends Tile {
-    constructor(public x: number, public y: number) {
+    public constructor(public x: number, public y: number) {
         super(x, y, 32, true);
     }
 }
 
 export class Wall extends Tile {
-    constructor(public x: number, public y: number) {
+    public constructor(public x: number, public y: number) {
         super(x, y, 33, false);
     }
 }

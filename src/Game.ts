@@ -8,6 +8,7 @@ import {
     Orc,
     Snake,
     Troll,
+    Wolf,
 } from "./Monster";
 import { Player } from "./player";
 import { Floor, Tile, Wall } from "./Tile";
@@ -20,13 +21,13 @@ export interface GameOptions {
 
 export class Game {
     private static instance: Game;
-    renderer: RenderingLibrary;
-    ui: GameUI;
-    player = (null as unknown) as Player;
-    tiles: Array<Array<Tile>> = [];
-    monsters: Monster[] = [];
+    public renderer: RenderingLibrary;
+    public ui: GameUI;
+    public player = (null as unknown) as Player;
+    public tiles: Array<Array<Tile>> = [];
+    public monsters: Monster[] = [];
     // TODO: Use in getPossibleMonsters
-    levelID = 1;
+    public levelID = 1;
 
     private constructor(options: GameOptions) {
         this.renderer = options.renderingLibrary;
@@ -102,7 +103,7 @@ export class Game {
         this.generateLevel();
     }
 
-    generateLevel(): void {
+    private generateLevel(): void {
         tryTo("generate map", () => {
             return (
                 this.generateTiles() ===
@@ -119,7 +120,7 @@ export class Game {
     }
 
     /* TODO: Not fully implemented */
-    generateMonsters(): Monster[] {
+    private generateMonsters(): Monster[] {
         const monsters: Monster[] = [];
         /*
         TODO: Delete
@@ -134,7 +135,7 @@ export class Game {
             "dragon": Dragon,
             "snake": Snake,
         }; */
-        const allMonsters = [Snake, Goblin, Orc, Man, Dragon, Dragon];
+        const allMonsters = [Troll, Wolf, Snake, Goblin, Orc, Man, Dragon, Dragon];
         // const n = randomRange(2, 2);
         for (const monster of allMonsters) {
             monsters.push(createMonster(monster));
@@ -144,7 +145,7 @@ export class Game {
         return monsters;
     }
 
-    renderTiles(): void {
+    private renderTiles(): void {
         const numTiles = this.renderer.options.numTiles;
         for (let i = 0; i < numTiles; i++) {
             for (let j = 0; j < numTiles; j++) {
@@ -153,13 +154,13 @@ export class Game {
         }
     }
 
-    renderMonsters(): void {
+    private renderMonsters(): void {
         for (const monster of this.monsters) {
             monster.draw();
         }
     }
 
-    generateTiles(): number {
+    private generateTiles(): number {
         let passableTiles = 0;
         const tiles: Array<Array<Tile>> = [];
         const numTiles = this.renderer.options.numTiles;
@@ -179,12 +180,12 @@ export class Game {
         return passableTiles;
     }
 
-    inBounds(x: number, y: number): boolean {
+    public inBounds(x: number, y: number): boolean {
         const numTiles = this.renderer.options.numTiles;
         return x > 0 && y > 0 && x < numTiles - 1 && y < numTiles - 1;
     }
 
-    getTile(x: number, y: number): Tile {
+    public getTile(x: number, y: number): Tile {
         if (this.inBounds(x, y)) {
             return this.tiles[x][y];
         } else {
@@ -202,7 +203,7 @@ export class Game {
         }
     }
 
-    render(): void {
+    public render(): void {
         this.renderer.clearScreen();
         this.renderTiles();
         this.renderMonsters();

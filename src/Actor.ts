@@ -53,23 +53,27 @@ export class Life {
             damageTaken,
         );
 
-        this.game.ui.msg(
-            this.game,
-            `${this.hp} was and now is ${damageTaken} less`,
-        );
-        this.game.ui.msg(
-            this.game,
-            `${dealer.getName()} attacks ${this.actor.getName()} for ${damageTaken} hp`,
-            Colors.red,
-        );
-
-        if (this.hp - damageTaken > 0) {
-            this.hp -= damageTaken;
-        } else {
+        const hpBeforeAttack = this.hp;
+        this.hp = Math.max(0, this.hp - damageTaken);
+        if (this.hp <= 0) {
             this.die();
         }
 
+        this.game.ui.msg(
+            this.game,
+            `${dealer.getName()} attacks ${this.actor.getName()} for ${damageTaken}. Was ${hpBeforeAttack} is ${
+                this.hp
+            }`,
+            Colors.red,
+        );
+
         return damageTaken;
+    }
+
+    heal(hp: number): number {
+        this.hp += hp;
+        this.game.ui.msg(this.game, `${this.actor.name} heals by ${hp}`);
+        return hp;
     }
 }
 
@@ -179,7 +183,7 @@ export class Actor {
         return this.name;
     }
 
-    public getTile(): Tile {
+    getTile(): Tile {
         return this.tile;
     }
 
@@ -228,6 +232,10 @@ export class Actor {
                     this.ai.attackCountThisTurn++;
                 }
                 newTile.monster.stunned = true;
+                this.game.ui.msg(
+                    this.game,
+                    `${this.name} stuns ${newTile.monster.name}`,
+                );
                 // TODO: Get actual damage value from the dealer taking into account
                 // stats, defence, etc.
                 const power = 10;

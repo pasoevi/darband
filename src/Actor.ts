@@ -150,6 +150,7 @@ export class Actor {
     public inventory?: Inventory;
     public ai?: AI;
     public domains?: ReadonlyArray<number>;
+    stunned = false;
 
     constructor(
         name: string,
@@ -226,6 +227,7 @@ export class Actor {
                 if (this.ai !== undefined) {
                     this.ai.attackCountThisTurn++;
                 }
+                newTile.monster.stunned = true;
                 // TODO: Get actual damage value from the dealer taking into account
                 // stats, defence, etc.
                 const power = 10;

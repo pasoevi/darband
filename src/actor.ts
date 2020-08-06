@@ -71,7 +71,7 @@ export class Life {
     }
 
     heal(hp: number): number {
-        this.hp += hp;
+        this.hp = Math.min(this.maxHp, this.hp + hp);
         this.game.ui.msg(this.game, `${this.actor.name} heals by ${hp}`);
         return hp;
     }
@@ -268,8 +268,8 @@ export class WizardLife extends Life {
 }
 
 export class SimpleLife extends Life {
-    constructor(actor: Actor) {
-        super(110, 110, 2, actor);
+    constructor(actor: Actor, maxHP = 100) {
+        super(maxHP, maxHP, 2, actor);
     }
 }
 

@@ -10,11 +10,12 @@ export class Monster extends Actor {
         sprite: number,
         tile: Tile,
         domains: Array<number>,
+        maxHP = 100,
         life?: Life,
         ai?: AI,
     ) {
         super(name, tile, sprite);
-        this.life = life ?? new SimpleLife(this);
+        this.life = life ?? new SimpleLife(this, maxHP);
         this.ai = ai ?? new MoveAndAttackAI();
     }
 
@@ -66,37 +67,37 @@ export class Monster extends Actor {
 
 export class Goblin extends Monster {
     constructor(tile: Tile) {
-        super("goblin", 12, tile, [0, 1, 2]);
+        super("goblin", 12, tile, [0, 1, 2], 95);
     }
 }
 
 export class Kobold extends Monster {
     constructor(tile: Tile) {
-        super("kobold", 15, tile, [0, 1, 2]);
+        super("kobold", 15, tile, [0, 1, 2], 125);
     }
 }
 
 export class Orc extends Monster {
     constructor(tile: Tile) {
-        super("orc", 14, tile, [0, 1, 2, 3]);
+        super("orc", 14, tile, [0, 1, 2, 3], 115);
     }
 }
 
 export class Dwarf extends Monster {
     constructor(tile: Tile) {
-        super("dwarf", 19, tile, [7, 8, 9, 10, 11, 12]);
+        super("dwarf", 19, tile, [7, 8, 9, 10, 11, 12], 120);
     }
 }
 
 export class Man extends Monster {
     constructor(tile: Tile) {
-        super("man", 16, tile, [3, 4, 5]);
+        super("man", 16, tile, [3, 4, 5], 100);
     }
 }
 
 export class Troll extends Monster {
     constructor(tile: Tile) {
-        super("troll", 17, tile, [3, 4]);
+        super("troll", 17, tile, [3, 4], 160);
     }
 
     update(): void {
@@ -111,15 +112,17 @@ export class Troll extends Monster {
 
 export class Elf extends Monster {
     constructor(tile: Tile) {
-        super("elf", 18, tile, [0, 1, 2]);
+        super("elf", 18, tile, [0, 1, 2], 150);
     }
 }
 
 export class Dragon extends Monster {
     constructor(tile: Tile) {
-        super("dragon", 3, tile, [10, 11, 12, 13, 14, 15]);
+        super("dragon", 3, tile, [10, 11, 12, 13, 14, 15], 250);
     }
 
+    // When low on hp, monsters of this kind can eat other monsters that are no more
+    // than half of its size in orter do restore hp
     eat(actor: Monster): boolean {
         this.game.ui.msg(this.game, `${this.name} eats ${actor.name}`);
         actor.life?.die();
@@ -127,12 +130,18 @@ export class Dragon extends Monster {
         return pointsHealed > 0;
     }
 
+    // Make this behaviour possible to attach to other types of actors
     act(): void {
         super.act();
+
         if (this.life.hp < 30) {
             const neighbors = this.tile
                 .getAdjacentActors<Monster>()
-                .filter((t) => t.life !== undefined);
+                .filter(
+                    (t) =>
+                        t.life !== undefined &&
+                        t.life.maxHp < this.life.maxHp / 2,
+                );
             if (neighbors.length > 0) {
                 this.eat(neighbors[0]);
             }
@@ -142,7 +151,7 @@ export class Dragon extends Monster {
 
 export class Snake extends Monster {
     constructor(tile: Tile) {
-        super("snake", 13, tile, [7, 8, 9]);
+        super("snake", 13, tile, [7, 8, 9], 15);
     }
 
     act(): void {

@@ -22,10 +22,7 @@ export class Monster extends Actor {
             this.game,
             `${this.name} ${this.stunned ? "is" : "is NOT"} stunned`,
         );
-        if (this.stunned) {
-            this.stunned = false;
-            return;
-        }
+
         this.act();
     }
 
@@ -36,6 +33,11 @@ export class Monster extends Actor {
     }
 
     protected act(): void {
+        if (this.stunned) {
+            this.stunned = false;
+            return;
+        }
+
         let neighbors = this.getAdjacentTiles();
 
         neighbors = neighbors.filter((t) => {

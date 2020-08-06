@@ -121,6 +121,7 @@ export class Game {
                    );
                });
 
+
                const startingTile = this.getRandomPassableTile();
                this.player = new Player(startingTile);
 

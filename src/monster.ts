@@ -143,9 +143,12 @@ export class ConsumerAI extends AI {
     }
 
     public eat(actor: Monster): boolean {
-        this.game.ui.msg(this.game, `${this.monster.name} eats ${actor.name}`);
         actor.life?.die();
         const pointsHealed = this.monster.life.heal(actor.life?.maxHp / 2);
+        this.game.ui.msg(
+            this.game,
+            `${this.monster.name} heals by ${pointsHealed} by eating ${actor.name}`,
+        );
         return pointsHealed > 0;
     }
 

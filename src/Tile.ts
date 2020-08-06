@@ -1,5 +1,6 @@
 import { Actor } from "./Actor";
 import { Game } from "./Game";
+import { Direction } from "./Types";
 import { shuffle } from "./Util";
 
 export class Tile {
@@ -77,13 +78,36 @@ export class Tile {
 }
 
 export class Floor extends Tile {
-    public constructor(public x: number, public y: number) {
+    public constructor(x: number, y: number) {
         super(x, y, 32, true);
     }
 }
 
 export class Wall extends Tile {
-    public constructor(public x: number, public y: number) {
+    public constructor(x: number, y: number) {
         super(x, y, 33, false);
+    }
+}
+
+export class Staircase extends Tile {
+    public constructor(
+        x: number,
+        y: number,
+        sprite: number,
+        public direction: Direction,
+    ) {
+        super(x, y, sprite, true);
+    }
+}
+
+export class StaircaseUp extends Staircase {
+    public constructor(x: number, y: number) {
+        super(x, y, 43, "UP");
+    }
+}
+
+export class StaircaseDown extends Staircase {
+    public constructor(x: number, y: number) {
+        super(x, y, 42, "DOWN");
     }
 }

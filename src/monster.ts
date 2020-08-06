@@ -5,6 +5,7 @@ import { Tile } from "./Tile";
 export class Monster extends Actor {
     public ai: AI;
     public life: Life;
+    pursuing: Actor | undefined = undefined;
     constructor(
         name: string,
         sprite: number,
@@ -17,6 +18,7 @@ export class Monster extends Actor {
         super(name, tile, sprite);
         this.life = life ?? new SimpleLife(this, maxHP);
         this.ai = ai ?? new MoveAndAttackAI();
+        this.pursue(this.game.player);
     }
 
     public update(): void {
@@ -40,7 +42,17 @@ export class Monster extends Actor {
             this.game.ui.msg(this.game, `${this.name} is no longer stunned`);
             return;
         }
+        this.towardPursuedActor();
+    }
 
+    pursue(actor: Actor): void {
+        this.pursuing = actor;
+    }
+
+    protected towardPursuedActor(): void {
+        if (this.pursuing === undefined) {
+            return;
+        }
         let neighbors = this.getAdjacentTiles();
 
         neighbors = neighbors.filter((t) => {
@@ -52,9 +64,9 @@ export class Monster extends Actor {
         });
 
         if (neighbors.length > 0) {
-            const playerTile = this.game.player?.getTile();
+            const pursuedActor = this.pursuing.getTile();
             neighbors.sort(
-                (a, b) => a.distance(playerTile) - b.distance(playerTile),
+                (a, b) => a.distance(pursuedActor) - b.distance(pursuedActor),
             );
             const newTile = neighbors[0];
             this.tryMove(
@@ -133,8 +145,18 @@ export class Dragon extends Monster {
     // Make this behaviour possible to attach to other types of actors
     act(): void {
         super.act();
-
-        if (this.life.hp < 30) {
+        if (this.life.hp < this.life.maxHp * 0.75) {
+            const smallMonsters = this.game.monsters
+                .filter(
+                    (t) =>
+                        t.life !== undefined &&
+                        t.life.maxHp < this.life.maxHp / 2,
+                )
+                .sort(
+                    (a, b) =>
+                        a.tile.distance(this.tile) - b.tile.distance(this.tile),
+                );
+            this.pursue(smallMonsters[0]);
             const neighbors = this.tile
                 .getAdjacentActors<Monster>()
                 .filter(
@@ -145,6 +167,8 @@ export class Dragon extends Monster {
             if (neighbors.length > 0) {
                 this.eat(neighbors[0]);
             }
+        } else {
+            this.pursue(this.game.player);
         }
     }
 }
@@ -164,7 +188,9 @@ export class Snake extends Monster {
     }
 }
 
-export function createMonster<M extends Monster>(C: new (tile: Tile) => M): M {
+export function createMonster<M extends Monster>(
+    actorClass: new (tile: Tile) => M,
+): M {
     const randomTile = Game.getInstance().getRandomPassableTile();
-    return new C(randomTile);
+    return new actorClass(randomTile);
 }

@@ -1,14 +1,14 @@
-import { Modifier, Weapon } from "./Weapon";
 import { Colors } from "./Data";
 import { Game } from "./Game";
 import { Item } from "./Item";
 import { Tile } from "./Tile";
+import { Modifier, Weapon } from "./Weapon";
 
 export class Life {
-    private game: Game;
     hp: number;
     maxHp: number;
     defence: number;
+    private game: Game;
     private actor: Actor;
 
     constructor(hp: number, maxHp: number, defence: number, actor: Actor) {
@@ -110,6 +110,7 @@ export class AI {
     private quests: Quest[];
     private xp: number;
     private xpLevel: number;
+    public attackCountThisTurn = 0;
 
     constructor(skills: Skills, quests: Array<Quest>, xp: number) {
         this.skills = skills;
@@ -222,7 +223,13 @@ export class Actor {
             if (newTile.monster === null) {
                 this.move(newTile);
             } else if (this.isPlayer !== newTile.monster.isPlayer) {
-                newTile.monster.life?.takeDamage(this, 10, []);
+                if (this.ai !== undefined) {
+                    this.ai.attackCountThisTurn++;
+                }
+                // TODO: Get actual damage value from the dealer taking into account
+                // stats, defence, etc.
+                const power = 10;
+                newTile.monster.life?.takeDamage(this, power, []);
             }
             return true;
         }
@@ -230,6 +237,12 @@ export class Actor {
     }
 
     move(newTile: Tile): void {
+        this.game.ui.msg(
+            this.game,
+            `${this.name} ${this.isPlayer ? "move" : "moves"} to ${
+                newTile.x
+            }, ${newTile.y}`,
+        );
         const currentTile = this.getTile();
         currentTile.monster = null;
 

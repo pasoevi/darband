@@ -1,9 +1,13 @@
 export interface RenderingLibrary {
-    clearScreen(): void;
-    drawSprite(sprite: number, x: number, y: number): void;
-    drawRect(color: string, x: number, y: number, w: number, h: number): void;
-    setOnRendererReady(onReady: () => void): void;
     options: RenderOptions;
+
+    clearScreen(): void;
+
+    drawSprite(sprite: number, x: number, y: number): void;
+
+    drawRect(color: string, x: number, y: number, w: number, h: number): void;
+
+    setOnRendererReady(onReady: () => void): void;
 }
 
 export interface RenderOptions {

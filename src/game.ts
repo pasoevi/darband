@@ -1,20 +1,8 @@
-import {
-    Dragon,
-    Dwarf,
-    Elf,
-    Goblin,
-    Kobold,
-    Man,
-    Monster,
-    Orc,
-    Snake,
-    Troll,
-    createMonster,
-} from "./Monster";
-import { Floor, Tile, Wall } from "./Tile";
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
-import { flatten, randomRange, tryTo } from "./Util";
+import { createMonster, Monster, Snake, } from "./Monster";
 import { Player } from "./player";
+import { Floor, Tile, Wall } from "./Tile";
+import { flatten, randomRange, tryTo } from "./Util";
 
 export interface GameOptions {
     renderingLibrary: RenderingLibrary;
@@ -27,10 +15,8 @@ export class Game {
     ui: GameUI;
     player = (null as unknown) as Player;
     tiles: Array<Array<Tile>> = [];
-    onRendererReady: () => void = () => {
-        /* noop */
-    };
     monsters: Monster[] = [];
+    // TODO: Use in getPossibleMonsters
     levelID = 1;
 
     private constructor(options: GameOptions) {
@@ -41,23 +27,24 @@ export class Game {
         });
     }
 
-    private getRandomTile(condition?: (tile: Tile) => boolean): Tile {
-        const allTiles = flatten<Tile>(this.tiles);
-        const possibleTiles =
-            condition === undefined ? allTiles : allTiles.filter(condition);
-        const randomTileIndex = randomRange(0, possibleTiles.length - 1);
-        return possibleTiles[randomTileIndex];
+    public static getInstance(options?: GameOptions): Game {
+        if (Game.instance === undefined) {
+            if (options === undefined) {
+                throw new Error(
+                    "getInstance needs to be passed the parameters when called for the fist time",
+                );
+            }
+            Game.instance = new Game(options);
+        }
+        return Game.instance;
     }
-
     public getRandomPassableTile(): Tile {
         return this.getRandomTile((t: Tile) => t.passable);
     }
 
     public getTiles(condition?: (tile: Tile) => boolean): Array<Tile> {
         const allTiles = flatten<Tile>(this.tiles);
-        const possibleTiles =
-            condition === undefined ? allTiles : allTiles.filter(condition);
-        return possibleTiles;
+        return condition === undefined ? allTiles : allTiles.filter(condition);
     }
 
     public getPassableTiles(): Array<Tile> {
@@ -88,16 +75,16 @@ export class Game {
 
                 // Monster movements (temporary feature)
                 if (e.key == "ArrowUp") {
-                    this.monsters[0].tile.y--;
+                    this.monsters[0].tryMove(0, -1);
                 }
                 if (e.key == "ArrowDown") {
-                    this.monsters[0].tile.y++;
+                    this.monsters[0].tryMove(0, 1);
                 }
                 if (e.key == "ArrowLeft") {
-                    this.monsters[0].tile.x--;
+                    this.monsters[0].tryMove(-1, 0);
                 }
                 if (e.key == "ArrowRight") {
-                    this.monsters[0].tile.x++;
+                    this.monsters[0].tryMove(1, 0);
                 }
 
                 this.render();
@@ -122,9 +109,12 @@ export class Game {
         this.monsters = this.generateMonsters();
     }
 
+    /* TODO: Not fully implemented */
     generateMonsters(): Monster[] {
         const monsters: Monster[] = [];
-        /*  const allMonsters: {[key: string]: Monster} = {
+        /*
+        TODO: Delete
+        const allMonsters: {[key: string]: Monster} = {
             "goblin": Goblin,
             "kobold": Kobold,
             "orc": Orc,
@@ -136,14 +126,6 @@ export class Game {
             "snake": Snake,
         }; */
         const allMonsters = [
-            Goblin,
-            Kobold,
-            Orc,
-            Dwarf,
-            Man,
-            Troll,
-            Elf,
-            Dragon,
             Snake,
         ];
         for (const monster of allMonsters) {
@@ -204,18 +186,6 @@ export class Game {
         }
     }
 
-    public static getInstance(options?: GameOptions): Game {
-        if (Game.instance === undefined) {
-            if (options === undefined) {
-                throw new Error(
-                    "getInstance needs to be passed the parameters when called for the fist time",
-                );
-            }
-            Game.instance = new Game(options);
-        }
-        return Game.instance;
-    }
-
     public tick(): void {
         for (let k = this.monsters.length - 1; k >= 0; k--) {
             if (this.monsters[k].life?.isAlive()) {
@@ -231,5 +201,13 @@ export class Game {
         this.renderTiles();
         this.renderMonsters();
         this.player?.draw();
+    }
+
+    private getRandomTile(condition?: (tile: Tile) => boolean): Tile {
+        const allTiles = flatten<Tile>(this.tiles);
+        const possibleTiles =
+            condition === undefined ? allTiles : allTiles.filter(condition);
+        const randomTileIndex = randomRange(0, possibleTiles.length - 1);
+        return possibleTiles[randomTileIndex];
     }
 }

@@ -4,6 +4,7 @@ import { shuffle } from "./Util";
 
 export class Tile {
     private game: Game;
+
     constructor(
         public x: number,
         public y: number,

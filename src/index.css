@@ -5,6 +5,7 @@ body {
     padding: 0;
     height: 100%;
 }
+
 canvas {
     outline: 1px solid white;
 }

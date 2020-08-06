@@ -8,8 +8,8 @@ export class Tile {
     constructor(
         public x: number,
         public y: number,
-        public sprite: number,
-        public passable: boolean,
+        public sprite = 0,
+        public passable = true,
         public monster: Actor | null = null,
     ) {
         this.game = Game.getInstance();
@@ -38,6 +38,15 @@ export class Tile {
         ]);
     }
 
+    getAdjacentActors<T extends Actor>(): Array<T> {
+        return (
+            this.getAdjacentNeighbors()
+                .filter((t) => t.monster !== null)
+                // TODO: Return not only monsters
+                .map((t) => t.monster as T)
+        );
+    }
+
     distance(other: Tile): number {
         return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }
@@ -58,6 +67,12 @@ export class Tile {
             frontier = frontier.concat(neighbors ?? []);
         }
         return connectedTiles;
+    }
+
+    replace(newTileType: typeof Tile): Tile {
+        // TODO: copy over monsters and items from the old tile to the new if necessary
+        this.game.tiles[this.x][this.y] = new newTileType(this.x, this.y);
+        return this.game.tiles[this.x][this.y];
     }
 }
 

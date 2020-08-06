@@ -4,6 +4,7 @@ import { Tile } from "./Tile";
 
 export class Monster extends Actor {
     public ai: AI;
+    public life: Life;
     constructor(
         name: string,
         sprite: number,
@@ -35,6 +36,7 @@ export class Monster extends Actor {
     protected act(): void {
         if (this.stunned) {
             this.stunned = false;
+            this.game.ui.msg(this.game, `${this.name} is no longer stunned`);
             return;
         }
 
@@ -102,6 +104,7 @@ export class Troll extends Monster {
         super.update();
         if (!startedStunned) {
             this.stunned = true;
+            this.game.ui.msg(this.game, `${this.name} is stunned`);
         }
     }
 }
@@ -115,6 +118,25 @@ export class Elf extends Monster {
 export class Dragon extends Monster {
     constructor(tile: Tile) {
         super("dragon", 3, tile, [10, 11, 12, 13, 14, 15]);
+    }
+
+    eat(actor: Monster): boolean {
+        this.game.ui.msg(this.game, `${this.name} eats ${actor.name}`);
+        actor.life?.die();
+        const pointsHealed = this.life.heal(actor.life?.maxHp / 2);
+        return pointsHealed > 0;
+    }
+
+    act(): void {
+        super.act();
+        if (this.life.hp < 30) {
+            const neighbors = this.tile
+                .getAdjacentActors<Monster>()
+                .filter((t) => t.life !== undefined);
+            if (neighbors.length > 0) {
+                this.eat(neighbors[0]);
+            }
+        }
     }
 }
 

@@ -135,7 +135,7 @@ export class Game {
             "dragon": Dragon,
             "snake": Snake,
         }; */
-        const allMonsters = [Troll, Wolf, Snake, Goblin, Orc, Man, Dragon, Dragon];
+        const allMonsters = [Wolf, Wolf, Dragon];
         // const n = randomRange(2, 2);
         for (const monster of allMonsters) {
             monsters.push(createMonster(monster));

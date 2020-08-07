@@ -6,6 +6,26 @@ body {
     height: 100%;
 }
 
+.container {
+    position: relative;
+    width: 95%;
+    height: 95%;
+}
+
+.container canvas, #game-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#game-ui {
+    display: none;
+    background-color: rgba(2, green, blue, 0.75);
+    width: 90%;
+    height: auto;
+    color: red;
+}
+
 canvas {
     outline: 1px solid white;
 }

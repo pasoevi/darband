@@ -17,7 +17,10 @@
     "name": "darband2",
     "version": "1.0.0",
     "main": "bundle.js",
-    "dependencies": {},
+    "dependencies": {
+        "global": "^4.4.0",
+        "http-server": "^0.12.3"
+    },
     "scripts": {
         "setup": "cd scripts && bash setup.sh",
         "start": "webpack-dev-server --mode development",

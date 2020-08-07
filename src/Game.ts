@@ -115,8 +115,9 @@ export class Game {
     }
 
     private startGame(): void {
-        this.startLevel(0);
         this.gameState = "PLAYING";
+        this.startLevel(0);
+        this.render();
     }
 
     private startLevel(levelId: number) {

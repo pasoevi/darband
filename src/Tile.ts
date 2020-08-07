@@ -101,13 +101,13 @@ export class Staircase extends Tile {
 }
 
 export class StaircaseUp extends Staircase {
-    public constructor(x: number, y: number) {
-        super(x, y, 43, "UP");
+    public constructor(x: number, y: number, sprite = 44) {
+        super(x, y, sprite, "UP");
     }
 }
 
 export class StaircaseDown extends Staircase {
-    public constructor(x: number, y: number) {
-        super(x, y, 42, "DOWN");
+    public constructor(x: number, y: number, sprite = 43) {
+        super(x, y, sprite, "DOWN");
     }
 }

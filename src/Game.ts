@@ -1,13 +1,15 @@
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
-import { createMonster, Dragon, Monster, Wolf } from "./Monster";
-import { Player } from "./player";
 import {
-    Floor,
-    StaircaseDown,
-    StaircaseUp,
-    Tile,
-    Wall,
-} from "./Tile";
+    createMonster,
+    Goblin,
+    Kobold,
+    Man,
+    Monster,
+    Snake,
+    Wolf,
+} from "./Monster";
+import { Player } from "./player";
+import { Floor, StaircaseDown, StaircaseUp, Tile, Wall } from "./Tile";
 import { flatten, randomRange, tryTo } from "./Util";
 
 export interface GameOptions {
@@ -49,6 +51,7 @@ export class Game {
         }
         return Game.instance;
     }
+
     public getRandomPassableTile(): Tile {
         return this.getRandomTile((t: Tile) => t.passable);
     }
@@ -135,15 +138,20 @@ export class Game {
         this.monsters = this.generateMonsters();
 
         if (this.levelID > 0) {
-            let stairsUp = this.getRandomPassableTile();
-            stairsUp = new StaircaseUp(stairsUp.x, stairsUp.y);
-            this.tiles[stairsUp.x][stairsUp.y] = stairsUp;
+            this.getRandomPassableTile().replace(StaircaseUp);
+            // stairsUp = new StaircaseUp(stairsUp.x, stairsUp.y);
+            // this.tiles[stairsUp.x][stairsUp.y] = stairsUp;
         }
 
         if (this.levelID < this.maxLevelID) {
-            let stairsDown = this.getRandomPassableTile();
-            stairsDown = new StaircaseDown(stairsDown.x, stairsDown.y);
-            this.tiles[stairsDown.x][stairsDown.y] = stairsDown;
+            const stairsDown = this.getRandomPassableTile().replace(
+                StaircaseDown,
+            );
+            if (this.levelID === 0) {
+                stairsDown.sprite = 42;
+            }
+            // stairsDown = new StaircaseDown(stairsDown.x, stairsDown.y, this.levelID === 0 ? 42 : undefined);
+            // this.tiles[stairsDown.x][stairsDown.y] = stairsDown;
         }
     }
 
@@ -163,9 +171,12 @@ export class Game {
             "dragon": Dragon,
             "snake": Snake,
         }; */
-        const allMonsters = [Wolf, Wolf, Dragon];
+        const allMonsters = [
+            [Wolf, Wolf, Man, Snake, Snake],
+            [Kobold, Goblin],
+        ];
         // const n = randomRange(2, 2);
-        for (const monster of allMonsters) {
+        for (const monster of allMonsters[this.levelID]) {
             monsters.push(createMonster(monster));
         }
         /* for (let i = 0; i < n; i++) {
@@ -241,12 +252,22 @@ export class Game {
             this.renderTiles();
             this.renderMonsters();
             this.player.draw();
+            this.ui.render(this);
         }
     }
 
     private renderTitleScreen() {
         this.renderer.drawRect("rgba(0,0,0,.75)", 0, 0);
         this.gameState = "TITLE";
+
+        // this.renderer.drawText("SUPER", 40, true, canvas.height / 2 - 110, "white");
+        this.renderer.drawText(
+            "PRESS ANY KEY TO START",
+            50,
+            true,
+            500,
+            "white",
+        );
     }
 
     private getRandomTile(condition?: (tile: Tile) => boolean): Tile {

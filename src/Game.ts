@@ -35,7 +35,7 @@ export class Game {
         this.renderer = options.renderingLibrary;
         this.ui = options.ui;
         this.renderer.setOnRendererReady(() => {
-            this.renderTitleScreen();
+            this.ui.renderTitleScreen(this);
             this.render();
         });
     }
@@ -255,20 +255,6 @@ export class Game {
             this.player.draw();
             this.ui.render(this);
         }
-    }
-
-    private renderTitleScreen() {
-        this.renderer.drawRect("rgba(0,0,0,.75)", 0, 0);
-        this.gameState = "TITLE";
-
-        // this.renderer.drawText("SUPER", 40, true, canvas.height / 2 - 110, "white");
-        this.renderer.drawText(
-            "PRESS ANY KEY TO START",
-            50,
-            true,
-            500,
-            "white",
-        );
     }
 
     private getRandomTile(condition?: (tile: Tile) => boolean): Tile {

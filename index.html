@@ -6,7 +6,12 @@
         <title>Document</title>
     </head>
     <body>
-        <canvas id="game"></canvas>
+        <div class="container">
+            <canvas id="game"></canvas>
+            <!-- Hidden by default. Can be controlled from the game to
+            show/hide game controls/title screen. -->
+            <div id="game-ui">This is an overlay</div>
+        </div>
         <script src="bundle.js" type="text/javascript"></script>
     </body>
 </html>

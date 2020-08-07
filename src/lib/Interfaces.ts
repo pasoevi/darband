@@ -5,7 +5,13 @@ export interface RenderingLibrary {
     clearScreen(): void;
     drawSprite(sprite: number, x: number, y: number): void;
     drawRect(color: string, x: number, y: number, w?: number, h?: number): void;
-    drawText(text: string, size: number, centered: boolean, textY: number, color: string): void;
+    drawText(
+        text: string,
+        size: number,
+        centered: boolean,
+        textY: number,
+        color: string,
+    ): void;
     setOnRendererReady(onReady: () => void): void;
 }
 
@@ -23,4 +29,5 @@ export interface InputHandler {
 export interface GameUI {
     msg: (game: temporaryAny, text: string, color?: string) => void;
     render(game: Game): void;
+    renderTitleScreen(game: Game): void;
 }

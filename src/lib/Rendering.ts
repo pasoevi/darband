@@ -5,7 +5,7 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     public context: CanvasRenderingContext2D;
     public options: RenderOptions;
     private canvas: HTMLCanvasElement;
-    private spritesheet: HTMLImageElement;
+    private readonly spritesheet: HTMLImageElement;
     private isRendererReady = false;
     private onRendererReady: () => void;
 
@@ -90,6 +90,29 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         ctx.fillStyle = color;
         ctx.fillRect(x, y, w, h);
         ctx.fillStyle = oldColor;
+    }
+
+    public drawText(
+        text: string,
+        size: number,
+        centered: boolean,
+        textY: number,
+        color: string,
+    ): void {
+        // TODO: Allow access to canvas element or canvas size
+        this.context.fillStyle = color;
+        this.context.font = size + "px monospace";
+        let textX;
+        if (centered) {
+            textX =
+                (this.canvas.width - this.context.measureText(text).width) / 2;
+        } else {
+            textX =
+                this.canvas.width -
+                this.options.uiWidth * this.options.tileSize;
+        }
+
+        this.context.fillText(text, textX, textY);
     }
 
     public clearScreen(): void {

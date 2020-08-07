@@ -318,7 +318,7 @@ export class Actor {
 }
 
 export class WizardLife extends Life {
-    public constructor(actor: Actor) {
-        super(190, 190, 3, actor);
+    public constructor(actor: Actor, maxHP = 200) {
+        super(maxHP, maxHP, 3, actor);
     }
 }

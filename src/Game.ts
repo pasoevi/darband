@@ -2,11 +2,13 @@ import { Item } from "./Item";
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
 import {
     createMonster,
+    Dragon,
     Goblin,
     Kobold,
     Man,
     Monster,
     Snake,
+    Troll,
     Wolf,
 } from "./Monster";
 import { Player } from "./player";
@@ -175,7 +177,7 @@ export class Game {
             "snake": Snake,
         }; */
         const allMonsters = [
-            [Wolf, Wolf, Man, Snake, Snake],
+            [Dragon, Dragon, Wolf, Wolf, Man, Troll,  Snake, Snake],
             [Kobold, Goblin],
         ];
         // const n = randomRange(2, 2);

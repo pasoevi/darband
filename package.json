@@ -19,6 +19,7 @@
     "main": "bundle.js",
     "dependencies": {},
     "scripts": {
+        "setup": "cd scripts && bash setup.sh",
         "start": "webpack-dev-server --mode development",
         "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
         "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,3 +1,4 @@
+import { Item } from "./Item";
 import { GameUI, RenderingLibrary } from "./lib/interfaces";
 import {
     createMonster,
@@ -26,6 +27,7 @@ export class Game {
     public player = (null as unknown) as Player;
     public tiles: Array<Array<Tile>> = [];
     public monsters: Monster[] = [];
+    public items: Item[] = [];
     // TODO: Use in getPossibleMonsters
     public levelID = 0;
     public maxLevelID = 16;
@@ -74,7 +76,7 @@ export class Game {
             if (this.gameState === "TITLE") {
                 this.startGame();
             } else if (this.gameState === "DEAD") {
-                this.renderTitleScreen();
+                this.ui.renderTitleScreen(this);
             } else if (this.gameState === "PLAYING") {
                 if (this.player === undefined) {
                     return;

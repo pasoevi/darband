@@ -9,11 +9,11 @@ fi
 
 PASS=true
 
-printf "\nValidating Javascript:\n"
+printf "Validating Javascript:\n"
 
 # Check for eslint
 if [[ ! -x "$ESLINT" ]]; then
-  printf "\t\033[41mPlease install ESlint\033[0m (npm i --save-dev eslint)"
+  printf "\033[41mPlease install ESlint\033[0m (npm i --save-dev eslint)"
   exit 1
 fi
 
@@ -22,9 +22,9 @@ do
   "$ESLINT" "$FILE"
 
   if [[ "$?" == 0 ]]; then
-    printf "\t\033[32mESLint Passed: $FILE\033[0m"
+    printf "\033[32mESLint Passed: $FILE\033[0m"
   else
-    printf "\t\033[41mESLint Failed: $FILE\033[0m"
+    printf "\033[41mESLint Failed: $FILE\033[0m"
     PASS=false
   fi
 done

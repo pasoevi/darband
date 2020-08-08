@@ -1,5 +1,5 @@
 import { Item } from "./Item";
-import { GameUI, RenderingLibrary } from "./lib/interfaces";
+import { Animation, GameUI, RenderingLibrary } from "./lib/interfaces";
 import {
     createMonster,
     Dragon,
@@ -34,7 +34,7 @@ export class Game {
     public levelID = 0;
     public maxLevelID = 16;
     public gameState: GameState = "TITLE";
-
+    public animation: Animation;
 
     private constructor(options: GameOptions) {
         this.renderer = options.renderingLibrary;
@@ -45,6 +45,26 @@ export class Game {
                 this.render();
             }, 15);
         });
+        this.animation = {
+            offsetX: 0,
+            offsetY: 0,
+            shakeAmount: 0,
+            shakeX: 0,
+            shakeY: 0,
+            // TODO: Create a GameAnimation class
+            screenshake() {
+                if (this.shakeAmount) {
+                    this.shakeAmount--;
+                }
+                const shakeAngle = Math.random() * Math.PI * 2;
+                this.shakeX = Math.round(
+                    Math.cos(shakeAngle) * this.shakeAmount,
+                );
+                this.shakeY = Math.round(
+                    Math.sin(shakeAngle) * this.shakeAmount,
+                );
+            },
+        };
     }
 
     public static getInstance(options?: GameOptions): Game {
@@ -254,6 +274,9 @@ export class Game {
     public render(): void {
         if (this.gameState === "PLAYING" || this.gameState === "DEAD") {
             this.renderer.clearScreen();
+            if (this.animation.screenshake) {
+                this.animation.screenshake();
+            }
             this.renderTiles();
             this.renderMonsters();
             this.player.draw();

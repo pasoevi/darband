@@ -19,13 +19,76 @@ export class Monster extends Actor {
         this.ai = ai ?? new MoveAndAttackAI(this);
     }
 
-    public update(): void {
+    public draw(): void {
+        super.draw();
+        this.drawHP();
+    }
+
+    public drawHP(): void {
+        const tileSize = this.game.renderer.options.tileSize;
+        const hpPercentage = (this.life?.hp ?? 0) / (this.life?.maxHp ?? 1);
+        const greenLength = tileSize * hpPercentage;
+        const redLength = tileSize - greenLength;
+        const hpLineHeight = 2;
+        this.game.renderer.drawRect(
+            "lime",
+            this.getDisplayX() * tileSize,
+            this.getDisplayY() * tileSize + tileSize - hpLineHeight,
+            greenLength,
+            hpLineHeight,
+        );
+        this.game.renderer.drawRect(
+            "red",
+            this.getDisplayX() * tileSize + greenLength,
+            this.getDisplayY() * tileSize + tileSize - hpLineHeight,
+            redLength,
+            hpLineHeight,
+        );
+    }
+
+    public tryMove(dx: number, dy: number): boolean {
+        const newTile = this.tile.getNeighbor(dx, dy);
+        if (newTile.passable) {
+            this.lastMove = { x: dx, y: dy };
+            if (newTile.monster === null) {
+                this.move(newTile);
+            } else if (this.isPlayer !== newTile.monster.isPlayer) {
+                if (this.ai !== undefined) {
+                    this.ai.attackCountThisTurn++;
+                }
+                newTile.monster.stunned = true;
+                this.game.ui.msg(
+                    this.game,
+                    `${this.name} stuns ${newTile.monster.name}`,
+                );
+                // TODO: Get actual damage value from the dealer taking into account
+                // stats, defence, etc.
+                const power = 10;
+
+                newTile.monster.life?.takeDamage(this, power, []);
+
+                this.animation.offsetX = (newTile.x - this.tile.x) / 2;
+                this.animation.offsetY = (newTile.y - this.tile.y) / 2;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public move(newTile: Tile): void {
         this.game.ui.msg(
             this.game,
-            `${this.name} ${this.stunned ? "is" : "is NOT"} stunned`,
+            `${this.name} ${this.isPlayer ? "move" : "moves"} to ${
+                newTile.x
+            }, ${newTile.y}`,
         );
+        const currentTile = this.getTile();
+        currentTile.monster = null;
+        this.animation.offsetX = currentTile.x - newTile.x;
+        this.animation.offsetY = currentTile.y - newTile.y;
 
-        this.ai.act();
+        this.tile = newTile;
+        newTile.monster = this;
     }
 }
 

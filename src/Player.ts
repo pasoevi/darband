@@ -1,10 +1,11 @@
-import { Actor, Life, WizardLife } from "./Actor";
+import { Life, WizardLife } from "./Actor";
+import { Monster } from "./Monster";
 import { Tile } from "./Tile";
 
-export class Player extends Actor {
+export class Player extends Monster {
     public life: Life;
     public constructor(tile: Tile) {
-        super("You", tile, 0);
+        super("You", 0, tile, []);
         this.life = new WizardLife(this, 1000);
         this.isPlayer = true;
     }

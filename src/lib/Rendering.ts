@@ -1,5 +1,9 @@
 import sprites from "../../assets/sprites.png";
-import { Animation,RenderingLibrary, RenderOptions } from "./interfaces";
+import { Animation, RenderingLibrary, RenderOptions } from "./interfaces";
+
+export enum Sprites {
+    AURA = 13,
+}
 
 export class CanvasDrawingLibrary implements RenderingLibrary {
     public context: CanvasRenderingContext2D;
@@ -57,7 +61,12 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         };
     }
 
-    public drawSprite(sprite: number, x: number, y: number, animation?: Animation): void {
+    public drawSprite(
+        sprite: number,
+        x: number,
+        y: number,
+        animation?: Animation,
+    ): void {
         const ctx = this.context;
         const { tileSize } = this.options;
         const spritesheetRows = this.spritesheet.height / tileSize;
@@ -71,8 +80,8 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
             spriteRow,
             tileSize,
             tileSize,
-            (x * tileSize) + ((animation?.shakeX) ?? 0),
-            (y * tileSize) + ((animation?.shakeY) ?? 0),
+            x * tileSize + (animation?.shakeX ?? 0),
+            y * tileSize + (animation?.shakeY ?? 0),
             tileSize,
             tileSize,
         );
@@ -113,6 +122,14 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         }
 
         this.context.fillText(text, textX, textY);
+    }
+
+    public setGlobalAlpha(value: number): void {
+        this.context.globalAlpha = value;
+    }
+
+    public resetGlobalAlpha(): void {
+        this.setGlobalAlpha(1);
     }
 
     public clearScreen(): void {

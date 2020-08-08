@@ -12,6 +12,7 @@ import {
     Wolf,
 } from "./Monster";
 import { Player } from "./player";
+import { spells } from "./Spells";
 import { Floor, StaircaseDown, StaircaseUp, Tile, Wall } from "./Tile";
 import { flatten, randomRange, tryTo } from "./Util";
 
@@ -50,6 +51,8 @@ export class Game {
             offsetY: 0,
             shakeAmount: 0,
             shakeX: 0,
+            effectSprite: undefined,
+            effectCounter: 0,
             shakeY: 0,
             // TODO: Create a GameAnimation class
             screenshake() {
@@ -122,6 +125,9 @@ export class Game {
                 case "Enter":
                     this.startLevel(this.levelID + 1);
                     break;
+                case "c":
+                    spells.confuse(this.player, this.monsters[0]);
+                    break;
                     // Monster movements (temporary feature)
                 case "ArrowUp":
                     this.monsters[0].tryMove(0, -1);
@@ -152,7 +158,7 @@ export class Game {
         this.startLevel(0);
     }
 
-    private startLevel(levelId: number) {
+    public startLevel(levelId: number): void {
         this.levelID = levelId;
         this.generateLevel();
     }
@@ -205,7 +211,17 @@ export class Game {
             "snake": Snake,
         }; */
         const allMonsters = [
+            [Kobold],
+            [Kobold, Goblin],
+            [Kobold, Goblin],
             [Dragon, Dragon, Wolf, Wolf, Man, Troll, Snake, Snake],
+            [Kobold, Goblin],
+            [Kobold, Goblin],
+            [Kobold, Goblin],
+            [Kobold, Goblin],
+            [Kobold, Goblin],
+            [Kobold, Goblin],
+            [Kobold, Goblin],
             [Kobold, Goblin],
         ];
         // const n = randomRange(2, 2);

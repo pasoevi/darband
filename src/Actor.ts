@@ -1,8 +1,8 @@
 import { Colors } from "./Data";
 import { Game } from "./Game";
 import { Item } from "./Item";
-import { Animation } from "./lib/interfaces";
-import { Monster } from "./Monster";
+import { Animation, PosOnMap } from "./lib/interfaces";
+import { ConfusedAI, Monster } from "./Monster";
 import { Tile } from "./Tile";
 import { Modifier, Weapon } from "./Weapon";
 
@@ -42,7 +42,7 @@ export class Life {
     public takeDamage(
         dealer: Actor,
         value: number,
-        modifiers: Modifier[],
+        modifiers?: Modifier[],
         weapon?: Weapon,
     ): number {
         let damageTaken = value;
@@ -55,10 +55,12 @@ export class Life {
             damageTaken = weapon.power - this.defence;
         }
 
-        damageTaken = modifiers.reduce(
-            (prev, current) => prev + current.value,
-            damageTaken,
-        );
+        if (modifiers !== undefined) {
+            damageTaken = modifiers.reduce(
+                (prev, current) => prev + current.value,
+                damageTaken,
+            );
+        }
 
         const hpBeforeAttack = this.hp;
         this.hp = Math.max(0, this.hp - damageTaken);
@@ -184,7 +186,8 @@ export class AI {
         if (neighbors.length > 0) {
             const pursuedActorTile = this.pursuing.getTile();
             neighbors.sort(
-                (a, b) => a.distance(pursuedActorTile) - b.distance(pursuedActorTile),
+                (a, b) =>
+                    a.distance(pursuedActorTile) - b.distance(pursuedActorTile),
             );
             const newTile = neighbors[0];
             this.monster.tryMove(
@@ -192,6 +195,53 @@ export class AI {
                 newTile.y - this.monster.tile.y,
             );
         }
+    }
+}
+
+export class Effect {
+    public constructor(
+        public actor: Actor,
+        public turnsLeft: number = 5,
+        public name: string = "",
+        public onExpired?: () => void,
+    ) {}
+
+    private renderOnMap() {
+        /* noop */
+    }
+
+    private renderOnUI() {
+        /* noop */
+    }
+
+    public update(): void {
+        this.turnsLeft -= 1;
+        if (this.turnsLeft <= 0 && this.onExpired !== undefined) {
+            this.onExpired();
+        }
+    }
+}
+
+export class ConfusionEffect extends Effect {
+    private oldAI: AI;
+
+    public constructor(monster: Monster) {
+        super(monster, 5);
+        this.oldAI = monster.ai;
+        this.onExpired = () => {
+            monster.ai = this.oldAI;
+            monster.game.ui.msg(
+                monster.game,
+                `${monster.name} is no longer confused`,
+            );
+        };
+        monster.ai = new ConfusedAI(
+            monster,
+            this.oldAI.skills,
+            this.oldAI.getQuests(),
+        );
+
+        monster.game.ui.msg(monster.game, `${monster.name} is now confused`);
     }
 }
 
@@ -206,7 +256,9 @@ export class Actor {
     public ai?: AI;
     public domains?: ReadonlyArray<number>;
     public stunned = false;
-    private animation: Animation;
+    protected animation: Animation;
+    public effects: Array<Effect>;
+    public lastMove: PosOnMap;
 
     public constructor(
         name: string,
@@ -221,9 +273,13 @@ export class Actor {
         this.name = name ?? "Unnamed monster";
         this.sprite = sprite;
         this.domains = domains;
+        this.lastMove = { x: -1, y: 0 };
+        this.effects = [];
+
         this.animation = {
             offsetX: 0,
             offsetY: 0,
+            effectCounter: 0,
             shakeAmount: 0,
             shakeX: 0,
             shakeY: 0,
@@ -246,12 +302,38 @@ export class Actor {
         return this.tile;
     }
 
+    public addEffect(effectClass: typeof Effect): void {
+        const effect = new effectClass(this);
+        this.effects.push(effect);
+    }
+
     public getDisplayX(): number {
         return this.tile.x + this.animation.offsetX;
     }
 
     public getDisplayY(): number {
         return this.tile.y + this.animation.offsetY;
+    }
+
+    public update(): void {
+        this.game.ui.msg(
+            this.game,
+            `${this.name} ${this.stunned ? "is" : "is NOT"} stunned`,
+        );
+
+        if (this.ai) {
+            this.ai.act();
+        }
+
+        for (let i = this.effects.length - 1; i >= 0; i--) {
+            const effect = this.effects[i];
+            effect.update();
+            if (effect.turnsLeft <= 0) {
+                if (effect.onExpired !== undefined) {
+                    this.effects.splice(i, 1);
+                }
+            }
+        }
     }
 
     public draw(): void {
@@ -263,78 +345,9 @@ export class Actor {
                 this.game.animation,
             );
         }
-        if (this.life !== undefined) {
-            this.drawHP();
-        }
 
         this.animation.offsetX -= Math.sign(this.animation.offsetX) * (1 / 8);
         this.animation.offsetY -= Math.sign(this.animation.offsetY) * (1 / 8);
-    }
-
-    public drawHP(): void {
-        const tileSize = this.game.renderer.options.tileSize;
-        const hpPercentage = (this.life?.hp ?? 0) / (this.life?.maxHp ?? 1);
-        const greenLength = tileSize * hpPercentage;
-        const redLength = tileSize - greenLength;
-        const hpLineHeight = 2;
-        this.game.renderer.drawRect(
-            "lime",
-            this.getDisplayX() * tileSize,
-            this.getDisplayY() * tileSize + tileSize - hpLineHeight,
-            greenLength,
-            hpLineHeight,
-        );
-        this.game.renderer.drawRect(
-            "red",
-            this.getDisplayX() * tileSize + greenLength,
-            this.getDisplayY() * tileSize + tileSize - hpLineHeight,
-            redLength,
-            hpLineHeight,
-        );
-    }
-
-    public tryMove(dx: number, dy: number): boolean {
-        const newTile = this.tile.getNeighbor(dx, dy);
-        if (newTile.passable) {
-            if (newTile.monster === null) {
-                this.move(newTile);
-            } else if (this.isPlayer !== newTile.monster.isPlayer) {
-                if (this.ai !== undefined) {
-                    this.ai.attackCountThisTurn++;
-                }
-                newTile.monster.stunned = true;
-                this.game.ui.msg(
-                    this.game,
-                    `${this.name} stuns ${newTile.monster.name}`,
-                );
-                // TODO: Get actual damage value from the dealer taking into account
-                // stats, defence, etc.
-                const power = 10;
-
-                newTile.monster.life?.takeDamage(this, power, []);
-
-                this.animation.offsetX = (newTile.x - this.tile.x) / 2;
-                this.animation.offsetY = (newTile.y - this.tile.y) / 2;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public move(newTile: Tile): void {
-        this.game.ui.msg(
-            this.game,
-            `${this.name} ${this.isPlayer ? "move" : "moves"} to ${
-                newTile.x
-            }, ${newTile.y}`,
-        );
-        const currentTile = this.getTile();
-        currentTile.monster = null;
-        this.animation.offsetX = currentTile.x - newTile.x;
-        this.animation.offsetY = currentTile.y - newTile.y;
-
-        this.tile = newTile;
-        newTile.monster = this;
     }
 
     public getAdjacentTiles(): Array<Tile> {

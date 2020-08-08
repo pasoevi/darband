@@ -1,5 +1,6 @@
 import { Actor } from "./Actor";
 import { Game } from "./Game";
+import { Animation } from "./lib/interfaces";
 import { Direction } from "./Types";
 import { shuffle } from "./Util";
 
@@ -12,17 +13,30 @@ export class Tile {
         public sprite = 0,
         public passable = true,
         public monster: Actor | null = null,
+        public animation?: Animation,
     ) {
         this.game = Game.getInstance();
     }
 
     public draw(): void {
-        this.game.renderer.drawSprite(
-            this.sprite,
-            this.x,
-            this.y,
-            this.game.animation,
-        );
+        const renderer = this.game.renderer;
+        renderer.drawSprite(this.sprite, this.x, this.y, this.game.animation);
+
+        if (this.animation && this.animation?.effectCounter > 0) {
+            this.animation.effectCounter--;
+            renderer.setGlobalAlpha(this.animation.effectCounter / 30);
+            if (this.animation.effectSprite !== undefined) {
+                renderer.drawSprite(this.animation.effectSprite, this.x, this.y);
+            }
+            renderer.resetGlobalAlpha();
+        }
+    }
+
+    public setAnimationEffect(effectSprite: number): void {
+        if (this.animation) {
+            this.animation.effectSprite = effectSprite;
+            this.animation.effectCounter = 30;
+        }
     }
 
     public getActorsOnThis(): Actor[] {

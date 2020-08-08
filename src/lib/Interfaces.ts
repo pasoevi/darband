@@ -17,6 +17,8 @@ export interface RenderingLibrary {
         textY: number,
         color: string,
     ): void;
+    setGlobalAlpha(value: number): void;
+    resetGlobalAlpha(): void;
     setOnRendererReady(onReady: () => void): void;
 }
 
@@ -43,5 +45,12 @@ export interface Animation {
     shakeX: number;
     shakeY: number;
     shakeAmount: number;
+    effectCounter: number;
+    effectSprite?: number;
     screenshake?: () => void;
+}
+
+export interface PosOnMap {
+    x: number;
+    y: number;
 }

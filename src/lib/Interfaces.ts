@@ -31,3 +31,8 @@ export interface GameUI {
     render(game: Game): void;
     renderTitleScreen(game: Game): void;
 }
+
+export interface Animation {
+    offsetX: number;
+    offsetY: number;
+}

@@ -35,12 +35,15 @@ export class Game {
     public maxLevelID = 16;
     public gameState: GameState = "TITLE";
 
+
     private constructor(options: GameOptions) {
         this.renderer = options.renderingLibrary;
         this.ui = options.ui;
         this.renderer.setOnRendererReady(() => {
             this.ui.renderTitleScreen(this);
-            this.render();
+            setInterval(() => {
+                this.render();
+            }, 15);
         });
     }
 
@@ -112,8 +115,6 @@ export class Game {
                 if (e.key == "ArrowRight") {
                     this.monsters[0].tryMove(1, 0);
                 }
-
-                this.render();
             }
         };
     }
@@ -121,7 +122,6 @@ export class Game {
     private startGame(): void {
         this.gameState = "PLAYING";
         this.startLevel(0);
-        this.render();
     }
 
     private startLevel(levelId: number) {
@@ -177,7 +177,7 @@ export class Game {
             "snake": Snake,
         }; */
         const allMonsters = [
-            [Dragon, Dragon, Wolf, Wolf, Man, Troll,  Snake, Snake],
+            [Dragon, Dragon, Wolf, Wolf, Man, Troll, Snake, Snake],
             [Kobold, Goblin],
         ];
         // const n = randomRange(2, 2);

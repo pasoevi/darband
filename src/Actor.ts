@@ -1,6 +1,7 @@
 import { Colors } from "./Data";
 import { Game } from "./Game";
 import { Item } from "./Item";
+import { Animation } from "./lib/interfaces";
 import { Monster } from "./Monster";
 import { Tile } from "./Tile";
 import { Modifier, Weapon } from "./Weapon";
@@ -205,6 +206,7 @@ export class Actor {
     public ai?: AI;
     public domains?: ReadonlyArray<number>;
     public stunned = false;
+    private animation: Animation;
 
     public constructor(
         name: string,
@@ -219,6 +221,10 @@ export class Actor {
         this.name = name ?? "Unnamed monster";
         this.sprite = sprite;
         this.domains = domains;
+        this.animation = {
+            offsetX: 0,
+            offsetY: 0,
+        };
 
         if (life !== undefined) {
             this.life = life;
@@ -237,17 +243,28 @@ export class Actor {
         return this.tile;
     }
 
+    public getDisplayX(): number {
+        return this.tile.x + this.animation.offsetX;
+    }
+
+    public getDisplayY(): number {
+        return this.tile.y + this.animation.offsetY;
+    }
+
     public draw(): void {
         if (this.sprite !== undefined) {
             this.game.renderer.drawSprite(
                 this.sprite,
-                this.tile.x,
-                this.tile.y,
+                this.getDisplayX(),
+                this.getDisplayY(),
             );
         }
         if (this.life !== undefined) {
             this.drawHP();
         }
+
+        this.animation.offsetX -= Math.sign(this.animation.offsetX) * (1 / 8);
+        this.animation.offsetY -= Math.sign(this.animation.offsetY) * (1 / 8);
     }
 
     public drawHP(): void {
@@ -258,15 +275,15 @@ export class Actor {
         const hpLineHeight = 2;
         this.game.renderer.drawRect(
             "lime",
-            this.tile.x * tileSize,
-            this.tile.y * tileSize + tileSize - hpLineHeight,
+            this.getDisplayX() * tileSize,
+            this.getDisplayY() * tileSize + tileSize - hpLineHeight,
             greenLength,
             hpLineHeight,
         );
         this.game.renderer.drawRect(
             "red",
-            this.tile.x * tileSize + greenLength,
-            this.tile.y * tileSize + tileSize - hpLineHeight,
+            this.getDisplayX() * tileSize + greenLength,
+            this.getDisplayY() * tileSize + tileSize - hpLineHeight,
             redLength,
             hpLineHeight,
         );
@@ -290,6 +307,9 @@ export class Actor {
                 // stats, defence, etc.
                 const power = 10;
                 newTile.monster.life?.takeDamage(this, power, []);
+
+                this.animation.offsetX = (newTile.x - this.tile.x) / 2;
+                this.animation.offsetY = (newTile.y - this.tile.y) / 2;
             }
             return true;
         }
@@ -305,6 +325,8 @@ export class Actor {
         );
         const currentTile = this.getTile();
         currentTile.monster = null;
+        this.animation.offsetX = currentTile.x - newTile.x;
+        this.animation.offsetY = currentTile.y - newTile.y;
 
         this.tile = newTile;
         newTile.monster = this;

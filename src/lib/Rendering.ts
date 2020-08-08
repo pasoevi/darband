@@ -1,5 +1,5 @@
 import sprites from "../../assets/sprites.png";
-import { RenderingLibrary, RenderOptions } from "./interfaces";
+import { Animation,RenderingLibrary, RenderOptions } from "./interfaces";
 
 export class CanvasDrawingLibrary implements RenderingLibrary {
     public context: CanvasRenderingContext2D;
@@ -57,7 +57,7 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         };
     }
 
-    public drawSprite(sprite: number, x: number, y: number): void {
+    public drawSprite(sprite: number, x: number, y: number, animation?: Animation): void {
         const ctx = this.context;
         const { tileSize } = this.options;
         const spritesheetRows = this.spritesheet.height / tileSize;
@@ -71,8 +71,8 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
             spriteRow,
             tileSize,
             tileSize,
-            x * tileSize,
-            y * tileSize,
+            (x * tileSize) + ((animation?.shakeX) ?? 0),
+            (y * tileSize) + ((animation?.shakeY) ?? 0),
             tileSize,
             tileSize,
         );

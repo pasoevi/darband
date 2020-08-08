@@ -224,6 +224,9 @@ export class Actor {
         this.animation = {
             offsetX: 0,
             offsetY: 0,
+            shakeAmount: 0,
+            shakeX: 0,
+            shakeY: 0,
         };
 
         if (life !== undefined) {
@@ -257,6 +260,7 @@ export class Actor {
                 this.sprite,
                 this.getDisplayX(),
                 this.getDisplayY(),
+                this.game.animation,
             );
         }
         if (this.life !== undefined) {
@@ -307,6 +311,7 @@ export class Actor {
                 // stats, defence, etc.
                 const power = 10;
                 newTile.monster.life?.takeDamage(this, power, []);
+                this.game.animation.shakeAmount = 5;
 
                 this.animation.offsetX = (newTile.x - this.tile.x) / 2;
                 this.animation.offsetY = (newTile.y - this.tile.y) / 2;

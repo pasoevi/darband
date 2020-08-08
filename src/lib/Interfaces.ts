@@ -3,7 +3,12 @@ import { Game } from "../Game";
 export interface RenderingLibrary {
     options: RenderOptions;
     clearScreen(): void;
-    drawSprite(sprite: number, x: number, y: number): void;
+    drawSprite(
+        sprite: number,
+        x: number,
+        y: number,
+        animation?: Animation,
+    ): void;
     drawRect(color: string, x: number, y: number, w?: number, h?: number): void;
     drawText(
         text: string,
@@ -35,4 +40,8 @@ export interface GameUI {
 export interface Animation {
     offsetX: number;
     offsetY: number;
+    shakeX: number;
+    shakeY: number;
+    shakeAmount: number;
+    screenshake?: () => void;
 }

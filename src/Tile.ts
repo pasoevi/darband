@@ -17,7 +17,12 @@ export class Tile {
     }
 
     public draw(): void {
-        this.game.renderer.drawSprite(this.sprite, this.x, this.y);
+        this.game.renderer.drawSprite(
+            this.sprite,
+            this.x,
+            this.y,
+            this.game.animation,
+        );
     }
 
     public getActorsOnThis(): Actor[] {

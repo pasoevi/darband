@@ -92,7 +92,7 @@ export class Game {
         return this.getTiles((t: Tile) => t.passable);
     }
 
-    public setupGame(): void {
+    private setupInputHandlers() {
         const html = document.querySelector("html");
         if (html === null) {
             throw Error("Please run the app in the browser environment");
@@ -106,37 +106,45 @@ export class Game {
                 if (this.player === undefined) {
                     return;
                 }
-                if (e.key === "w") {
+                switch (e.key) {
+                case "w":
                     this.player.tryMove(0, -1);
-                }
-                if (e.key === "s") {
+                    break;
+                case "s":
                     this.player.tryMove(0, 1);
-                }
-                if (e.key === "a") {
+                    break;
+                case "a":
                     this.player.tryMove(-1, 0);
-                }
-                if (e.key === "d") {
+                    break;
+                case "d":
                     this.player.tryMove(1, 0);
-                }
-                if (e.key === "Enter") {
+                    break;
+                case "Enter":
                     this.startLevel(this.levelID + 1);
-                }
-
-                // Monster movements (temporary feature)
-                if (e.key == "ArrowUp") {
+                    break;
+                    // Monster movements (temporary feature)
+                case "ArrowUp":
                     this.monsters[0].tryMove(0, -1);
-                }
-                if (e.key == "ArrowDown") {
+                    break;
+                case "ArrowDown":
                     this.monsters[0].tryMove(0, 1);
-                }
-                if (e.key == "ArrowLeft") {
+                    break;
+                case "ArrowLeft":
                     this.monsters[0].tryMove(-1, 0);
-                }
-                if (e.key == "ArrowRight") {
+                    break;
+                case "ArrowRight":
                     this.monsters[0].tryMove(1, 0);
+                    break;
+
+                default:
+                    break;
                 }
             }
         };
+    }
+
+    public setupGame(): void {
+        this.setupInputHandlers();
     }
 
     private startGame(): void {

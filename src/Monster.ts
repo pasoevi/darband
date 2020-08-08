@@ -149,6 +149,7 @@ export class ConsumerAI extends AI {
             this.game,
             `${this.monster.name} heals by ${pointsHealed} by eating ${actor.name}`,
         );
+        this.game.animation.shakeAmount = 5;
         return pointsHealed > 0;
     }
 

@@ -182,9 +182,9 @@ export class AI {
         });
 
         if (neighbors.length > 0) {
-            const pursuedActor = this.pursuing.getTile();
+            const pursuedActorTile = this.pursuing.getTile();
             neighbors.sort(
-                (a, b) => a.distance(pursuedActor) - b.distance(pursuedActor),
+                (a, b) => a.distance(pursuedActorTile) - b.distance(pursuedActorTile),
             );
             const newTile = neighbors[0];
             this.monster.tryMove(
@@ -310,8 +310,8 @@ export class Actor {
                 // TODO: Get actual damage value from the dealer taking into account
                 // stats, defence, etc.
                 const power = 10;
+
                 newTile.monster.life?.takeDamage(this, power, []);
-                this.game.animation.shakeAmount = 5;
 
                 this.animation.offsetX = (newTile.x - this.tile.x) / 2;
                 this.animation.offsetY = (newTile.y - this.tile.y) / 2;

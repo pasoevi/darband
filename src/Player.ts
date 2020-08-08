@@ -5,7 +5,7 @@ export class Player extends Actor {
     public life: Life;
     public constructor(tile: Tile) {
         super("You", tile, 0);
-        this.life = new WizardLife(this, 400);
+        this.life = new WizardLife(this, 1000);
         this.isPlayer = true;
     }
 

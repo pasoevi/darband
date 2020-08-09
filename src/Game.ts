@@ -1,5 +1,5 @@
 import { Item } from "./Item";
-import { Animation, GameUI, RenderingLibrary } from "./lib/interfaces";
+import { Animation, GameUI, RenderingLibrary } from "./lib/Interfaces";
 import {
     createMonster,
     Dragon,
@@ -11,7 +11,7 @@ import {
     Troll,
     Wolf,
 } from "./Monster";
-import { Player } from "./player";
+import { Player } from "./Player";
 import { spells } from "./Spells";
 import { Floor, StaircaseDown, StaircaseUp, Tile, Wall } from "./Tile";
 import { flatten, randomRange, tryTo } from "./Util";

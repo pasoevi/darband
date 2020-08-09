@@ -1,5 +1,5 @@
 import sprites from "../../assets/sprites.png";
-import { Animation, RenderingLibrary, RenderOptions } from "./interfaces";
+import { Animation, RenderingLibrary, RenderOptions } from "./Interfaces";
 
 export enum Sprites {
     AURA = 13,

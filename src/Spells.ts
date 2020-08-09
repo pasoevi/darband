@@ -1,5 +1,5 @@
 import { Actor, ConfusionEffect } from "./Actor";
-import { Sprites } from "./lib/rendering";
+import { Sprites } from "./lib/Rendering";
 import { Monster } from "./Monster";
 
 export const spells = {

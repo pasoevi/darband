@@ -1,7 +1,7 @@
 import { Colors } from "./Data";
 import { Game } from "./Game";
 import { Item } from "./Item";
-import { Animation, PosOnMap } from "./lib/interfaces";
+import { Animation, PosOnMap } from "./lib/Interfaces";
 import { ConfusedAI, Monster } from "./Monster";
 import { Tile } from "./Tile";
 import { Modifier, Weapon } from "./Weapon";

@@ -1,6 +1,6 @@
 import { Actor } from "./Actor";
 import { Game } from "./Game";
-import { Animation } from "./lib/interfaces";
+import { Animation } from "./lib/Interfaces";
 import { Direction } from "./Types";
 import { shuffle } from "./Util";
 

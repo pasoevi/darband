@@ -1,5 +1,5 @@
 import { Game } from "../Game";
-import { GameUI } from "../lib/interfaces";
+import { GameUI } from "../lib/Interfaces";
 
 export class CanvasUI implements GameUI {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

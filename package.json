@@ -7,6 +7,7 @@
         "eslint-plugin-import": "^2.22.0",
         "eslint-plugin-simple-import-sort": "^5.0.3",
         "file-loader": "^6.0.0",
+        "html-webpack-plugin": "^4.3.0",
         "style-loader": "^1.2.1",
         "ts-loader": "^8.0.1",
         "typescript": "^3.9.7",
@@ -23,6 +24,7 @@
     },
     "scripts": {
         "setup": "cd scripts && bash setup.sh",
+        "build": "webpack --mode production",
         "start": "webpack-dev-server --mode development",
         "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
         "test": "echo \"Error: no test specified\" && exit 1"

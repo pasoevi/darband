@@ -14,9 +14,9 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     private onRendererReady: () => void;
 
     public constructor(canvasElementId: string, options: RenderOptions) {
-        const canvas = document.getElementById(
-            canvasElementId,
-        ) as HTMLCanvasElement;
+        const canvas = document.createElement("canvas");
+        canvas.id = canvasElementId;
+        document.body.appendChild(canvas);
         this.canvas = canvas;
         const ctx = this.canvas.getContext("2d");
         if (ctx === null) {

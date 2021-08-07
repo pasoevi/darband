@@ -11,7 +11,7 @@
     "rules": {
         "no-console": "error",
         "indent": ["error", 4],
-        "quotes": ["error", "double"],
+        "quotes": ["error", "single"],
         "semi": ["error", "always"],
         "object-curly-spacing": ["error", "always"],
         "simple-import-sort/sort": "error",

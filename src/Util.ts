@@ -23,7 +23,7 @@ export function tryTo(description: string, callback: () => boolean): void {
             return;
         }
     }
-    throw "Timeout while trying to " + description;
+    throw 'Timeout while trying to ' + description;
 }
 
 export function shuffle<T>(arr: Array<T>): Array<T> {

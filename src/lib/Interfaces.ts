@@ -1,4 +1,5 @@
-import { Game } from "../Game";
+import { Actor } from '../Actor';
+import { Game } from '../Game';
 
 export interface RenderingLibrary {
     options: RenderOptions;
@@ -53,4 +54,17 @@ export interface Animation {
 export interface PosOnMap {
     x: number;
     y: number;
+}
+
+/*
+ * @experimental
+ */
+export interface Message {
+    move?: number;
+    actor?: Actor;
+    text: string;
+}
+
+export interface LoggingLibrary {
+    log: (message: string) => void;
 }

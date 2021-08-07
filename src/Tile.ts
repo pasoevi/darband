@@ -1,8 +1,8 @@
-import { Actor } from "./Actor";
-import { Game } from "./Game";
-import { Animation } from "./lib/Interfaces";
-import { Direction } from "./Types";
-import { shuffle } from "./Util";
+import { Actor } from './Actor';
+import { Game } from './Game';
+import { Animation } from './lib/Interfaces';
+import { Direction } from './Types';
+import { shuffle } from './Util';
 
 export class Tile {
     private game: Game;
@@ -121,12 +121,12 @@ export class Staircase extends Tile {
 
 export class StaircaseUp extends Staircase {
     public constructor(x: number, y: number, sprite = 44) {
-        super(x, y, sprite, "UP");
+        super(x, y, sprite, 'UP');
     }
 }
 
 export class StaircaseDown extends Staircase {
     public constructor(x: number, y: number, sprite = 43) {
-        super(x, y, sprite, "DOWN");
+        super(x, y, sprite, 'DOWN');
     }
 }

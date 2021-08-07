@@ -1,5 +1,5 @@
-import { Item } from "./Item";
-import { Tile } from "./Tile";
+import { Item } from './Item';
+import { Tile } from './Tile';
 
 export interface Weapon {
     power: number;

@@ -1,6 +1,6 @@
-import { Actor, AI, Life } from "./Actor";
-import { Game } from "./Game";
-import { Tile } from "./Tile";
+import { Actor, AI, Life } from './Actor';
+import { Game } from './Game';
+import { Tile } from './Tile';
 
 export class Monster extends Actor {
     public ai: AI;
@@ -31,14 +31,14 @@ export class Monster extends Actor {
         const redLength = tileSize - greenLength;
         const hpLineHeight = 2;
         this.game.renderer.drawRect(
-            "lime",
+            'lime',
             this.getDisplayX() * tileSize,
             this.getDisplayY() * tileSize + tileSize - hpLineHeight,
             greenLength,
             hpLineHeight,
         );
         this.game.renderer.drawRect(
-            "red",
+            'red',
             this.getDisplayX() * tileSize + greenLength,
             this.getDisplayY() * tileSize + tileSize - hpLineHeight,
             redLength,
@@ -78,7 +78,7 @@ export class Monster extends Actor {
     public move(newTile: Tile): void {
         this.game.ui.msg(
             this.game,
-            `${this.name} ${this.isPlayer ? "move" : "moves"} to ${
+            `${this.name} ${this.isPlayer ? 'move' : 'moves'} to ${
                 newTile.x
             }, ${newTile.y}`,
         );
@@ -94,64 +94,64 @@ export class Monster extends Actor {
 
 export class Goblin extends Monster {
     public constructor(tile: Tile) {
-        super("goblin", 12, tile, [0, 1, 2], 95);
+        super('goblin', 12, tile, [0, 1, 2], 95);
     }
 }
 
 export class Kobold extends Monster {
     public constructor(tile: Tile) {
-        super("kobold", 15, tile, [0, 1, 2], 125);
+        super('kobold', 15, tile, [0, 1, 2], 125);
     }
 }
 
 export class Orc extends Monster {
     public constructor(tile: Tile) {
-        super("orc", 14, tile, [0, 1, 2, 3], 115);
+        super('orc', 14, tile, [0, 1, 2, 3], 115);
     }
 }
 
 export class Wolf extends Monster {
     public constructor(tile: Tile) {
-        super("wolf", 11, tile, [0, 1, 2, 3, 4], 95);
+        super('wolf', 11, tile, [0, 1, 2, 3, 4], 95);
         this.ai = new ConfusedAI(this);
     }
 }
 
 export class Dwarf extends Monster {
     public constructor(tile: Tile) {
-        super("dwarf", 19, tile, [7, 8, 9, 10, 11, 12], 120);
+        super('dwarf', 19, tile, [7, 8, 9, 10, 11, 12], 120);
     }
 }
 
 export class Man extends Monster {
     public constructor(tile: Tile) {
-        super("man", 16, tile, [3, 4, 5], 100);
+        super('man', 16, tile, [3, 4, 5], 100);
     }
 }
 
 export class Troll extends Monster {
     public constructor(tile: Tile) {
-        super("troll", 17, tile, [3, 4], 160);
+        super('troll', 17, tile, [3, 4], 160);
         this.ai = new SlowAI(this);
     }
 }
 
 export class Elf extends Monster {
     public constructor(tile: Tile) {
-        super("elf", 18, tile, [0, 1, 2], 150);
+        super('elf', 18, tile, [0, 1, 2], 150);
     }
 }
 
 export class Dragon extends Monster {
     public constructor(tile: Tile) {
-        super("dragon", 3, tile, [10, 11, 12, 13, 14, 15], 250, undefined);
+        super('dragon', 3, tile, [10, 11, 12, 13, 14, 15], 250, undefined);
         this.ai = new ConsumerAI(this);
     }
 }
 
 export class Snake extends Monster {
     public constructor(tile: Tile) {
-        super("snake", 13, tile, [7, 8, 9], 15);
+        super('snake', 13, tile, [7, 8, 9], 15);
     }
 }
 

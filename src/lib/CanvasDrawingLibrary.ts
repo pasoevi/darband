@@ -1,5 +1,5 @@
-import sprites from "../../assets/sprites.png";
-import { Animation, RenderingLibrary, RenderOptions } from "./Interfaces";
+import sprites from '../../assets/sprites.png';
+import { Animation, RenderingLibrary, RenderOptions } from './Interfaces';
 
 export enum Sprites {
     AURA = 13,
@@ -14,13 +14,13 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     private onRendererReady: () => void;
 
     public constructor(canvasElementId: string, options: RenderOptions) {
-        const canvas = document.createElement("canvas");
+        const canvas = document.createElement('canvas');
         canvas.id = canvasElementId;
         document.body.appendChild(canvas);
         this.canvas = canvas;
-        const ctx = this.canvas.getContext("2d");
+        const ctx = this.canvas.getContext('2d');
         if (ctx === null) {
-            throw new Error("No matching drawing context supported");
+            throw new Error('No matching drawing context supported');
         }
         this.context = ctx;
         this.options = options;
@@ -38,8 +38,8 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
 
         canvas.width = tileSize * (numTiles + uiWidth);
         canvas.height = tileSize * numTiles;
-        canvas.style.width = canvas.width + "px";
-        canvas.style.height = canvas.height + "px";
+        canvas.style.width = canvas.width + 'px';
+        canvas.style.height = canvas.height + 'px';
 
         this.spritesheet = new Image();
         this.loadAssets();
@@ -110,7 +110,7 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     ): void {
         // TODO: Allow access to canvas element or canvas size
         this.context.fillStyle = color;
-        this.context.font = size + "px monospace";
+        this.context.font = size + 'px monospace';
         let textX;
         if (centered) {
             textX =

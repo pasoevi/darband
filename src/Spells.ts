@@ -1,6 +1,6 @@
-import { Actor, ConfusionEffect } from "./Actor";
-import { Sprites } from "./lib/Rendering";
-import { Monster } from "./Monster";
+import { Actor, ConfusionEffect } from './Actor';
+import { Sprites } from './lib/CanvasDrawingLibrary';
+import { Monster } from './Monster';
 
 export const spells = {
     blink: function (caster: Monster): void {

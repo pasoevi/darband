@@ -1,10 +1,10 @@
-import { Colors } from "./Data";
-import { Game } from "./Game";
-import { Item } from "./Item";
-import { Animation, PosOnMap } from "./lib/Interfaces";
-import { ConfusedAI, Monster } from "./Monster";
-import { Tile } from "./Tile";
-import { Modifier, Weapon } from "./Weapon";
+import { Colors } from './Data';
+import { Game } from './Game';
+import { Item } from './Item';
+import { Animation, PosOnMap } from './lib/Interfaces';
+import { ConfusedAI, Monster } from './Monster';
+import { Tile } from './Tile';
+import { Modifier, Weapon } from './Weapon';
 
 export class Life {
     public hp: number;
@@ -107,7 +107,7 @@ export class Inventory {
 
 class Quest {
     public getName() {
-        return "Some quest";
+        return 'Some quest';
     }
 }
 
@@ -202,7 +202,7 @@ export class Effect {
     public constructor(
         public actor: Actor,
         public turnsLeft: number = 5,
-        public name: string = "",
+        public name: string = '',
         public onExpired?: () => void,
     ) {}
 
@@ -270,7 +270,7 @@ export class Actor {
     ) {
         this.game = Game.getInstance();
         this.tile = tile;
-        this.name = name ?? "Unnamed monster";
+        this.name = name ?? 'Unnamed monster';
         this.sprite = sprite;
         this.domains = domains;
         this.lastMove = { x: -1, y: 0 };
@@ -318,7 +318,7 @@ export class Actor {
     public update(): void {
         this.game.ui.msg(
             this.game,
-            `${this.name} ${this.stunned ? "is" : "is NOT"} stunned`,
+            `${this.name} ${this.stunned ? 'is' : 'is NOT'} stunned`,
         );
 
         if (this.ai) {

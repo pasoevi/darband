@@ -1,5 +1,6 @@
-import { Item } from "./Item";
-import { Animation, GameUI, RenderingLibrary } from "./lib/Interfaces";
+import { History  } from './history/History';
+import { Item } from './Item';
+import { Animation, GameUI, LoggingLibrary, RenderingLibrary } from './lib/Interfaces';
 import {
     createMonster,
     Dragon,
@@ -10,23 +11,26 @@ import {
     Snake,
     Troll,
     Wolf,
-} from "./Monster";
-import { Player } from "./Player";
-import { spells } from "./Spells";
-import { Floor, StaircaseDown, StaircaseUp, Tile, Wall } from "./Tile";
-import { flatten, randomRange, tryTo } from "./Util";
+} from './Monster';
+import { Player } from './Player';
+import { spells } from './Spells';
+import { Floor, StaircaseDown, StaircaseUp, Tile, Wall } from './Tile';
+import { flatten, randomRange, tryTo } from './Util';
 
 export interface GameOptions {
     renderingLibrary: RenderingLibrary;
     ui: GameUI;
+    logging: LoggingLibrary;
 }
 
-export type GameState = "LOADING" | "PLAYING" | "DEAD" | "TITLE";
+export type GameState = 'LOADING' | 'PLAYING' | 'DEAD' | 'TITLE';
 
 export class Game {
     private static instance: Game;
     public renderer: RenderingLibrary;
     public ui: GameUI;
+    public history: History;
+    public logging: LoggingLibrary;
     public player = (null as unknown) as Player;
     public tiles: Array<Array<Tile>> = [];
     public monsters: Monster[] = [];
@@ -34,12 +38,14 @@ export class Game {
     // TODO: Use in getPossibleMonsters
     public levelID = 0;
     public maxLevelID = 16;
-    public gameState: GameState = "TITLE";
+    public gameState: GameState = 'TITLE';
     public animation: Animation;
 
     private constructor(options: GameOptions) {
         this.renderer = options.renderingLibrary;
         this.ui = options.ui;
+        this.history = new History();
+        this.logging = options.logging;
         this.renderer.setOnRendererReady(() => {
             this.ui.renderTitleScreen(this);
             setInterval(() => {
@@ -74,7 +80,7 @@ export class Game {
         if (Game.instance === undefined) {
             if (options === undefined) {
                 throw new Error(
-                    "getInstance needs to be passed the parameters when called for the fist time",
+                    'getInstance needs to be passed the parameters when called for the fist time',
                 );
             }
             Game.instance = new Game(options);
@@ -96,49 +102,49 @@ export class Game {
     }
 
     private setupInputHandlers() {
-        const html = document.querySelector("html");
+        const html = document.querySelector('html');
         if (html === null) {
-            throw Error("Please run the app in the browser environment");
+            throw Error('Please run the app in the browser environment');
         }
         html.onkeydown = (e) => {
-            if (this.gameState === "TITLE") {
+            if (this.gameState === 'TITLE') {
                 this.startGame();
-            } else if (this.gameState === "DEAD") {
+            } else if (this.gameState === 'DEAD') {
                 this.ui.renderTitleScreen(this);
-            } else if (this.gameState === "PLAYING") {
+            } else if (this.gameState === 'PLAYING') {
                 if (this.player === undefined) {
                     return;
                 }
                 switch (e.key) {
-                case "w":
+                case 'w':
                     this.player.tryMove(0, -1);
                     break;
-                case "s":
+                case 's':
                     this.player.tryMove(0, 1);
                     break;
-                case "a":
+                case 'a':
                     this.player.tryMove(-1, 0);
                     break;
-                case "d":
+                case 'd':
                     this.player.tryMove(1, 0);
                     break;
-                case "Enter":
+                case 'Enter':
                     this.startLevel(this.levelID + 1);
                     break;
-                case "c":
+                case 'c':
                     spells.confuse(this.player, this.monsters[0]);
                     break;
                     // Monster movements (temporary feature)
-                case "ArrowUp":
+                case 'ArrowUp':
                     this.monsters[0].tryMove(0, -1);
                     break;
-                case "ArrowDown":
+                case 'ArrowDown':
                     this.monsters[0].tryMove(0, 1);
                     break;
-                case "ArrowLeft":
+                case 'ArrowLeft':
                     this.monsters[0].tryMove(-1, 0);
                     break;
-                case "ArrowRight":
+                case 'ArrowRight':
                     this.monsters[0].tryMove(1, 0);
                     break;
 
@@ -154,7 +160,7 @@ export class Game {
     }
 
     private startGame(): void {
-        this.gameState = "PLAYING";
+        this.gameState = 'PLAYING';
         this.startLevel(0);
     }
 
@@ -164,7 +170,7 @@ export class Game {
     }
 
     private generateLevel(): void {
-        tryTo("generate map", () => {
+        tryTo('generate map', () => {
             return (
                 this.generateTiles() ===
                 this.getRandomPassableTile().getConnectedTiles().length
@@ -211,7 +217,9 @@ export class Game {
             "snake": Snake,
         }; */
         const allMonsters = [
-            [Kobold],
+            [Dragon, Man, Goblin, Snake, Kobold],
+            [Dragon, Man, Goblin, Snake, Kobold],
+            [Dragon, Man, Goblin, Snake, Kobold],
             [Kobold, Goblin],
             [Kobold, Goblin],
             [Dragon, Dragon, Wolf, Wolf, Man, Troll, Snake, Snake],
@@ -228,8 +236,6 @@ export class Game {
         for (const monster of allMonsters[this.levelID]) {
             monsters.push(createMonster(monster));
         }
-        /* for (let i = 0; i < n; i++) {
-        } */
         return monsters;
     }
 
@@ -291,12 +297,12 @@ export class Game {
         }
 
         if (!this.player.life.isAlive()) {
-            this.gameState = "DEAD";
+            this.gameState = 'DEAD';
         }
     }
 
     public render(): void {
-        if (this.gameState === "PLAYING" || this.gameState === "DEAD") {
+        if (this.gameState === 'PLAYING' || this.gameState === 'DEAD') {
             this.renderer.clearScreen();
             if (this.animation.screenshake) {
                 this.animation.screenshake();

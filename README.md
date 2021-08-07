@@ -10,10 +10,7 @@ above. Your goal is to choose a deity to worship and attempt to do his
 or her bidding. You can abandon your god and convert to other religion
 later in the game and have the objective of the game changed, as well.
 
-Darband is a game about entering the world different from your own and and your return journey. All the questions you may have asked about your own world can be asked in the world of Darband as well - where does it start, where does it end? Why are you there?   Unlike your native world, Darband can have specific answers to such questions. 
-
-
-# Ideas
+Darband is a game where you enter the world different from your own. Ultimately the game is about about your return journey. All the questions you may have asked about your own world can be asked in the world of Darband as well - where does it start, where does it end? Why are you there? Unlike your native world, Darband can have specific answers to these questions.
 
 ## Game Mechanics
 

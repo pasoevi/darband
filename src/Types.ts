@@ -1,1 +1,1 @@
-export type Direction = "UP" | "DOWN";
+export type Direction = 'UP' | 'DOWN';

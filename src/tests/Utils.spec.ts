@@ -55,9 +55,7 @@ describe('Utils', () => {
             const arr = [1, 2, 3, 4, 5];
             const newArr = shuffle(arr);
             expect(newArr).toHaveLength(5);
-            for (const elem of arr) {
-                expect(newArr).toContain(elem);
-            }
+            expect(newArr).toContainAllValues(arr);
         });
     });
 });

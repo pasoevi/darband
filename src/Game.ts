@@ -203,19 +203,7 @@ export class Game {
     /* TODO: Not fully implemented */
     private generateMonsters(): Monster[] {
         const monsters: Monster[] = [];
-        /*
-        TODO: Delete
-        const allMonsters: {[key: string]: Monster} = {
-            "goblin": Goblin,
-            "kobold": Kobold,
-            "orc": Orc,
-            "dwarf": Dwarf,
-            "man": Man,
-            "troll": Troll,
-            "elf": Elf,
-            "dragon": Dragon,
-            "snake": Snake,
-        }; */
+        
         const allMonsters = [
             [Dragon, Man, Goblin, Snake, Kobold],
             [Dragon, Man, Goblin, Snake, Kobold],

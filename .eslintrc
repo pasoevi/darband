@@ -14,7 +14,7 @@
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
         "object-curly-spacing": ["error", "always"],
-        "simple-import-sort/sort": "error",
+        "simple-import-sort/imports": "error",
         "sort-imports": "off",
         "import/first": "error",
         "import/newline-after-import": "error",

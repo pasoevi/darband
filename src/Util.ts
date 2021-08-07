@@ -27,12 +27,13 @@ export function tryTo(description: string, callback: () => boolean): void {
 }
 
 export function shuffle<T>(arr: Array<T>): Array<T> {
+    const newArray = arr.slice();
     let temp, r;
-    for (let i = 1; i < arr.length; i++) {
+    for (let i = 1; i < newArray.length; i++) {
         r = randomRange(0, i);
-        temp = arr[i];
-        arr[i] = arr[r];
-        arr[r] = temp;
+        temp = newArray[i];
+        newArray[i] = newArray[r];
+        newArray[r] = temp;
     }
-    return arr;
+    return newArray;
 }

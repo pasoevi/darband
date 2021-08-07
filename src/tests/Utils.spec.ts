@@ -1,4 +1,4 @@
-import { flatten, tryTo } from '../Util';
+import { flatten, shuffle, tryTo } from '../Util';
 
 describe('Utils', () => {
     describe('flatten', () => {
@@ -34,6 +34,30 @@ describe('Utils', () => {
             expect(() => tryTo('decrease counter', tesAction)).toThrow('Timeout while trying to decrease counter');
             expect(tesAction).toHaveBeenCalledTimes(1000);
             expect(counter).toEqual(1);
+        });
+    });
+
+    describe('shuffle', () => {
+        it('should not modify the original array', () => {
+            const arr = [1, 2, 3, 4, 5];
+            const newArr = shuffle(arr);
+            expect(newArr).not.toBe(arr);
+            expect(arr).toEqual([1, 2, 3, 4, 5]);
+        });
+        
+        it('should return an array of the same length', () => {
+            const arr = [1, 2, 3, 4, 5];
+            const newArr = shuffle(arr);
+            expect(newArr).toHaveLength(5);
+        });
+        
+        it('should return an a new array with the same elements possibly in different order', () => {
+            const arr = [1, 2, 3, 4, 5];
+            const newArr = shuffle(arr);
+            expect(newArr).toHaveLength(5);
+            for (const elem of arr) {
+                expect(newArr).toContain(elem);
+            }
         });
     });
 });

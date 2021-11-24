@@ -27,7 +27,7 @@
         "import/first": "error",
         "import/newline-after-import": "error",
         "import/no-duplicates": "error",
-        "import/no-unresolved": "off",
+        "import/no-unresolved": "warn",
         "@typescript-eslint/explicit-member-accessibility": ["error"]
     },
     "settings": {
@@ -42,7 +42,11 @@
             "node": {
                 "extensions": [".js", ".ts"],
                 "paths": ["src", "assets"]
-            }
+            },
+            "alias": [
+                ["src", "./src"],
+                ["assets", "./assets"]
+            ]
         }
     }
 }

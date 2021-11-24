@@ -1,4 +1,5 @@
-import sprites from '../../assets/sprites.png';
+import sprites from 'assets/sprites.png';
+
 import { Animation, RenderingLibrary, RenderOptions } from './Interfaces';
 
 export enum Sprites {

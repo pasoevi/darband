@@ -31,7 +31,7 @@
   "scripts": {
     "setup": "cd scripts && bash setup.sh",
     "build": "webpack --mode production",
-    "start": "webpack-dev-server --mode development",
+    "start": "webpack serve --mode development",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "test": "jest"
   },

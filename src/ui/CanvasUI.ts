@@ -2,7 +2,10 @@ import { Game } from '../Game';
 import { GameUI } from '../lib/Interfaces';
 
 export class CanvasUI implements GameUI {
-    
+    /*
+     * Display message using the rendering library the game was set up with.
+     * @param color might be ignored if the rendering library does not support it.
+     */
     public msg(game: Game, text: string, color = 'violet'): void {
         game.logging.log(text);
         
@@ -15,6 +18,9 @@ export class CanvasUI implements GameUI {
         );
     }
 
+    /*
+     * Render the UI based on the game
+     */
     public render(game: Game): void {
         game.renderer.drawText(
             'Level: ' + game.levelID,

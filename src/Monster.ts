@@ -199,7 +199,7 @@ export class SlowAI extends AI {
 }
 
 // When low on hp, monsters of this kind can eat other monsters that are no more
-// than half of its size in orter do restore hp
+// than half of its size in order do restore hp
 export class ConsumerAI extends AI {
     public constructor(actor: Monster) {
         super(actor);

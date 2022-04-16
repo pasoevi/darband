@@ -121,9 +121,12 @@ export class Game {
                 case 'd':
                     this.player.tryMove(1, 0);
                     break;
-                case 'Enter':
-                    this.startLevel(this.levelID + 1);
+                case 'Enter': {
+                    const playerTile = this.player.getTile();
+                    const tile = this.getTile(playerTile.x, playerTile.y);
+                    tile.features.map(feature => feature.onInteract(this.player));
                     break;
+                }
                 case 'c':
                     spells.confuse(this.player, this.monsters[0]);
                     break;

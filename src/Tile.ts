@@ -4,8 +4,12 @@ import { Animation } from './lib/Interfaces';
 import { Direction } from './Types';
 import { shuffle } from './Util';
 
+export interface TileFeature {
+    onInteract: (actor: Actor) => void;
+}
+
 export class Tile {
-    private game: Game;
+    public game: Game;
 
     public constructor(
         public x: number,
@@ -14,6 +18,7 @@ export class Tile {
         public passable = true,
         public monster: Actor | null = null,
         public animation?: Animation,
+        public features: TileFeature[] = [],
     ) {
         this.game = Game.getInstance();
     }
@@ -117,16 +122,27 @@ export class Staircase extends Tile {
     ) {
         super(x, y, sprite, true);
     }
+
+    public climb(direction: 'UP' | 'DOWN') {
+        const nextLevel = this.game.levelID + (direction === 'UP' ? - 1 : 1);
+        this.game.startLevel(nextLevel);
+    }
 }
 
 export class StaircaseUp extends Staircase {
     public constructor(x: number, y: number, sprite = 44) {
         super(x, y, sprite, 'UP');
+        this.features.push({
+            onInteract: (actor) => this.climb('UP'),
+        });
     }
 }
 
 export class StaircaseDown extends Staircase {
     public constructor(x: number, y: number, sprite = 43) {
         super(x, y, sprite, 'DOWN');
+        this.features.push({
+            onInteract: (actor) => this.climb('DOWN'),
+        });
     }
 }

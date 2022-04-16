@@ -6,7 +6,7 @@ export class Player extends Monster {
     public life: Life;
     public constructor(tile: Tile) {
         super('You', 0, tile, []);
-        this.life = new WizardLife(this, 10);
+        this.life = new WizardLife(this, 1000);
         this.isPlayer = true;
     }
 

@@ -6,11 +6,11 @@ export class Player extends Monster {
     public life: Life;
     public constructor(tile: Tile) {
         super('You', 0, tile, []);
-        this.life = new WizardLife(this, 1000);
+        this.life = new WizardLife(this, 10);
         this.isPlayer = true;
     }
 
-    public tryMove(dx: number, dy: number): boolean {
+    public tryMove(dx: number, dy: number) {
         if (super.tryMove(dx, dy)) {
             this.game.tick();
             return true;
@@ -19,4 +19,3 @@ export class Player extends Monster {
     }
 }
 
-export class UninitializedPlayer extends Player {}

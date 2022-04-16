@@ -29,7 +29,11 @@ export class Life {
     public die(): void {
         this.hp = 0;
         this.actor.getTile().monster = null;
-        this.game.ui.msg(this.game, `${this.actor.getName()} dies`);
+        if (this.actor.isPlayer) {
+            this.game.ui.msg(this.game, 'You die.');
+        } else {
+            this.game.ui.msg(this.game, `${this.actor.getName()} dies`);
+        }
     }
 
     public isAlive(): boolean {

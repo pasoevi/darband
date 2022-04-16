@@ -38,6 +38,7 @@ export interface GameUI {
     msg: (game: temporaryAny, text: string, color?: string) => void;
     render(game: Game): void;
     renderTitleScreen(game: Game): void;
+    renderGameOverScreen(game: Game): void;
 }
 
 export interface Animation {

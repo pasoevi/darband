@@ -1,17 +1,7 @@
-import { History  } from './history/History';
+import { History } from './history/History';
 import { Item } from './Item';
 import { Animation, GameUI, LoggingLibrary, RenderingLibrary } from './lib/Interfaces';
-import {
-    createMonster,
-    Dragon,
-    Goblin,
-    Kobold,
-    Man,
-    Monster,
-    Snake,
-    Troll,
-    Wolf,
-} from './Monster';
+import { createMonster, Dragon, Goblin, Kobold, Man, Monster, Snake, Troll, Wolf, } from './Monster';
 import { Player } from './Player';
 import { spells } from './Spells';
 import { Floor, StaircaseDown, StaircaseUp, Tile, Wall } from './Tile';
@@ -23,7 +13,12 @@ export interface GameOptions {
     logging: LoggingLibrary;
 }
 
-export type GameState = 'LOADING' | 'PLAYING' | 'DEAD' | 'TITLE';
+export enum GameState {
+    LOADING,
+    PLAYING,
+    DEAD,
+    TITLE,
+}
 
 export class Game {
     private static instance: Game;
@@ -38,7 +33,7 @@ export class Game {
     // TODO: Use in getPossibleMonsters
     public levelID = 0;
     public maxLevelID = 16;
-    public gameState: GameState = 'TITLE';
+    public gameState: GameState = GameState.TITLE;
     public animation: Animation;
 
     private constructor(options: GameOptions) {
@@ -107,11 +102,9 @@ export class Game {
             throw Error('Please run the app in the browser environment');
         }
         html.onkeydown = (e) => {
-            if (this.gameState === 'TITLE') {
+            if (this.gameState === GameState.TITLE || this.gameState === GameState.DEAD) {
                 this.startGame();
-            } else if (this.gameState === 'DEAD') {
-                this.ui.renderTitleScreen(this);
-            } else if (this.gameState === 'PLAYING') {
+            } else if (this.gameState === GameState.PLAYING) {
                 if (this.player === undefined) {
                     return;
                 }
@@ -160,7 +153,7 @@ export class Game {
     }
 
     private startGame(): void {
-        this.gameState = 'PLAYING';
+        this.gameState = GameState.PLAYING;
         this.startLevel(0);
     }
 
@@ -203,7 +196,7 @@ export class Game {
     /* TODO: Not fully implemented */
     private generateMonsters(): Monster[] {
         const monsters: Monster[] = [];
-        
+
         const allMonsters = [
             [Dragon, Man, Goblin, Snake, Kobold],
             [Dragon, Man, Goblin, Snake, Kobold],
@@ -285,12 +278,12 @@ export class Game {
         }
 
         if (!this.player.life.isAlive()) {
-            this.gameState = 'DEAD';
+            this.gameState = GameState.DEAD;
         }
     }
 
     public render(): void {
-        if (this.gameState === 'PLAYING' || this.gameState === 'DEAD') {
+        if (this.gameState === GameState.PLAYING) {
             this.renderer.clearScreen();
             if (this.animation.screenshake) {
                 this.animation.screenshake();
@@ -299,6 +292,8 @@ export class Game {
             this.renderMonsters();
             this.player.draw();
             this.ui.render(this);
+        } else if (this.gameState === GameState.DEAD) {
+            this.ui.renderGameOverScreen(this);
         }
     }
 

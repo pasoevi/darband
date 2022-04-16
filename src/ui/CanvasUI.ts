@@ -1,4 +1,4 @@
-import { Game } from '../Game';
+import { Game, GameState } from '../Game';
 import { GameUI } from '../lib/Interfaces';
 
 export class CanvasUI implements GameUI {
@@ -33,7 +33,7 @@ export class CanvasUI implements GameUI {
 
     public renderTitleScreen(game: Game): void {
         game.renderer.drawRect('rgba(0,0,0,.75)', 0, 0);
-        game.gameState = 'TITLE';
+        game.gameState = GameState.TITLE;
 
         // this.renderer.drawText("SUPER", 40, true, canvas.height / 2 - 110, "white");
         game.renderer.drawText(
@@ -41,6 +41,26 @@ export class CanvasUI implements GameUI {
             50,
             true,
             500,
+            'white',
+        );
+    }
+
+    public renderGameOverScreen(game: Game): void {
+        game.renderer.drawRect('rgba(0,0,0,.5)', 0, 0);
+
+        game.renderer.drawText(
+            'YOU DIE',
+            50,
+            true,
+            300,
+            'red',
+        );
+
+        game.renderer.drawText(
+            'PRESS ANY KEY TO START AGAIN',
+            40,
+            true,
+            400,
             'white',
         );
     }

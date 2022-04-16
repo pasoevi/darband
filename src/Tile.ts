@@ -121,10 +121,13 @@ export class Staircase extends Tile {
         public direction: Direction,
     ) {
         super(x, y, sprite, true);
+        this.features.push({
+            onInteract: (actor) => this.climb(),
+        });
     }
 
-    public climb(direction: 'UP' | 'DOWN') {
-        const nextLevel = this.game.levelID + (direction === 'UP' ? - 1 : 1);
+    public climb() {
+        const nextLevel = this.game.levelID + (this.direction === 'UP' ? - 1 : 1);
         this.game.startLevel(nextLevel);
     }
 }
@@ -132,17 +135,11 @@ export class Staircase extends Tile {
 export class StaircaseUp extends Staircase {
     public constructor(x: number, y: number, sprite = 44) {
         super(x, y, sprite, 'UP');
-        this.features.push({
-            onInteract: (actor) => this.climb('UP'),
-        });
     }
 }
 
 export class StaircaseDown extends Staircase {
     public constructor(x: number, y: number, sprite = 43) {
         super(x, y, sprite, 'DOWN');
-        this.features.push({
-            onInteract: (actor) => this.climb('DOWN'),
-        });
     }
 }

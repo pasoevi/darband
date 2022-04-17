@@ -99,6 +99,10 @@ export class Tile {
         this.game.tiles[this.x][this.y] = new newTileType(this.x, this.y);
         return this.game.tiles[this.x][this.y];
     }
+
+    public interact(actor: Actor) {
+        this.features.map(feature => feature.onInteract(actor));
+    }
 }
 
 export class Floor extends Tile {

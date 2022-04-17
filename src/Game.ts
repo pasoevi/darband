@@ -124,7 +124,7 @@ export class Game {
                 case 'Enter': {
                     const playerTile = this.player.getTile();
                     const tile = this.getTile(playerTile.x, playerTile.y);
-                    tile.features.map(feature => feature.onInteract(this.player));
+                    tile.interact(this.player);
                     break;
                 }
                 case 'c':

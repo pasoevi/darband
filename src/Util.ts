@@ -2,11 +2,11 @@ export function randomRange(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const flatten = function <T>(
+export const flatten = function <T> (
     arr: Array<Array<T>> | Array<T>,
     result: Array<T> = [],
 ): Array<T> {
-    for (let i = 0, length = arr.length; i < length; i++) {
+    for (let i = 0, { length } = arr; i < length; i++) {
         const value = arr[i];
         if (Array.isArray(value)) {
             flatten<T>(value, result);
@@ -23,12 +23,13 @@ export function tryTo(description: string, callback: () => boolean): void {
             return;
         }
     }
-    throw 'Timeout while trying to ' + description;
+    throw Error(`Timeout while trying to ${description}`);
 }
 
 export function shuffle<T>(arr: Array<T>): Array<T> {
     const newArray = arr.slice();
-    let temp, r;
+    let temp; let
+        r;
     for (let i = 1; i < newArray.length; i++) {
         r = randomRange(0, i);
         temp = newArray[i];

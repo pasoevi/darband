@@ -1,10 +1,16 @@
+import {
+    createMonster, Dragon, Goblin, Kobold, Man, Monster, Snake, Troll, Wolf,
+} from './actor/Monster';
 import { History } from './history/History';
 import { Item } from './Item';
-import { Animation, GameUI, LoggingLibrary, RenderingLibrary } from './lib/Interfaces';
-import { createMonster, Dragon, Goblin, Kobold, Man, Monster, Snake, Troll, Wolf, } from './Monster';
+import {
+    Animation, GameUI, LoggingLibrary, RenderingLibrary,
+} from './lib/Interfaces';
 import { Player } from './Player';
 import { spells } from './Spells';
-import { Floor, StaircaseDown, StaircaseUp, Tile, Wall } from './Tile';
+import {
+    Floor, StaircaseDown, StaircaseUp, Tile, Wall,
+} from './Tile';
 import { flatten, randomRange, tryTo } from './Util';
 
 export interface GameOptions {
@@ -22,18 +28,30 @@ export enum GameState {
 
 export class Game {
     private static instance: Game;
+
     public renderer: RenderingLibrary;
+
     public ui: GameUI;
+
     public history: History;
+
     public logging: LoggingLibrary;
+
     public player = (null as unknown) as Player;
+
     public tiles: Array<Array<Tile>> = [];
+
     public monsters: Monster[] = [];
+
     public items: Item[] = [];
+
     // TODO: Use in getPossibleMonsters
     public levelID = 0;
+
     public maxLevelID = 16;
+
     public gameState: GameState = GameState.TITLE;
+
     public animation: Animation;
 
     private constructor(options: GameOptions) {
@@ -41,6 +59,7 @@ export class Game {
         this.ui = options.ui;
         this.history = new History();
         this.logging = options.logging;
+        this.gameState = GameState.TITLE;
         this.renderer.setOnRendererReady(() => {
             this.ui.renderTitleScreen(this);
             setInterval(() => {
@@ -58,7 +77,7 @@ export class Game {
             // TODO: Create a GameAnimation class
             screenshake() {
                 if (this.shakeAmount) {
-                    this.shakeAmount--;
+                    this.shakeAmount -= 1;
                 }
                 const shakeAngle = Math.random() * Math.PI * 2;
                 this.shakeX = Math.round(
@@ -166,12 +185,10 @@ export class Game {
     }
 
     private generateLevel(): void {
-        tryTo('generate map', () => {
-            return (
-                this.generateTiles() ===
-                this.getRandomPassableTile().getConnectedTiles().length
-            );
-        });
+        tryTo('generate map', () => (
+            this.generateTiles()
+                === this.getRandomPassableTile().getConnectedTiles().length
+        ));
 
         const startingTile = this.getRandomPassableTile();
         this.player = new Player(startingTile);
@@ -180,8 +197,6 @@ export class Game {
 
         if (this.levelID > 0) {
             this.getRandomPassableTile().replace(StaircaseUp);
-            // stairsUp = new StaircaseUp(stairsUp.x, stairsUp.y);
-            // this.tiles[stairsUp.x][stairsUp.y] = stairsUp;
         }
 
         if (this.levelID < this.maxLevelID) {
@@ -191,15 +206,11 @@ export class Game {
             if (this.levelID === 0) {
                 stairsDown.sprite = 42;
             }
-            // stairsDown = new StaircaseDown(stairsDown.x, stairsDown.y, this.levelID === 0 ? 42 : undefined);
-            // this.tiles[stairsDown.x][stairsDown.y] = stairsDown;
         }
     }
 
     /* TODO: Not fully implemented */
     private generateMonsters(): Monster[] {
-        const monsters: Monster[] = [];
-
         const allMonsters = [
             [Dragon, Man, Goblin, Snake, Kobold],
             [Dragon, Man, Goblin, Snake, Kobold],
@@ -216,40 +227,34 @@ export class Game {
             [Kobold, Goblin],
             [Kobold, Goblin],
         ];
-        // const n = randomRange(2, 2);
-        for (const monster of allMonsters[this.levelID]) {
-            monsters.push(createMonster(monster));
-        }
-        return monsters;
+        return allMonsters[this.levelID].map((m) => createMonster(m));
     }
 
     private renderTiles(): void {
-        const numTiles = this.renderer.options.numTiles;
-        for (let i = 0; i < numTiles; i++) {
-            for (let j = 0; j < numTiles; j++) {
+        const { numTiles } = this.renderer.options;
+        for (let i = 0; i < numTiles; i += 1) {
+            for (let j = 0; j < numTiles; j += 1) {
                 this.getTile(i, j).draw();
             }
         }
     }
 
     private renderMonsters(): void {
-        for (const monster of this.monsters) {
-            monster.draw();
-        }
+        this.monsters.map((m) => m.draw());
     }
 
     private generateTiles(): number {
         let passableTiles = 0;
         const tiles: Array<Array<Tile>> = [];
-        const numTiles = this.renderer.options.numTiles;
-        for (let i = 0; i < numTiles; i++) {
+        const { numTiles } = this.renderer.options;
+        for (let i = 0; i < numTiles; i += 1) {
             tiles[i] = [];
-            for (let j = 0; j < numTiles; j++) {
+            for (let j = 0; j < numTiles; j += 1) {
                 if (Math.random() < 0.3 || !this.inBounds(i, j)) {
                     tiles[i][j] = new Wall(i, j);
                 } else {
                     tiles[i][j] = new Floor(i, j);
-                    passableTiles++;
+                    passableTiles += 1;
                 }
             }
         }
@@ -259,20 +264,19 @@ export class Game {
     }
 
     public inBounds(x: number, y: number): boolean {
-        const numTiles = this.renderer.options.numTiles;
+        const { numTiles } = this.renderer.options;
         return x > 0 && y > 0 && x < numTiles - 1 && y < numTiles - 1;
     }
 
     public getTile(x: number, y: number): Tile {
         if (this.inBounds(x, y)) {
             return this.tiles[x][y];
-        } else {
-            return new Wall(x, y);
         }
+        return new Wall(x, y);
     }
 
     public tick(): void {
-        for (let k = this.monsters.length - 1; k >= 0; k--) {
+        for (let k = this.monsters.length - 1; k >= 0; k -= 1) {
             if (this.monsters[k].life?.isAlive()) {
                 this.monsters[k].update();
             } else {
@@ -302,8 +306,7 @@ export class Game {
 
     private getRandomTile(condition?: (tile: Tile) => boolean): Tile {
         const allTiles = flatten<Tile>(this.tiles);
-        const possibleTiles =
-            condition === undefined ? allTiles : allTiles.filter(condition);
+        const possibleTiles = condition === undefined ? allTiles : allTiles.filter(condition);
         const randomTileIndex = randomRange(0, possibleTiles.length - 1);
         return possibleTiles[randomTileIndex];
     }

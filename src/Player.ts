@@ -1,9 +1,12 @@
-import { Life, WizardLife } from './Actor';
-import { Monster } from './Monster';
+import { Life } from '@/actor/Life';
+
+import { WizardLife } from './actor/Actor';
+import { Monster } from './actor/Monster';
 import { Tile } from './Tile';
 
 export class Player extends Monster {
     public life: Life;
+
     public constructor(tile: Tile) {
         super('You', 0, tile, []);
         this.life = new WizardLife(this, 1000);
@@ -18,4 +21,3 @@ export class Player extends Monster {
         return false;
     }
 }
-

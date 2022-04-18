@@ -16,7 +16,7 @@ function setupGame() {
     const gameUI = new CanvasUI();
     const logger = new ConsoleLogging();
     const gameOptions: GameOptions = {
-        renderingLibrary: renderingLibrary,
+        renderingLibrary,
         ui: gameUI,
         logging: logger,
     };

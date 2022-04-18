@@ -8,10 +8,15 @@ export enum Sprites {
 
 export class CanvasDrawingLibrary implements RenderingLibrary {
     public context: CanvasRenderingContext2D;
+
     public options: RenderOptions;
+
     private canvas: HTMLCanvasElement;
+
     private readonly spritesheet: HTMLImageElement;
+
     private isRendererReady = false;
+
     private onRendererReady: () => void;
 
     public constructor(canvasElementId: string, options: RenderOptions) {
@@ -29,9 +34,8 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
         this.context.imageSmoothingEnabled = false;
 
         // Can also be assigned by calling setOnRendererReady
-        this.onRendererReady =
-            options.onRendererReady ??
-            (() => {
+        this.onRendererReady = options.onRendererReady
+            ?? (() => {
                 /* tmp */
             });
 
@@ -39,8 +43,8 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
 
         canvas.width = tileSize * (numTiles + uiWidth);
         canvas.height = tileSize * numTiles;
-        canvas.style.width = canvas.width + 'px';
-        canvas.style.height = canvas.height + 'px';
+        canvas.style.width = `${canvas.width}px`;
+        canvas.style.height = `${canvas.height}px`;
 
         this.spritesheet = new Image();
         this.loadAssets();
@@ -111,15 +115,13 @@ export class CanvasDrawingLibrary implements RenderingLibrary {
     ): void {
         // TODO: Allow access to canvas element or canvas size
         this.context.fillStyle = color;
-        this.context.font = size + 'px monospace';
+        this.context.font = `${size}px monospace`;
         let textX;
         if (centered) {
-            textX =
-                (this.canvas.width - this.context.measureText(text).width) / 2;
+            textX = (this.canvas.width - this.context.measureText(text).width) / 2;
         } else {
-            textX =
-                this.canvas.width -
-                this.options.uiWidth * this.options.tileSize;
+            textX = this.canvas.width
+                - this.options.uiWidth * this.options.tileSize;
         }
 
         this.context.fillText(text, textX, textY);

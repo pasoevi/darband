@@ -1,16 +1,16 @@
-import { Actor, ConfusionEffect } from './Actor';
+import { Actor, ConfusionEffect } from './actor/Actor';
+import { Monster } from './actor/Monster';
 import { Sprites } from './lib/CanvasDrawingLibrary';
-import { Monster } from './Monster';
 
 export const spells = {
-    blink: function (caster: Monster): void {
+    blink(caster: Monster): void {
         caster.move(caster.game.getRandomPassableTile());
     },
-    quake: function (caster: Actor): void {
-        const tiles = caster.game.tiles;
+    quake(caster: Actor): void {
+        const { tiles } = caster.game;
         for (let y = 0; y < tiles.length; y++) {
             for (let x = 0; x < tiles.length; x++) {
-                const tile = caster.tile;
+                const { tile } = caster;
                 if (tile.monster) {
                     const numWalls = 4 - tile.getAdjacentPassableTiles().length;
                     tile.monster.life?.takeDamage(caster, numWalls * 10, []);
@@ -19,17 +19,19 @@ export const spells = {
         }
         caster.game.animation.shakeAmount = 20;
     },
-    maelstrom: function (caster: Actor): void {
-        const game = caster.game;
-        const monsters = game.monsters;
+    maelstrom(caster: Actor): void {
+        const { game } = caster;
+        const { monsters } = game;
+        // eslint-disable-next-line no-restricted-syntax
         for (const monster of monsters) {
             monster.move(game.getRandomPassableTile());
         }
     },
-    mulligan: function (caster: Actor): void {
+    mulligan(caster: Actor): void {
         caster.game.startLevel(caster.game.levelID);
     },
-    aura: function (caster: Actor): void {
+    aura(caster: Actor): void {
+        // eslint-disable-next-line no-restricted-syntax
         for (const tile of caster.tile.getAdjacentNeighbors()) {
             tile.setAnimationEffect(13);
             if (tile.monster) {
@@ -39,7 +41,7 @@ export const spells = {
             caster.life?.heal(5);
         }
     },
-    dash: function (caster: Monster): void {
+    dash(caster: Monster): void {
         const newTile = caster.tile;
         let testTile;
 
@@ -52,6 +54,7 @@ export const spells = {
 
         if (caster.tile !== newTile) {
             caster.move(newTile);
+            // eslint-disable-next-line no-restricted-syntax
             for (const tile of newTile.getAdjacentNeighbors()) {
                 if (tile.monster) {
                     tile.setAnimationEffect(Sprites.AURA);
@@ -61,7 +64,7 @@ export const spells = {
             }
         }
     },
-    confuse: function (caster: Actor, target: Monster): void {
+    confuse(caster: Actor, target: Monster): void {
         if (target.ai === undefined) {
             return;
         }

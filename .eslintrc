@@ -7,6 +7,7 @@
     "plugins": ["@typescript-eslint", "simple-import-sort", "import"],
     "extends": [
         "eslint:recommended",
+        "airbnb",
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript",
@@ -28,7 +29,31 @@
         "import/newline-after-import": "error",
         "import/no-duplicates": "error",
         "import/no-unresolved": "warn",
-        "@typescript-eslint/explicit-member-accessibility": ["error"]
+        "import/no-cycle": "warn",
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"],
+        "default-param-last": "off",
+        "no-param-reassign": ["error", { "props":  false}],
+        "@typescript-eslint/default-param-last": ["error"],
+        "@typescript-eslint/explicit-member-accessibility": ["error"],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "js": "never",
+                "jsx": "never",
+                "ts": "never",
+                "tsx": "never"
+            }
+        ],
+        "import/prefer-default-export": "off",
+        "class-methods-use-this": "off",
+        "no-plusplus": "off",
+        "no-loop-func": "off",
+        "@typescript-eslint/no-loop-func": ["error"],
+        "max-classes-per-file": ["warn"],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error"]
     },
     "settings": {
         "import/parsers": {

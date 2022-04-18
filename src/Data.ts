@@ -606,4 +606,6 @@ const Settings = {
     },
 };
 
-export { Settings, Colors, Levels, Items, Texts };
+export {
+    Settings, Colors, Levels, Items, Texts,
+};

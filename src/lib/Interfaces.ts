@@ -1,5 +1,32 @@
-import { Actor } from '../Actor';
+import { Actor } from '../actor/Actor';
 import { Game } from '../Game';
+
+export interface Animation {
+    offsetX: number;
+    offsetY: number;
+    shakeX: number;
+    shakeY: number;
+    shakeAmount: number;
+    effectCounter: number;
+    effectSprite?: number;
+    screenshake?: () => void;
+}
+
+export interface PosOnMap {
+    x: number;
+    y: number;
+}
+
+export interface RenderOptions {
+    tileSize: number;
+    numTiles: number;
+    uiWidth: number;
+    onRendererReady?: () => void;
+}
+
+export interface InputHandler {
+    setup(): void;
+}
 
 export interface RenderingLibrary {
     options: RenderOptions;
@@ -23,38 +50,11 @@ export interface RenderingLibrary {
     setOnRendererReady(onReady: () => void): void;
 }
 
-export interface RenderOptions {
-    tileSize: number;
-    numTiles: number;
-    uiWidth: number;
-    onRendererReady?: () => void;
-}
-
-export interface InputHandler {
-    setup(): void;
-}
-
 export interface GameUI {
     msg: (game: temporaryAny, text: string, color?: string) => void;
     render(game: Game): void;
     renderTitleScreen(game: Game): void;
     renderGameOverScreen(game: Game): void;
-}
-
-export interface Animation {
-    offsetX: number;
-    offsetY: number;
-    shakeX: number;
-    shakeY: number;
-    shakeAmount: number;
-    effectCounter: number;
-    effectSprite?: number;
-    screenshake?: () => void;
-}
-
-export interface PosOnMap {
-    x: number;
-    y: number;
 }
 
 /*

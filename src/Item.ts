@@ -1,4 +1,4 @@
-import { Actor } from './Actor';
+import { Actor } from './actor/Actor';
 import { Tile } from './Tile';
 
 export class Item extends Actor {

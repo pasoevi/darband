@@ -1,4 +1,5 @@
-import { Actor } from './Actor';
+// eslint-disable-next-line max-classes-per-file
+import { Actor } from './actor/Actor';
 import { Game } from './Game';
 import { Animation } from './lib/Interfaces';
 import { Direction } from './Types';
@@ -6,6 +7,7 @@ import { shuffle } from './Util';
 
 export interface TileFeature {
     onInteract: (actor: Actor) => void;
+    skipOtherFeatures?: boolean;
 }
 
 export class Tile {
@@ -24,7 +26,7 @@ export class Tile {
     }
 
     public draw(): void {
-        const renderer = this.game.renderer;
+        const { renderer } = this.game;
         renderer.drawSprite(this.sprite, this.x, this.y, this.game.animation);
 
         if (this.animation && this.animation?.effectCounter > 0) {
@@ -87,21 +89,22 @@ export class Tile {
             const neighbors = frontier
                 .pop()
                 ?.getAdjacentPassableTiles()
-                .filter((t: Tile) => !connectedTiles.includes(t));
+                // eslint-disable-next-line @typescript-eslint/no-loop-func
+                .filter((t) => !connectedTiles.includes(t));
             connectedTiles = connectedTiles.concat(neighbors ?? []);
             frontier = frontier.concat(neighbors ?? []);
         }
         return connectedTiles;
     }
 
-    public replace(newTileType: typeof Tile): Tile {
+    public replace(NewTileType: typeof Tile): Tile {
         // TODO: copy over monsters and items from the old tile to the new if necessary
-        this.game.tiles[this.x][this.y] = new newTileType(this.x, this.y);
+        this.game.tiles[this.x][this.y] = new NewTileType(this.x, this.y);
         return this.game.tiles[this.x][this.y];
     }
 
     public interact(actor: Actor) {
-        this.features.map(feature => feature.onInteract(actor));
+        this.features.map((feature) => feature.onInteract(actor));
     }
 }
 
@@ -131,7 +134,7 @@ export class Staircase extends Tile {
     }
 
     public climb() {
-        const nextLevel = this.game.levelID + (this.direction === 'UP' ? - 1 : 1);
+        const nextLevel = this.game.levelID + (this.direction === 'UP' ? -1 : 1);
         this.game.startLevel(nextLevel);
     }
 }

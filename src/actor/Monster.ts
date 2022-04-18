@@ -1,10 +1,23 @@
-import { Actor, AI, Life } from './Actor';
-import { Game } from './Game';
-import { Tile } from './Tile';
+// eslint-disable-next-line max-classes-per-file
+import {
+    AI, ConfusedAI, ConsumerAI, MoveAndAttackAI, SlowAI,
+} from '../ai/AI';
+import { Game } from '../Game';
+import { Tile } from '../Tile';
+import { Actor } from './Actor';
+import { Life } from './Life';
+
+export class SimpleLife extends Life {
+    public constructor(actor: Actor, maxHP = 100) {
+        super(maxHP, maxHP, 2, actor);
+    }
+}
 
 export class Monster extends Actor {
     public ai: AI;
+
     public life: Life;
+
     public constructor(
         name: string,
         sprite: number,
@@ -25,7 +38,7 @@ export class Monster extends Actor {
     }
 
     public drawHP(): void {
-        const tileSize = this.game.renderer.options.tileSize;
+        const { tileSize } = this.game.renderer.options;
         const hpPercentage = (this.life?.hp ?? 0) / (this.life?.maxHp ?? 1);
         const greenLength = tileSize * hpPercentage;
         const redLength = tileSize - greenLength;
@@ -54,7 +67,7 @@ export class Monster extends Actor {
                 this.move(newTile);
             } else if (this.isPlayer !== newTile.monster.isPlayer) {
                 if (this.ai !== undefined) {
-                    this.ai.attackCountThisTurn++;
+                    this.ai.attackCountThisTurn += 1;
                 }
                 newTile.monster.stunned = true;
                 this.game.ui.msg(
@@ -156,105 +169,8 @@ export class Snake extends Monster {
 }
 
 export function createMonster<M extends Monster>(
-    actorClass: new (tile: Tile) => M,
+    ActorClass: new (tile: Tile) => M,
 ): M {
     const randomTile = Game.getInstance().getRandomPassableTile();
-    return new actorClass(randomTile);
-}
-
-export class SimpleLife extends Life {
-    public constructor(actor: Actor, maxHP = 100) {
-        super(maxHP, maxHP, 2, actor);
-    }
-}
-
-export class MoveAndAttackAI extends AI {
-    public constructor(actor: Monster) {
-        super(actor);
-    }
-
-    public act(): void {
-        this.attackCountThisTurn = 0;
-        super.act();
-
-        if (this.attackCountThisTurn === 0) {
-            super.act();
-        }
-    }
-}
-
-export class SlowAI extends AI {
-    public constructor(monster: Monster, public speed = 5) {
-        super(monster);
-    }
-
-    public act(): void {
-        const startedStunned = this.monster.stunned;
-        super.act();
-        if (!startedStunned) {
-            this.monster.stunned = true;
-            this.game.ui.msg(this.game, `${this.monster.name} is stunned`);
-        }
-    }
-}
-
-// When low on hp, monsters of this kind can eat other monsters that are no more
-// than half of its size in order do restore hp
-export class ConsumerAI extends AI {
-    public constructor(actor: Monster) {
-        super(actor);
-    }
-
-    public eat(actor: Monster): boolean {
-        actor.life?.die();
-        const pointsHealed = this.monster.life.heal(actor.life?.maxHp / 2);
-        this.game.ui.msg(
-            this.game,
-            `${this.monster.name} heals by ${pointsHealed} by eating ${actor.name}`,
-        );
-        this.game.animation.shakeAmount = 5;
-        return pointsHealed > 0;
-    }
-
-    // Make this behaviour possible to attach to other types of actors
-    public act(): void {
-        super.act();
-        if (this.monster.life.hp < this.monster.life.maxHp * 0.75) {
-            const smallMonsters = this.game.monsters
-                .filter(
-                    (t) =>
-                        t.life !== undefined &&
-                        t.life.maxHp < this.monster.life.maxHp / 2,
-                )
-                .sort(
-                    (a, b) =>
-                        a.tile.distance(this.monster.tile) -
-                        b.tile.distance(this.monster.tile),
-                );
-            this.pursue(smallMonsters[0]);
-            const neighbors = this.monster.tile
-                .getAdjacentActors<Monster>()
-                .filter(
-                    (t) =>
-                        t.life !== undefined &&
-                        t.life.maxHp < this.monster.life.maxHp / 2,
-                );
-            if (neighbors.length > 0) {
-                this.eat(neighbors[0]);
-            }
-        } else {
-            this.pursue(this.game.player);
-        }
-    }
-}
-
-export class ConfusedAI extends AI {
-    public act(): void {
-        const neighbors = this.monster.tile.getAdjacentPassableTiles();
-        if (neighbors.length > 0) {
-            const dx = neighbors[0].x - this.monster.tile.x;
-            const dy = neighbors[0].y - this.monster.tile.y;
-            this.monster.tryMove(dx, dy);
-        }
-    }
+    return new ActorClass(randomTile);
 }

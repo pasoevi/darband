@@ -113,7 +113,9 @@ export class SlowAI extends AI {
             this.game.ui.msg(this.game, `${this.monster.name} is stunned`);
         }
     }
-} // When low on hp, monsters of this kind can eat other monsters that are no more
+}
+
+// When low on hp, monsters of this kind can eat other monsters that are no more
 // than half of its size in order do restore hp
 export class ConsumerAI extends AI {
     public eat(actor: Monster): boolean {

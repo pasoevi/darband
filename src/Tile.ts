@@ -98,9 +98,10 @@ export class Tile {
     }
 
     public replace(NewTileType: typeof Tile): Tile {
-        // TODO: copy over monsters and items from the old tile to the new if necessary
-        this.game.tiles[this.x][this.y] = new NewTileType(this.x, this.y);
-        return this.game.tiles[this.x][this.y];
+        const newTile = new NewTileType(this.x, this.y);
+        newTile.monster = this.monster;
+        this.game.tiles[this.x][this.y] = newTile;
+        return newTile;
     }
 
     public interact(actor: Actor) {
